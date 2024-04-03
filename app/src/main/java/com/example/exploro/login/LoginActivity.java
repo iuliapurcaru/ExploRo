@@ -3,6 +3,7 @@ package com.example.exploro.login;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.exploro.R;
+import com.example.exploro.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
