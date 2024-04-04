@@ -12,19 +12,19 @@ import com.example.exploro.databinding.ActivityLoginBinding;
 import com.example.exploro.signup.SignupActivity;
 
 public class LoginActivity extends AppCompatActivity {
-    ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
-    final ProgressBar loadingProgressBar = binding.loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         final EditText usernameEditText = binding.email;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
+        final ProgressBar loadingProgressBar = binding.loading;
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
