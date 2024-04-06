@@ -4,21 +4,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.exploro.R;
 import com.example.exploro.databinding.ActivitySignupBinding;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -46,14 +40,30 @@ public class SignupActivity extends AppCompatActivity {
         String errorPassword = getString(R.string.invalid_password);
         String confirmPassword = getString(R.string.passwords_do_not_match);
 
-        FirebaseApp.initializeApp(SignupActivity.this);
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.setOnClickListener(v -> onBackPressed());
+        loginButton.setOnClickListener(v -> finish());
 
-        signupButton.setOnClickListener(v -> {
-            createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
-            Toast.makeText(getApplicationContext(), "No crash at least?", Toast.LENGTH_SHORT).show();
+        signupButton.setOnClickListener(v -> createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString()));
+
+        nameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String name = s.toString().trim();
+                if (name.isEmpty()) {
+                    nameEditText.setError("Name is required!");
+                } else {
+                    nameEditText.setError(null);
+                }
+            }
         });
 
         emailEditText.addTextChangedListener(new TextWatcher() {
@@ -73,6 +83,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,25 +144,17 @@ public class SignupActivity extends AppCompatActivity {
 
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignupActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "createUserWithEmail:success");
+                        Toast.makeText(SignupActivity.this, "Account created successfully!",Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(SignupActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-    private void updateUI(FirebaseUser user) { }
+
     private void reload() { }
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

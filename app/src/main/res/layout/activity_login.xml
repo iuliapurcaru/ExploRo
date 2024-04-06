@@ -47,17 +47,16 @@
                 app:layout_constraintHorizontal_bias="1.0"/>
         <TextView
                 android:text="@string/sign_in_to_your_account"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
+                android:layout_width="334dp"
+                android:layout_height="45dp"
                 android:id="@+id/textView2"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:fontFamily="@font/poppins_bold"
                 android:fontWeight="700"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="184dp" app:layout_constraintHorizontal_bias="0.0"/>
+                android:layout_marginTop="176dp" app:layout_constraintHorizontal_bias="0.0"/>
         <EditText
                 android:id="@+id/email"
                 android:layout_width="0dp"
@@ -115,7 +114,6 @@
                 android:id="@+id/textView3"
                 android:textSize="20sp"
                 android:fontFamily="@font/poppins_bold"
-                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
