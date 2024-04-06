@@ -1,7 +1,8 @@
 plugins {
     id("com.android.application")
-        id("com.google.gms.google-services") version "4.4.1" apply false
+    id("com.google.gms.google-services") version "4.4.1" apply false
 }
+
 
 android {
     namespace = "com.example.exploro"
@@ -61,3 +62,5 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
 }
+
+apply(plugin = "com.google.gms.google-services")

@@ -1,6 +1,5 @@
 package com.example.exploro.signup;
 
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,22 +46,14 @@ public class SignupActivity extends AppCompatActivity {
         String errorPassword = getString(R.string.invalid_password);
         String confirmPassword = getString(R.string.passwords_do_not_match);
 
-        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseApp.initializeApp(SignupActivity.this);
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        loginButton.setOnClickListener(v -> onBackPressed());
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
-                Toast.makeText(getApplicationContext(), "No crash at least?", Toast.LENGTH_SHORT).show();
-            }
+        signupButton.setOnClickListener(v -> {
+            createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            Toast.makeText(getApplicationContext(), "No crash at least?", Toast.LENGTH_SHORT).show();
         });
 
         emailEditText.addTextChangedListener(new TextWatcher() {
