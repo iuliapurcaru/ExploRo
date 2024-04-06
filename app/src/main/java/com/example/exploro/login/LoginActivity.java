@@ -24,15 +24,17 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
-        final ProgressBar loadingProgressBar = binding.loading;
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
