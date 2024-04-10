@@ -24,7 +24,11 @@
     <string name="invalid_password">Password must have more than 8 characters!</string>
     <string name="passwords_do_not_match">Passwords do not match!</string>
 
-
+    <!-- Strings related to home activity -->
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
 </resources>

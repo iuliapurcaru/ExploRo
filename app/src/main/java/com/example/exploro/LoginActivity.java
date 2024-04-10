@@ -1,15 +1,14 @@
-package com.example.exploro.login;
+package com.example.exploro;
 
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.exploro.R;
 import com.example.exploro.databinding.ActivityLoginBinding;
-import com.example.exploro.signup.SignupActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,15 +29,22 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
+        final ProgressBar progressBar = binding.loading;
 
         mAuth = FirebaseAuth.getInstance();
 
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
             startActivity(intent);
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
         });
 
-        loginButton.setOnClickListener(v -> login(usernameEditText.getText().toString(), passwordEditText.getText().toString()));
+        loginButton.setOnClickListener(v -> {
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+        });
     }
 
     private void login(String email, String password) {
@@ -56,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     private void updateUI(FirebaseUser user) {
-        Toast.makeText(LoginActivity.this, "Hello " + user.getEmail(), Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.exploro.signup;
+package com.example.exploro;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -6,11 +6,11 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.exploro.R;
 import com.example.exploro.databinding.ActivitySignupBinding;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
         final EditText confirmPassEditText = binding.password2;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
+        final ProgressBar progressBar = binding.loading;
 
         String errorEmail = getString(R.string.invalid_email);
         String errorPassword = getString(R.string.invalid_password);
@@ -44,7 +45,11 @@ public class SignupActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> finish());
 
-        signupButton.setOnClickListener(v -> createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString()));
+        signupButton.setOnClickListener(v -> {
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+        });
 
         nameEditText.addTextChangedListener(new TextWatcher() {
             @Override
