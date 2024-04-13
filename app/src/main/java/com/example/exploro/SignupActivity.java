@@ -1,5 +1,6 @@
 package com.example.exploro;
 
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,12 +14,15 @@ import android.os.Bundle;
 
 import com.example.exploro.databinding.ActivitySignupBinding;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.*;
+
+import java.util.regex.Pattern;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class SignupActivity extends AppCompatActivity {
+
+    ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
     @Override
@@ -35,7 +39,7 @@ public class SignupActivity extends AppCompatActivity {
         final EditText confirmPassEditText = binding.password2;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
-        final ProgressBar progressBar = binding.loading;
+        progressBar = findViewById(R.id.loading);
 
         String errorEmail = getString(R.string.invalid_email);
         String errorPassword = getString(R.string.invalid_password);
@@ -43,12 +47,28 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.setOnClickListener(v -> finish());
+        loginButton.setOnClickListener(v ->{
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            finish();
+        });
 
         signupButton.setOnClickListener(v -> {
+            if (nameEditText.getText().toString().isEmpty() ||
+                    emailEditText.getText().toString().isEmpty() ||
+                    passwordEditText.getText().toString().isEmpty() ||
+                    confirmPassEditText.getText().toString().isEmpty()) {
+                Toast.makeText(SignupActivity.this, "Please fill in all fields!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidEmail(emailEditText.getText().toString()) || !isValidPassword(passwordEditText.getText().toString()) ||
+                    !confirmPassEditText.getText().toString().equals(passwordEditText.getText().toString())){
+                Toast.makeText(SignupActivity.this, "Failed to create account!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             progressBar.setVisibility(ProgressBar.VISIBLE);
-            createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
-            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString(), nameEditText.getText().toString());
         });
 
         nameEditText.addTextChangedListener(new TextWatcher() {
@@ -81,10 +101,10 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String email = s.toString().trim();
-                if (!isValidEmail(email)) {
-                    emailEditText.setError(errorEmail);
-                } else {
+                if (isValidEmail(email)) {
                     emailEditText.setError(null);
+                } else {
+                    emailEditText.setError(errorEmail);
                 }
             }
         });
@@ -102,10 +122,10 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String password = s.toString().trim();
-                if (!isValidPassword(password)) {
-                    passwordEditText.setError(errorPassword);
-                } else {
+                if (isValidPassword(password)) {
                     passwordEditText.setError(null);
+                } else {
+                    passwordEditText.setError(errorPassword);
                 }
             }
         });
@@ -144,19 +164,29 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private boolean isValidPassword(String password) {
-        return password.length() >= 8;
+        final Pattern textPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\d).+$");
+        return textPattern.matcher(password).matches() && password.length() >= 8;
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String email, String password, String name) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+                        assert user != null;
+                        user.updateProfile(profileUpdates);
                         Toast.makeText(SignupActivity.this, "Account created successfully!",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(SignupActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "Invalid email!",Toast.LENGTH_SHORT).show();
                     }
                 });
     }

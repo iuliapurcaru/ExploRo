@@ -21,7 +21,8 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="create_an_account">Create Account</string>
     <string name="invalid_email">Invalid email!</string>
-    <string name="invalid_password">Password must have more than 8 characters!</string>
+    <string name="invalid_password">
+        Password must have at least 8 characters, contain at least one uppercase character, one lowercase character and one number!</string>
     <string name="passwords_do_not_match">Passwords do not match!</string>
 
     <!-- Strings related to home activity -->

@@ -98,8 +98,6 @@
                 android:text="@string/action_sign_in"
                 android:textSize="20sp"
                 android:fontFamily="@font/poppins_bold"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/red_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

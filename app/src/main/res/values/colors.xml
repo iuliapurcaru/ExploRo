@@ -6,6 +6,6 @@
     <color name="red_500">#CC0000</color>
     <color name="red_700">#FF370F</color>
     <color name="blue_200">#0A0DC4</color>
-    <color name="teal_700">#FF018786</color>
     <color name="yellow_200">#EDE207</color>
+    <color name="yellow_500">#FCCA03</color>
 </resources>
