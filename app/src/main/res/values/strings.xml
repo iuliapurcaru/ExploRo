@@ -30,6 +30,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_account">Your account</string>
+    <string name="logout">Logout</string>
 
 
 </resources>
