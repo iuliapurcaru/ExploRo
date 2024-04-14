@@ -1,4 +1,4 @@
-package com.example.exploro.ui.dashboard;
+package com.example.exploro.ui.planning;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,22 +8,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.exploro.databinding.FragmentDashboardBinding;
+import com.example.exploro.databinding.FragmentPlanningBinding;
 
-public class DashboardFragment extends Fragment {
+public class PlanningFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentPlanningBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        PlanningViewModel planningViewModel =
+                new ViewModelProvider(this).get(PlanningViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentPlanningBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textPlanning;
+        planningViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

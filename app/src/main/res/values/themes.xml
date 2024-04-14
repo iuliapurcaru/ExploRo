@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
 <!--    <style name="Theme.ExploRo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
 <!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
@@ -17,14 +17,30 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.ExploRo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="Theme.ExploRo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">15sp</item>
+    </style>
+
   <!-- Base application theme. -->
     <style name="Base.Theme.ExploRo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryVariant">@color/red_200</item>
         <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/blue_200</item>
+        <item name="colorSecondaryVariant">@color/blue_500</item>
+        <item name="colorOnSecondary">@color/black</item>
     </style>
 </resources>

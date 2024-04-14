@@ -47,8 +47,8 @@
                 app:layout_constraintHorizontal_bias="1.0"/>
         <TextView
                 android:text="@string/sign_in_to_your_account"
-                android:layout_width="334dp"
-                android:layout_height="45dp"
+                android:layout_width="354dp"
+                android:layout_height="39dp"
                 android:id="@+id/textView2"
                 android:textSize="20sp"
                 android:fontFamily="@font/poppins_bold"
@@ -132,8 +132,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
-                app:layout_constraintVertical_bias="0.032"
-                app:layout_constraintHorizontal_bias="0.065"/>
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.058"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
