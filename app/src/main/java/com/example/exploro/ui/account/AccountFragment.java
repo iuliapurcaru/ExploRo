@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.exploro.HomeActivity;
 import com.example.exploro.LoginActivity;
 import com.example.exploro.databinding.FragmentAccountBinding;
 import com.google.firebase.auth.FirebaseAuth;
