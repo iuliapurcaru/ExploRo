@@ -15,6 +15,8 @@ import android.os.Bundle;
 import com.example.exploro.databinding.ActivitySignupBinding;
 
 import com.google.firebase.auth.*;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -180,6 +182,7 @@ public class SignupActivity extends AppCompatActivity {
                                 .build();
                         assert user != null;
                         user.updateProfile(profileUpdates);
+                        addUserData(user, name);
                         Toast.makeText(SignupActivity.this, "Account created successfully!",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                         startActivity(intent);
@@ -189,6 +192,14 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(SignupActivity.this, "Invalid email!",Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void addUserData(FirebaseUser user, String name) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("users/" + user.getUid());
+        usersRef.child("name").setValue(name);
+        usersRef.child("email").setValue(user.getEmail());
+        usersRef.child("currency").setValue("RON");
     }
 
     private void reload() { }

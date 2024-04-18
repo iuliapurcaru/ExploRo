@@ -39,6 +39,7 @@
 
     <!-- Strings related to account fragment -->
     <string name="logout">Logout</string>
+    <string name="account_settings">Account settings</string>
 
 
 </resources>

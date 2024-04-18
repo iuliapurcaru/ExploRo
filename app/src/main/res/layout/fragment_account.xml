@@ -7,20 +7,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.account.AccountFragment">
 
-    <TextView
-            android:id="@+id/text_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
     <ProgressBar
             android:id="@+id/loading"
             android:visibility="gone"
@@ -35,19 +21,53 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.3"/>
 
+    <TextView
+            android:id="@+id/text_account"
+            android:layout_width="302dp"
+            android:layout_height="36dp"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.129" app:layout_constraintHorizontal_bias="0.266"/>
     <Button
             android:id="@+id/logout"
             android:enabled="true"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_gravity="start"
-            android:layout_marginBottom="436dp"
+            android:layout_marginBottom="544dp"
             android:text="@string/logout"
             android:textSize="20sp"
-            android:fontFamily="@font/poppins_bold"
+            android:backgroundTint="@color/yellow_200"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.107"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.061" app:layout_constraintVertical_bias="0.715"/>
+    <TextView
+            android:id="@+id/account_settings"
+            android:text="@string/account_settings"
+            android:fontFamily="@font/poppins_light"
+            android:layout_width="201dp"
+            android:layout_height="26dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.278" app:layout_constraintHorizontal_bias="0.138"/>
+    <View
+            android:id="@+id/divider"
+            android:layout_width="409dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.257"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
