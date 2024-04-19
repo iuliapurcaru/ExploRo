@@ -20,8 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 public class SignupActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
@@ -175,30 +173,30 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        Log.d("SIGNUP", "createUserWithEmail:success");
+                        FirebaseUser mUser = mAuth.getCurrentUser();
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(name)
                                 .build();
-                        assert user != null;
-                        user.updateProfile(profileUpdates);
-                        addUserData(user, name);
+                        assert mUser != null;
+                        mUser.updateProfile(profileUpdates);
+                        addUserData(mUser, name);
                         Toast.makeText(SignupActivity.this, "Account created successfully!",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
                         Toast.makeText(SignupActivity.this, "Invalid email!",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void addUserData(FirebaseUser user, String name) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("users/" + user.getUid());
+    private void addUserData(FirebaseUser mUser, String name) {
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = mDatabase.getReference("users/" + mUser.getUid());
         usersRef.child("name").setValue(name);
-        usersRef.child("email").setValue(user.getEmail());
+        usersRef.child("email").setValue(mUser.getEmail());
         usersRef.child("currency").setValue("RON");
     }
 

@@ -22,24 +22,31 @@
     <string name="create_an_account">Create Account</string>
     <string name="invalid_email">Invalid email!</string>
     <string name="invalid_password">
-        Password must have at least 8 characters, contain at least one uppercase character, one lowercase character and one number!</string>
+        Password must have at least 8 characters, contain at least one uppercase character, one lowercase character and
+        one number!
+    </string>
     <string name="passwords_do_not_match">Passwords do not match!</string>
 
     <!-- Strings related to home activity -->
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_planning">Planning</string>
+    <string name="title_explore">Explore</string>
     <string name="title_account">Your account</string>
 
     <!-- Strings related to home fragment -->
 
 
-    <!-- Strings related to planning fragment -->
+    <!-- Strings related to explore fragment -->
 
 
     <!-- Strings related to account fragment -->
     <string name="logout">Logout</string>
+    <string name="user_preferences">User preferences</string>
     <string name="account_settings">Account settings</string>
+    <string name="change_currency">Change currency</string>
+    <string name="ron_currency">RON</string>
+    <string name="usd_currency">USD</string>
+    <string name="eur_currency">EUR</string>
 
 
 </resources>

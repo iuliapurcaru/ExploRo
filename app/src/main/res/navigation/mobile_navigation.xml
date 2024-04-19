@@ -12,10 +12,10 @@
             tools:layout="@layout/fragment_home"/>
 
     <fragment
-            android:id="@+id/navigation_planning"
-            android:name="com.example.exploro.ui.planning.PlanningFragment"
-            android:label="@string/title_planning"
-            tools:layout="@layout/fragment_planning"/>
+            android:id="@+id/navigation_explore"
+            android:name="com.example.exploro.ui.explore.ExploreFragment"
+            android:label="@string/title_explore"
+            tools:layout="@layout/fragment_explore"/>
 
     <fragment
             android:id="@+id/navigation_account"

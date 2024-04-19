@@ -1,4 +1,4 @@
-package com.example.exploro.ui.planning;
+package com.example.exploro.ui.explore;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,22 +8,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.exploro.databinding.FragmentPlanningBinding;
+import com.example.exploro.databinding.FragmentExploreBinding;
 
-public class PlanningFragment extends Fragment {
+public class ExploreFragment extends Fragment {
 
-    private FragmentPlanningBinding binding;
+    private FragmentExploreBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        PlanningViewModel planningViewModel =
-                new ViewModelProvider(this).get(PlanningViewModel.class);
+        ExploreViewModel exploreViewModel =
+                new ViewModelProvider(this).get(ExploreViewModel.class);
 
-        binding = FragmentPlanningBinding.inflate(inflater, container, false);
+        binding = FragmentExploreBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textPlanning;
-        planningViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textExplore;
+        exploreViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

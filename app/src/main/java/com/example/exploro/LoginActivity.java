@@ -10,9 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.exploro.databinding.ActivityLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class LoginActivity extends AppCompatActivity {
     ProgressBar progressBar;
@@ -63,17 +60,15 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        assert user != null;
-                        updateUI(user);
+                        Log.d("LOGIN", "signInWithEmail:success");
+                        updateUI();
                     } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Log.w("LOGIN", "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();

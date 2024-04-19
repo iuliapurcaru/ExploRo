@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.exploro.LoginActivity;
 import com.example.exploro.databinding.FragmentAccountBinding;
+import com.example.exploro.ui.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountFragment extends Fragment {
@@ -31,6 +33,7 @@ public class AccountFragment extends Fragment {
         final TextView textView = binding.textAccount;
         final Button logoutButton = binding.logout;
         final View progressBar = binding.loading;
+        final TextView currency = binding.currency;
 
         accountViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -39,6 +42,10 @@ public class AccountFragment extends Fragment {
             mAuth.signOut();
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
+        });
+
+        currency.setOnClickListener(v -> {
+            PopupMenu.showPopupCurrency(this, v, null);
         });
 
         return root;
