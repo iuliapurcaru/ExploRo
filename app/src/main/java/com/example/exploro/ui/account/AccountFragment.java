@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,7 +19,8 @@ public class AccountFragment extends Fragment {
 
     FirebaseAuth mAuth;
     private FragmentAccountBinding binding;
-
+    TextView changeCurrency;
+    View overlay;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         AccountViewModel accountViewModel =
                 new ViewModelProvider(this).get(AccountViewModel.class);
@@ -30,12 +30,13 @@ public class AccountFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
-        final TextView textView = binding.textAccount;
+        final TextView textAccount = binding.textAccount;
         final Button logoutButton = binding.logout;
         final View progressBar = binding.loading;
-        final TextView currency = binding.currency;
+        changeCurrency = binding.changeCurrency;
+        overlay = binding.overlay;
 
-        accountViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        accountViewModel.getText().observe(getViewLifecycleOwner(), textAccount::setText);
 
         logoutButton.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -44,8 +45,9 @@ public class AccountFragment extends Fragment {
             startActivity(intent);
         });
 
-        currency.setOnClickListener(v -> {
-            PopupMenu.showPopupCurrency(this, v, null);
+        changeCurrency.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+            showPopupMenu();
         });
 
         return root;
@@ -56,4 +58,9 @@ public class AccountFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void showPopupMenu() {
+        PopupMenu.showPopupCurrency(requireParentFragment(), changeCurrency, () -> overlay.setVisibility(View.GONE));
+    }
+
 }

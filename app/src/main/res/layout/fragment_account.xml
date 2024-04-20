@@ -20,6 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.3"/>
+
     <TextView
             android:id="@+id/text_account"
             android:layout_width="302dp"
@@ -47,7 +48,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.061" app:layout_constraintVertical_bias="0.715"/>
     <View
-            android:id="@+id/divider"
+            android:id="@+id/divider1"
             android:layout_width="409dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"
@@ -57,64 +58,117 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.257"/>
     <TextView
-            android:id="@+id/settings"
+            android:id="@+id/user_preferences"
             android:text="@string/user_preferences"
-            android:layout_width="201dp"
-            android:layout_height="31dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="23sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toTopOf="@+id/divider1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.138" app:layout_constraintVertical_bias="0.278" />
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.04" />
     <TextView
-            android:id="@+id/currency"
+            android:id="@+id/change_currency"
             android:text="@string/change_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:fontFamily="@font/poppins_light"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/settings"
-            app:layout_constraintTop_toBottomOf="@+id/settings"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/user_preferences"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.04"/>
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.035"/>
     <TextView
-            android:id="@+id/textView5"
-            android:text="TextView"
+            android:id="@+id/edit_cities"
+            android:text="@string/edit_cities"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:fontFamily="@font/poppins_light"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/settings"
-            app:layout_constraintTop_toBottomOf="@+id/currency"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/change_currency"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.02"/>
-    <TextView
-            android:id="@+id/textView6"
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:fontFamily="@font/poppins_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/settings"
-            app:layout_constraintTop_toBottomOf="@+id/textView5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.02"/>
-    <TextView
-            android:id="@+id/textView7"
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:fontFamily="@font/poppins_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/settings"
-            app:layout_constraintTop_toBottomOf="@+id/textView6"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.02"/>
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.05"/>
 
+    <View
+            android:id="@+id/divider2"
+            android:layout_width="409dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_cities"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.05"/>
+    <TextView
+            android:id="@+id/account_settings"
+            android:text="@string/account_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="23sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toTopOf="@+id/divider2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.05" />
+    <TextView
+            android:id="@+id/change_password"
+            android:text="@string/change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/account_settings"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.05"/>
+    <TextView
+            android:id="@+id/edit_email"
+            android:text="@string/edit_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/change_password"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.075"/>
+    <TextView
+            android:id="@+id/edit_name"
+            android:text="@string/edit_display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/edit_email"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.1"/>
+    <TextView
+            android:id="@+id/delete_account"
+            android:text="@string/delete_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/red_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/edit_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.125"/>
+
+    <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

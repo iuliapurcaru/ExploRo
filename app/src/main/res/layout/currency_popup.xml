@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/radio_group"
+            android:layout_width="260dp"
+            android:layout_height="220dp"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+    <TextView
+            android:id="@+id/change_currency"
+            android:text="@string/change_currency"
+            android:textSize="22sp"
             android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginTop="13dp"/>
+    <RadioButton
+            android:id="@+id/radio_option1"
+            android:textSize="20sp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/ron_currency"
+            android:layout_gravity="center_horizontal"/>
+    <RadioButton
+            android:id="@+id/radio_option2"
+            android:textSize="20sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/eur_currency"
+            android:layout_gravity="center_horizontal"/>
 
-        <RadioButton
-                android:id="@+id/radio_option1"
-                android:textSize="20sp"
-                android:layout_width="141dp"
-                android:layout_height="wrap_content"
-                android:text="@string/ron_currency"/>
-
-        <RadioButton
-                android:id="@+id/radio_option2"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/eur_currency"/>
-
-        <RadioButton
-                android:id="@+id/radio_option3"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/usd_currency"/>
+    <RadioButton
+            android:id="@+id/radio_option3"
+            android:textSize="20sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/usd_currency"
+            android:layout_gravity="center_horizontal"/>
 </RadioGroup>

@@ -36,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         final EditText nameEditText = binding.fullName;
         final EditText emailEditText = binding.email;
         final EditText passwordEditText = binding.password;
-        final EditText confirmPassEditText = binding.password2;
+        final EditText confirmPassEditText = binding.confirmPassword;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
         progressBar = findViewById(R.id.loading);

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <style name="Theme.ExploRo" parent="Base.Theme.ExploRo">
     <!-- Transparent system bars for edge-to-edge. -->
     <item name="android:navigationBarColor">@color/black</item>

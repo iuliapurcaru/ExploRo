@@ -1,21 +1,15 @@
 <resources>
     <string name="app_name">ExploRo</string>
-    <!-- Strings related to login -->
+    <!-- Strings related to log in -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Login</string>
     <string name="action_sign_in_short">Login</string>
-    <string name="login_failed">"Login failed"</string>
     <string name="sign_in_to_your_account">Sign in to your account</string>
-    <string name="welcome">ExploRo</string>
-    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="no_account">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
 
     <!-- Strings related to sign up -->
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="title_activity_signup">SignupActivity</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="full_name">Full Name</string>
     <string name="already_have_an_account">Already have an account?</string>
@@ -41,12 +35,17 @@
 
     <!-- Strings related to account fragment -->
     <string name="logout">Logout</string>
-    <string name="user_preferences">User preferences</string>
     <string name="account_settings">Account settings</string>
     <string name="change_currency">Change currency</string>
     <string name="ron_currency">RON</string>
     <string name="usd_currency">USD</string>
     <string name="eur_currency">EUR</string>
+    <string name="change_password">Change password</string>
+    <string name="edit_email">Edit email address</string>
+    <string name="delete_account">Delete account</string>
+    <string name="user_preferences">User preferences</string>
+    <string name="edit_cities">Edit favorite cities</string>
+    <string name="edit_display_name">Edit display name</string>
 
 
 </resources>
