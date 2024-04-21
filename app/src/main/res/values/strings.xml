@@ -6,6 +6,8 @@
     <string name="action_sign_in">Login</string>
     <string name="action_sign_in_short">Login</string>
     <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="enter_email">Enter your email to reset your password</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
 
@@ -40,12 +42,11 @@
     <string name="ron_currency">RON</string>
     <string name="usd_currency">USD</string>
     <string name="eur_currency">EUR</string>
-    <string name="change_password">Change password</string>
+    <string name="reset_password">Reset password</string>
     <string name="edit_email">Edit email address</string>
     <string name="delete_account">Delete account</string>
     <string name="user_preferences">User preferences</string>
     <string name="edit_cities">Edit favorite cities</string>
     <string name="edit_display_name">Edit display name</string>
-
 
 </resources>

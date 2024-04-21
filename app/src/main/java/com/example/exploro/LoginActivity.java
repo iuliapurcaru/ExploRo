@@ -2,18 +2,20 @@ package com.example.exploro;
 
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.exploro.databinding.ActivityLoginBinding;
+import com.example.exploro.ui.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
+    private TextView forgotPasswordTextView;
     private FirebaseAuth mAuth;
+    private View overlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +24,13 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        final EditText usernameEditText = binding.email;
+        final EditText emailEditText = binding.email;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
+        forgotPasswordTextView = binding.forgotPassword;
         progressBar = findViewById(R.id.loading);
+        overlay = binding.overlay;
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -37,12 +41,17 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-            if (usernameEditText.getText().toString().isEmpty() || passwordEditText.getText().toString().isEmpty()) {
+            if (emailEditText.getText().toString().isEmpty() || passwordEditText.getText().toString().isEmpty()) {
                 Toast.makeText(LoginActivity.this, "Please fill in all fields!", Toast.LENGTH_SHORT).show();
                 return;
             }
             progressBar.setVisibility(ProgressBar.VISIBLE);
-            login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            login(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        });
+
+        forgotPasswordTextView.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+            showPopupMenu();
         });
     }
 
@@ -72,5 +81,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void showPopupMenu() {
+        PopupMenu.forgotPassword(this, forgotPasswordTextView, () -> overlay.setVisibility(View.GONE));
     }
 }

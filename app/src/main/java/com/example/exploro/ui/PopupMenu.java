@@ -1,14 +1,17 @@
 package com.example.exploro.ui;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
-import android.widget.RadioGroup;
+import android.widget.*;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import com.example.exploro.LoginActivity;
 import com.example.exploro.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,7 +22,6 @@ public class PopupMenu {
 
     private static FirebaseAuth mAuth;
     private static FirebaseDatabase mDatabase;
-    private static DatabaseReference mCurrencyRef;
     private static FirebaseUser mUser;
 
     public static void showPopupCurrency(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
@@ -28,38 +30,42 @@ public class PopupMenu {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance();
+
         assert mUser != null;
-        mCurrencyRef = mDatabase.getReference("users/" + mUser.getUid() + "/currency/");
+        DatabaseReference mCurrencyReference = mDatabase.getReference("users/" + mUser.getUid() + "/currency/");
 
-        RadioGroup radioGroup = popupView.findViewById(R.id.radio_group);
+        RadioButton radioOptionRON = popupView.findViewById(R.id.radio_option1);
+        RadioButton radioOptionEUR = popupView.findViewById(R.id.radio_option2);
+        RadioButton radioOptionUSD = popupView.findViewById(R.id.radio_option3);
+        final RadioGroup radioGroup = popupView.findViewById(R.id.radio_group);
 
-        mCurrencyRef.addValueEventListener(new ValueEventListener() {
+        mCurrencyReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
 
-                mCurrencyRef.removeEventListener(this);
                 String currencyValue = dataSnapshot.getValue(String.class);
+                RadioButton selectedRadioButton = null;
 
                 if (currencyValue != null) {
                     switch (currencyValue) {
                         case "RON":
-                            radioGroup.check(R.id.radio_option1);
+                            selectedRadioButton = radioOptionRON;
                             break;
                         case "EUR":
-                            radioGroup.check(R.id.radio_option2);
+                            selectedRadioButton = radioOptionEUR;
                             break;
                         case "USD":
-                            radioGroup.check(R.id.radio_option3);
+                            selectedRadioButton = radioOptionUSD;
                             break;
                     }
+                    assert selectedRadioButton != null;
+                    selectedRadioButton.setChecked(true);
                 }
-
-                mCurrencyRef.addValueEventListener(this);
             }
 
             @Override
             public void onCancelled(@NotNull DatabaseError error) {
-                // Failed to read value
+                Log.w("LOGIN", "Failed to get database data.", error.toException());
             }
         });
 
@@ -73,7 +79,7 @@ public class PopupMenu {
                 selectedOption = "USD";
             }
 
-            mCurrencyRef.setValue(selectedOption);
+            mCurrencyReference.setValue(selectedOption);
         });
 
         PopupWindow popupWindow = new PopupWindow(
@@ -81,17 +87,47 @@ public class PopupMenu {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-
-        Drawable drawable = ContextCompat.getDrawable(fragment.requireContext(), R.drawable.popup_background);
-        popupWindow.setBackgroundDrawable(drawable);
-
+//        Drawable popupBackground = ContextCompat.getDrawable(fragment.requireContext(), R.drawable.popup_background);
+//        popupWindow.setBackgroundDrawable(popupBackground);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
-
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
         if (dismissListener != null) {
             popupWindow.setOnDismissListener(dismissListener);
         }
+    }
+
+    public static void forgotPassword(LoginActivity activity, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(activity).inflate(R.layout.forgot_password, null);
+
+        final EditText emailEditText = popupView.findViewById(R.id.email);
+        final Button resetPassButton = popupView.findViewById(R.id.reset_password);
+        mAuth = FirebaseAuth.getInstance();
+
+        resetPassButton.setOnClickListener(v -> {
+            if (emailEditText.getText().toString().isEmpty()) {
+                Toast.makeText(activity, "Please fill in email field!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mAuth.sendPasswordResetEmail(emailEditText.getText().toString());
+            Toast.makeText(activity, "Reset password email sent to " + emailEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+        });
+
+        PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+        if (dismissListener != null) {
+            popupWindow.setOnDismissListener(dismissListener);
+        }
+
     }
 }

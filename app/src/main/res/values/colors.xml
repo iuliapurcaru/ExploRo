@@ -9,4 +9,5 @@
     <color name="blue_500">#080BA6</color>
     <color name="yellow_200">#EDE207</color>
     <color name="yellow_500">#FCCA03</color>
+    <color name="dark_grey">#333333</color>
 </resources>
