@@ -2,17 +2,17 @@ package com.example.exploro.ui;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import com.example.exploro.LoginActivity;
 import com.example.exploro.R;
+import com.example.exploro.ui.account.AccountViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
@@ -82,25 +82,11 @@ public class PopupMenu {
             mCurrencyReference.setValue(selectedOption);
         });
 
-        PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-//        Drawable popupBackground = ContextCompat.getDrawable(fragment.requireContext(), R.drawable.popup_background);
-//        popupWindow.setBackgroundDrawable(popupBackground);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
-
-        if (dismissListener != null) {
-            popupWindow.setOnDismissListener(dismissListener);
-        }
+        configurePopupWindow(anchorView, dismissListener, popupView);
     }
 
-    public static void forgotPassword(LoginActivity activity, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(activity).inflate(R.layout.forgot_password, null);
+    public static void showForgotPasswordPopup(LoginActivity activity, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(activity).inflate(R.layout.forgot_password_popup, null);
 
         final EditText emailEditText = popupView.findViewById(R.id.email);
         final Button resetPassButton = popupView.findViewById(R.id.reset_password);
@@ -115,6 +101,26 @@ public class PopupMenu {
             Toast.makeText(activity, "Reset password email sent to " + emailEditText.getText().toString(), Toast.LENGTH_SHORT).show();
         });
 
+        configurePopupWindow(anchorView, dismissListener, popupView);
+
+    }
+
+    public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.reset_password_popup, (ViewGroup) fragment.getView(), false);
+
+        AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        final TextView emailTextView = popupView.findViewById(R.id.reset_email);
+
+        accountViewModel.getEmailText().observe(fragment.getViewLifecycleOwner(), emailTextView::setText);
+
+        configurePopupWindow(anchorView, dismissListener, popupView);
+    }
+
+    private static void configurePopupWindow(View anchorView, PopupWindow.OnDismissListener dismissListener, View popupView) {
         PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -128,6 +134,5 @@ public class PopupMenu {
         if (dismissListener != null) {
             popupWindow.setOnDismissListener(dismissListener);
         }
-
     }
 }

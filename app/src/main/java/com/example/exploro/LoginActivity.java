@@ -84,6 +84,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showPopupMenu() {
-        PopupMenu.forgotPassword(this, forgotPasswordTextView, () -> overlay.setVisibility(View.GONE));
+        PopupMenu.showForgotPasswordPopup(this, forgotPasswordTextView, () -> overlay.setVisibility(View.GONE));
     }
 }

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +21,10 @@ public class AccountFragment extends Fragment {
     FirebaseAuth mAuth;
     private FragmentAccountBinding binding;
     private TextView changeCurrency;
+    private TextView resetPassword;
+    private TextView editEmail;
+    private TextView editDisplayName;
+    private TextView deleteAccount;
     private View overlay;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,11 +39,14 @@ public class AccountFragment extends Fragment {
         final TextView textAccount = binding.textAccount;
         final Button logoutButton = binding.logout;
         final View progressBar = binding.loading;
-        changeCurrency = binding.changeCurrency;
-        final TextView changePassword = binding.changePassword;
         overlay = binding.overlay;
+        changeCurrency = binding.changeCurrency;
+        resetPassword = binding.resetPassword;
+        editEmail = binding.editEmail;
+        editDisplayName = binding.editName;
+        deleteAccount = binding.deleteAccount;
 
-        accountViewModel.getText().observe(getViewLifecycleOwner(), textAccount::setText);
+        accountViewModel.getDisplayNameText().observe(getViewLifecycleOwner(), textAccount::setText);
 
         logoutButton.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -51,14 +57,26 @@ public class AccountFragment extends Fragment {
 
         changeCurrency.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
-            showPopupMenu();
+            showChangeCurrencyPopupMenu();
         });
 
-        changePassword.setOnClickListener(v -> {
+        resetPassword.setOnClickListener(v -> {
             FirebaseUser mUser = mAuth.getCurrentUser();
             assert mUser != null;
-            changePassword(mUser);
-            Toast.makeText(requireContext(), "Reset password email sent to " + mUser.getEmail(), Toast.LENGTH_SHORT).show();
+            resetPassword(mUser);
+        });
+
+        editEmail.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+//            PopupMenu.showEditEmailPopup(requireParentFragment(), editEmail, () -> overlay.setVisibility(View.GONE));
+        });
+
+        editDisplayName.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+        });
+
+        deleteAccount.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
         });
 
         return root;
@@ -70,14 +88,20 @@ public class AccountFragment extends Fragment {
         binding = null;
     }
 
-    private void showPopupMenu() {
-        PopupMenu.showPopupCurrency(requireParentFragment(), changeCurrency, () -> overlay.setVisibility(View.GONE));
-    }
-
-    private void changePassword(FirebaseUser user) {
+    private void resetPassword(FirebaseUser user) {
         String email = user.getEmail();
         mAuth = FirebaseAuth.getInstance();
         assert email != null;
         mAuth.sendPasswordResetEmail(email);
+        overlay.setVisibility(View.VISIBLE);
+        showResetPasswordPopupMenu();
+    }
+    
+    private void showChangeCurrencyPopupMenu() {
+        PopupMenu.showPopupCurrency(requireParentFragment(), changeCurrency, () -> overlay.setVisibility(View.GONE));
+    }
+
+    private void showResetPasswordPopupMenu() {
+        PopupMenu.showResetPasswordPopup(requireParentFragment(), resetPassword, () -> overlay.setVisibility(View.GONE));
     }
 }
