@@ -1,7 +1,6 @@
 package com.example.exploro.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
-import org.jetbrains.annotations.NotNull;
 
-import com.example.exploro.domain.AccountManager;
+import com.example.exploro.domain.UserManager;
 import com.example.exploro.databinding.FragmentAccountBinding;
 import com.example.exploro.utils.PopupMenu;
-import com.google.firebase.database.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -45,29 +42,11 @@ public class AccountFragment extends Fragment {
         editDisplayName = binding.editName;
         deleteAccount = binding.deleteAccount;
 
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mNameReference = mDatabase.getReference("users/" + mUser.getUid() + "/display_name");
-
-        mNameReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String displayName = dataSnapshot.getValue(String.class);
-                    textAccount.setText(displayName);
-                } else {
-                    textAccount.setText(" ");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
+        UserManager.fetchDisplayName(textAccount);
 
         logoutButton.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
-            AccountManager.signOut(this);
+            UserManager.signOut(this);
         });
 
         resetPassword.setOnClickListener(v -> {
@@ -95,7 +74,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void resetPassword(FirebaseUser user) {
-        AccountManager.resetPassword();
+        UserManager.resetPassword();
         overlay.setVisibility(View.VISIBLE);
         showResetPasswordPopupMenu(user);
     }

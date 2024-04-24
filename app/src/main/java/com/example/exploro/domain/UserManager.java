@@ -2,6 +2,7 @@ package com.example.exploro.domain;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
@@ -13,7 +14,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AccountManager {
+public class UserManager {
 
     private static FirebaseAuth mAuth;
     private static FirebaseUser mUser;
@@ -33,6 +34,28 @@ public class AccountManager {
                 Toast.makeText(activity, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
             }
             popupWindow.dismiss();
+        });
+    }
+
+    public static void fetchDisplayName(android.widget.TextView textViewName) {
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mNameReference = mDatabase.getReference("users/" + mUser.getUid() + "/display_name");
+
+        mNameReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String displayName = task.getResult().getValue(String.class);
+                if (displayName != null) {
+                    mNameReference.setValue(displayName);
+                    String textName = "Hello, " + displayName + "!";
+                    textViewName.setText(textName);
+                } else {
+                    textViewName.setText(" ");
+                }
+            } else {
+                Log.w("DATABASE", "Failed to get database data.");
+            }
         });
     }
 

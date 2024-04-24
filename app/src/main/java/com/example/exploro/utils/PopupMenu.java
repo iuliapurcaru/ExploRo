@@ -11,7 +11,7 @@ import android.widget.*;
 import androidx.fragment.app.Fragment;
 
 import com.example.exploro.R;
-import com.example.exploro.domain.AccountManager;
+import com.example.exploro.domain.UserManager;
 import com.example.exploro.domain.AttractionManager;
 import com.example.exploro.domain.TripManager;
 import com.example.exploro.models.Trip;
@@ -27,7 +27,7 @@ public class PopupMenu {
         final Button resetPasswordButton = popupView.findViewById(com.example.exploro.R.id.reset_password);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        resetPasswordButton.setOnClickListener(v -> AccountManager.forgotPassword(emailEditText.getText().toString(), activity, popupWindow));
+        resetPasswordButton.setOnClickListener(v -> UserManager.forgotPassword(emailEditText.getText().toString(), activity, popupWindow));
     }
 
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener, String email) {
@@ -48,7 +48,7 @@ public class PopupMenu {
         final Button confirmButton = popupView.findViewById(com.example.exploro.R.id.confirm_button);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        confirmButton.setOnClickListener(v -> AccountManager.editDisplayName(displayNameEditText.getText().toString(), fragment, popupWindow));
+        confirmButton.setOnClickListener(v -> UserManager.editDisplayName(displayNameEditText.getText().toString(), fragment, popupWindow));
     }
 
     public static void showDeleteAccountPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
@@ -59,7 +59,7 @@ public class PopupMenu {
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         yesButton.setOnClickListener(v -> {
-            AccountManager.deleteAccount(fragment);
+            UserManager.deleteAccount(fragment);
             popupWindow.dismiss();
         });
 

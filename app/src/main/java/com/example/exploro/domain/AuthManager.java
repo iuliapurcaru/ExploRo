@@ -36,13 +36,27 @@ public class AuthManager {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(activity, MainActivity.class);
-                        activity.startActivity(intent);
-                        activity.finish();
+                        if (mAuth.getCurrentUser() == null) {
+                            Log.w(TAG, "signInWithEmail:failure");
+                            return;
+                        }
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        checkEmailVerification(user, activity);
                     } else {
                         Toast.makeText(activity, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private static void checkEmailVerification(FirebaseUser user, Activity activity) {
+        if (user.isEmailVerified()) {
+            Intent intent = new Intent(activity, MainActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
+        } else {
+            Toast.makeText(activity, "Please verify your email!", Toast.LENGTH_SHORT).show();
+            sendEmailVerification(user, activity);
+        }
     }
 
     public static void createAccount(String name, String email, String password, String confirmPassword, Activity activity, ProgressBar progressBar) {
@@ -72,9 +86,13 @@ public class AuthManager {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(name)
                                 .build();
-                        assert mUser != null;
+                        if (mUser == null) {
+                            Log.w(TAG, "createUserWithEmail:failure");
+                            return;
+                        }
                         mUser.updateProfile(profileUpdates);
-                        addUserData(mUser, name);
+                        addUserToDatabase(mUser, name);
+                        sendEmailVerification(mUser, activity);
                         Toast.makeText(activity, "Account created successfully!",Toast.LENGTH_SHORT).show();
                         activity.finish();
                     } else {
@@ -84,7 +102,18 @@ public class AuthManager {
                 });
     }
 
-    public static void addUserData(FirebaseUser mUser, String name) {
+    private static void sendEmailVerification(FirebaseUser user, Activity activity) {
+        user.sendEmailVerification().addOnCompleteListener(activity, task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(activity, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e(TAG, "sendEmailVerification:failure", task.getException());
+                Toast.makeText(activity, "Failed to send verification email!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private static void addUserToDatabase(FirebaseUser mUser, String name) {
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = mDatabase.getReference("users/" + mUser.getUid());
         usersReference.child("display_name").setValue(name);

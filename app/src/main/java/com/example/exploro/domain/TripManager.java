@@ -6,10 +6,12 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.models.Attraction;
 import com.example.exploro.models.Trip;
+import com.example.exploro.ui.adapters.HomeSavedTripsAdapter;
+import com.example.exploro.utils.VariousUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +85,49 @@ public class TripManager {
                 }
             } else {
                 Log.w(TAG, "Failed to delete trip.", task.getException());
+            }
+        });
+    }
+
+    public static void fetchSavedTrips(android.widget.TextView textViewTrips, HomeSavedTripsAdapter homeSavedTripsAdapter) {
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        DatabaseReference mTripsReference = FirebaseDatabase.getInstance().getReference("users/" + mUser.getUid() + "/trips");
+        mTripsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                List<Trip> trips = new ArrayList<>();
+                if (dataSnapshot.exists()) {
+                    String tripsText = "Your trips:";
+                    textViewTrips.setText(tripsText);
+                    for (DataSnapshot tripSnapshot : dataSnapshot.getChildren()) {
+                        String tripID = tripSnapshot.getKey();
+                        String destinationID = tripSnapshot.child("destination_id").getValue(String.class);
+                        String startDate = tripSnapshot.child("start_date").getValue(String.class);
+                        String endDate = tripSnapshot.child("end_date").getValue(String.class);
+                        int numberOfAdults = VariousUtils.getValueOrDefault(tripSnapshot.child("number_adults"), Integer.class, -1);
+                        int numberOfStudents = VariousUtils.getValueOrDefault(tripSnapshot.child("number_students"), Integer.class, -1);
+                        int numberOfDays = VariousUtils.getValueOrDefault(tripSnapshot.child("number_days"), Integer.class, -1);
+                        List<String> selectedAttractions = new ArrayList<>();
+                        for (DataSnapshot attractionSnapshot : tripSnapshot.child("attractions").getChildren()) {
+                            selectedAttractions.add(attractionSnapshot.getValue(String.class));
+                        }
+                        Trip trip = new Trip(tripID, destinationID, startDate, endDate, numberOfDays, numberOfAdults, numberOfStudents, selectedAttractions);
+                        trips.add(trip);
+                    }
+                    homeSavedTripsAdapter.setTrips(trips);
+                    homeSavedTripsAdapter.notifyDataSetChanged();
+                } else {
+                    String tripsText = "You haven't planned any trips yet!";
+                    textViewTrips.setText(tripsText);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
             }
         });
     }
