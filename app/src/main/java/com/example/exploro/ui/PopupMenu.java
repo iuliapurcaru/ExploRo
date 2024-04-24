@@ -126,8 +126,6 @@ public class PopupMenu {
     public static void showEditDisplayNamePopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
         View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.edit_display_name_popup, (ViewGroup) fragment.getView(), false);
 
-        AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
@@ -163,9 +161,7 @@ public class PopupMenu {
 
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        noButton.setOnClickListener(v -> {
-            popupWindow.dismiss();
-        });
+        noButton.setOnClickListener(v -> popupWindow.dismiss());
 
         yesButton.setOnClickListener(v -> {
             assert mUser != null;
