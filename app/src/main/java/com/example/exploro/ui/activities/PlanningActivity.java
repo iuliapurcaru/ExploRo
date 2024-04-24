@@ -1,10 +1,8 @@
 package com.example.exploro.ui.activities;
 
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,20 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.databinding.ActivityPlanningBinding;
 import com.example.exploro.domain.PlanningManager;
 import com.example.exploro.models.Trip;
-import com.example.exploro.R;
-import com.example.exploro.ui.adapters.PlanningAttractionsAdapter;
-import com.google.firebase.database.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlanningActivity extends AppCompatActivity {
 
-    private final List<String> attractionsNames = new ArrayList<>();
-    private final List<String> attractionsIDs = new ArrayList<>();
     private final List<String> selectedAttractions = new ArrayList<>();
-    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +36,6 @@ public class PlanningActivity extends AppCompatActivity {
         final EditText numberOfAdultsEditText = binding.numAdults;
         final EditText numberOfStudentsEditText = binding.numStudents;
         final Button continueButton = binding.continueButton;
-
-
 
         startDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(startDateEditText, this));
         endDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(endDateEditText, this));
@@ -69,10 +58,10 @@ public class PlanningActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = binding.recyclerView;
+        RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        getAttractionsNames(destinationID);
+        PlanningManager.displayAttractions(destinationID, selectedAttractions, binding, recyclerView);
     }
 
     private boolean checkValidity(EditText startDateEditText, EditText endDateEditText, EditText numberOfAdultsEditText, EditText numberOfStudentsEditText, List<String> selectedAttractions) {
@@ -112,48 +101,5 @@ public class PlanningActivity extends AppCompatActivity {
         }
 
         return isValid;
-    }
-
-    private void getAttractionsNames(String destinationID) {
-
-        DatabaseReference mDestinationNameReference = FirebaseDatabase.getInstance().getReference("destinations/" + destinationID + "/text");
-
-        mDestinationNameReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String destinationName = "Plan your trip to " + dataSnapshot.getValue(String.class);
-                    TextView destinationTextView = findViewById(R.id.textViewDestination);
-                    destinationTextView.setText(destinationName);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
-
-        DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference("attractions/" + destinationID);
-        mAttractionsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String attractionID = snapshot.getKey();
-                        attractionsIDs.add(attractionID);
-                        String attractionName = snapshot.child("name").getValue(String.class);
-                        attractionsNames.add(attractionName);
-                    }
-                    PlanningAttractionsAdapter adapter = new PlanningAttractionsAdapter(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
     }
 }

@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
+import com.example.exploro.databinding.ActivityPlanningBinding;
+import com.example.exploro.ui.adapters.PlanningAttractionsAdapter;
+import com.google.firebase.database.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class PlanningManager {
 
     private static final String TAG = PlanningManager.class.getSimpleName();
+
+    private static final List<String> attractionsNames = new ArrayList<>();
+    private static final List<String> attractionsIDs = new ArrayList<>();
 
     public static void showDatePicker(EditText editText, Activity activity) {
         final Calendar calendar = Calendar.getInstance();
@@ -69,6 +75,49 @@ public class PlanningManager {
             Log.e(TAG, "Error parsing start date", e);
         }
         return calendar;
+    }
+
+    public static void displayAttractions(String destinationID, List<String> selectedAttractions, ActivityPlanningBinding binding, androidx.recyclerview.widget.RecyclerView recyclerView) {
+
+        DatabaseReference mDestinationNameReference = FirebaseDatabase.getInstance().getReference("destinations/" + destinationID + "/text");
+
+        mDestinationNameReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String destinationName = "Plan your trip to " + dataSnapshot.getValue(String.class);
+                    TextView destinationTextView = binding.textViewDestination;
+                    destinationTextView.setText(destinationName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
+
+        DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference("attractions/" + destinationID);
+        mAttractionsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String attractionID = snapshot.getKey();
+                        attractionsIDs.add(attractionID);
+                        String attractionName = snapshot.child("name").getValue(String.class);
+                        attractionsNames.add(attractionName);
+                    }
+                    PlanningAttractionsAdapter adapter = new PlanningAttractionsAdapter(attractionsNames, selectedAttractions, binding.overlay, destinationID, attractionsIDs);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
     }
 
 }
