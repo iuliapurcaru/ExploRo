@@ -48,5 +48,10 @@
     <string name="user_preferences">User preferences</string>
     <string name="edit_cities">Edit favorite cities</string>
     <string name="edit_display_name">Edit display name</string>
+    <string name="confirm_name">Confirm</string>
+    <string name="change_display_name">Change your display name</string>
+    <string name="confirm_delete_account">Are you sure you want to delete your account?</string>
+    <string name="confirm_delete">Yes, confirm</string>
+    <string name="no_delete_account">No</string>
 
 </resources>

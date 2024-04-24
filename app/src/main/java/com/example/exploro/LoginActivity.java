@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Log.d("LOGIN", "signInWithEmail:success");
                         updateUI();
+                        finish();
                     } else {
                         Log.w("LOGIN", "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();

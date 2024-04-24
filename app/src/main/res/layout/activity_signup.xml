@@ -37,7 +37,7 @@
                 android:layout_marginTop="92dp"
                 app:layout_constraintHorizontal_bias="0.0"/>
         <EditText
-                android:id="@+id/fullName"
+                android:id="@+id/full_name"
                 android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="180dp"
@@ -64,7 +64,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
-                app:layout_constraintTop_toBottomOf="@+id/fullName"/>
+                app:layout_constraintTop_toBottomOf="@+id/full_name"/>
         <EditText
                 android:id="@+id/password"
                 android:layout_width="370dp"

@@ -15,8 +15,11 @@ import com.example.exploro.R;
 import com.example.exploro.ui.account.AccountViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PopupMenu {
 
@@ -90,6 +93,8 @@ public class PopupMenu {
 
         final EditText emailEditText = popupView.findViewById(R.id.email);
         final Button resetPassButton = popupView.findViewById(R.id.reset_password);
+        PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
+
         mAuth = FirebaseAuth.getInstance();
 
         resetPassButton.setOnClickListener(v -> {
@@ -99,10 +104,8 @@ public class PopupMenu {
             }
             mAuth.sendPasswordResetEmail(emailEditText.getText().toString());
             Toast.makeText(activity, "Reset password email sent to " + emailEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
         });
-
-        configurePopupWindow(anchorView, dismissListener, popupView);
-
     }
 
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
@@ -120,7 +123,64 @@ public class PopupMenu {
         configurePopupWindow(anchorView, dismissListener, popupView);
     }
 
-    private static void configurePopupWindow(View anchorView, PopupWindow.OnDismissListener dismissListener, View popupView) {
+    public static void showEditDisplayNamePopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.edit_display_name_popup, (ViewGroup) fragment.getView(), false);
+
+        AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        final EditText displayNameEditText = popupView.findViewById(R.id.full_name);
+        final Button confirmButton = popupView.findViewById(R.id.confirm_button);
+
+        PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
+
+        confirmButton.setOnClickListener(v -> {
+            if (displayNameEditText.getText().toString().isEmpty()) {
+                Toast.makeText(fragment.getContext(), "Please fill in name field!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(displayNameEditText.getText().toString())
+                    .build();
+            assert mUser != null;
+            mUser.updateProfile(profileUpdates);
+            Toast.makeText(fragment.getContext(), "Display name updated!", Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
+        });
+    }
+
+    public static boolean showDeleteAccountPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.delete_account_popup, (ViewGroup) fragment.getView(), false);
+
+        AtomicReference<Boolean> checkDelete = new AtomicReference<>(false);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        final Button yesButton = popupView.findViewById(R.id.yes_button);
+        final Button noButton = popupView.findViewById(R.id.no_button);
+
+        PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
+
+        noButton.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+
+        yesButton.setOnClickListener(v -> {
+            assert mUser != null;
+            mUser.delete();
+            Toast.makeText(fragment.getContext(), "Account deleted!", Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
+            mAuth.signOut();
+            checkDelete.set(true);
+        });
+
+        return checkDelete.get();
+    }
+
+
+    private static PopupWindow configurePopupWindow(View anchorView, PopupWindow.OnDismissListener dismissListener, View popupView) {
         PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -134,5 +194,7 @@ public class PopupMenu {
         if (dismissListener != null) {
             popupWindow.setOnDismissListener(dismissListener);
         }
+
+        return popupWindow;
     }
 }
