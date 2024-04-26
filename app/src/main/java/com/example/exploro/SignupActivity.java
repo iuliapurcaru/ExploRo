@@ -1,6 +1,5 @@
 package com.example.exploro;
 
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class SignupActivity extends AppCompatActivity {
         ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        final EditText nameEditText = binding.fullName;
+        final EditText nameEditText = binding.displayName;
         final EditText emailEditText = binding.email;
         final EditText passwordEditText = binding.password;
         final EditText confirmPassEditText = binding.confirmPassword;
@@ -182,8 +181,6 @@ public class SignupActivity extends AppCompatActivity {
                         mUser.updateProfile(profileUpdates);
                         addUserData(mUser, name);
                         Toast.makeText(SignupActivity.this, "Account created successfully!",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                        startActivity(intent);
                         finish();
                     } else {
                         Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
@@ -194,10 +191,11 @@ public class SignupActivity extends AppCompatActivity {
 
     private void addUserData(FirebaseUser mUser, String name) {
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = mDatabase.getReference("users/" + mUser.getUid());
-        usersRef.child("name").setValue(name);
-        usersRef.child("email").setValue(mUser.getEmail());
-        usersRef.child("currency").setValue("RON");
+        DatabaseReference usersReference = mDatabase.getReference("users/" + mUser.getUid());
+        usersReference.child("display_name").setValue(name);
+        usersReference.child("email").setValue(mUser.getEmail());
+        usersReference.child("currency").setValue("RON");
+        usersReference.child("distance_unit").setValue("kilometers (km)");
     }
 
     private void reload() { }

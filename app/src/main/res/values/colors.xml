@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red_200">#FC3838</color>
     <color name="red_500">#CC0000</color>
-    <color name="red_700">#FF370F</color>
+<!--    <color name="red_700">#FF370F</color>-->
     <color name="blue_200">#0A0DC4</color>
     <color name="blue_500">#080BA6</color>
     <color name="yellow_200">#EDE207</color>

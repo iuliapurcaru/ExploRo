@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.exploro.LoginActivity;
 import com.example.exploro.databinding.FragmentAccountBinding;
-import com.example.exploro.ui.PopupMenu;
+import com.example.exploro.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,8 +23,8 @@ public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     private TextView changeCurrency;
+    private TextView changeDistance;
     private TextView resetPassword;
-    private TextView editEmail;
     private TextView editDisplayName;
     private TextView deleteAccount;
     private View overlay;
@@ -44,8 +44,8 @@ public class AccountFragment extends Fragment {
         final View progressBar = binding.loading;
         overlay = binding.overlay;
         changeCurrency = binding.changeCurrency;
+        changeDistance = binding.changeDistance;
         resetPassword = binding.resetPassword;
-        editEmail = binding.editEmail;
         editDisplayName = binding.editName;
         deleteAccount = binding.deleteAccount;
 
@@ -63,20 +63,19 @@ public class AccountFragment extends Fragment {
             showChangeCurrencyPopupMenu();
         });
 
+        changeDistance.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+            showChangeDistancePopupMenu();
+        });
+
         resetPassword.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
             resetPassword(mUser);
         });
 
-        editEmail.setOnClickListener(v -> {
-            overlay.setVisibility(View.VISIBLE);
-            editEmail(mUser);
-        });
-
         editDisplayName.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
             editDisplayName();
-            accountViewModel.getDisplayNameText().observe(getViewLifecycleOwner(), textAccount::setText);
         });
 
         deleteAccount.setOnClickListener(v -> {
@@ -102,15 +101,6 @@ public class AccountFragment extends Fragment {
         showResetPasswordPopupMenu();
     }
 
-    private void editEmail(FirebaseUser user) {
-//        String email = user.getEmail();
-//        mAuth = FirebaseAuth.getInstance();
-//        assert email != null;
-//        mAuth.send(email);
-//        overlay.setVisibility(View.VISIBLE);
-//        showResetPasswordPopupMenu();
-    }
-
     private void editDisplayName() {
         overlay.setVisibility(View.VISIBLE);
         showEditDisplayNamePopupMenu();
@@ -125,12 +115,12 @@ public class AccountFragment extends Fragment {
         PopupMenu.showPopupCurrency(requireParentFragment(), changeCurrency, () -> overlay.setVisibility(View.GONE));
     }
 
-    private void showResetPasswordPopupMenu() {
-        PopupMenu.showResetPasswordPopup(requireParentFragment(), resetPassword, () -> overlay.setVisibility(View.GONE));
+    private void showChangeDistancePopupMenu() {
+        PopupMenu.showPopupDistance(requireParentFragment(), changeDistance, () -> overlay.setVisibility(View.GONE));
     }
 
-    private void showEditEmailPopupMenu() {
-//        PopupMenu.showEditEmailPopup(requireParentFragment(), editEmail, () -> overlay.setVisibility(View.GONE));
+    private void showResetPasswordPopupMenu() {
+        PopupMenu.showResetPasswordPopup(requireParentFragment(), resetPassword, () -> overlay.setVisibility(View.GONE));
     }
 
     private void showEditDisplayNamePopupMenu() {
@@ -138,9 +128,6 @@ public class AccountFragment extends Fragment {
     }
 
     private void showDeleteAccountPopupMenu() {
-        if (PopupMenu.showDeleteAccountPopup(requireParentFragment(), deleteAccount, () -> overlay.setVisibility(View.GONE))) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-        }
+        PopupMenu.showDeleteAccountPopup(requireParentFragment(), deleteAccount, () -> overlay.setVisibility(View.GONE));
     }
 }
