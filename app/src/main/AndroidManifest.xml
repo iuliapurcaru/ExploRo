@@ -16,9 +16,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
-                android:name=".HomeActivity"
+                android:name=".MainActivity"
                 android:exported="false"
-                android:label="@string/title_activity_home"/>
+                android:label="@string/title_activity_main"/>
         <activity
                 android:name=".SignupActivity"
                 android:exported="false"/>

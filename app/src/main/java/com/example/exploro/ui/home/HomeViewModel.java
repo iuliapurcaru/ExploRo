@@ -14,16 +14,19 @@ import java.util.Objects;
 public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> displayNameLiveData;
+    private final MutableLiveData<String> tripsLiveData;
 
     public HomeViewModel() {
 
         displayNameLiveData = new MutableLiveData<>();
+        tripsLiveData = new MutableLiveData<>();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         assert mUser != null;
         DatabaseReference mNameReference = mDatabase.getReference("users/" + mUser.getUid() + "/display_name");
+        DatabaseReference mTripsReference = mDatabase.getReference("users/" + mUser.getUid() + "/trips");
 
         mNameReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -42,9 +45,30 @@ public class HomeViewModel extends ViewModel {
                 Log.w("DATABASE", "Failed to get database data.", error.toException());
             }
         });
+
+        mTripsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                String trips = Objects.requireNonNull(dataSnapshot.getValue()).toString();
+                if (!trips.isEmpty()) {
+                    tripsLiveData.setValue("You have " + trips + " trips!");
+                }
+                else {
+                    tripsLiveData.setValue("You haven't planned any trips yet!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
     }
 
-    public LiveData<String> getText() {
+    public LiveData<String> getHomeText() {
         return displayNameLiveData;
+    }
+    public LiveData<String> getTripsText() {
+        return tripsLiveData;
     }
 }

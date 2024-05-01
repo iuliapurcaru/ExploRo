@@ -196,6 +196,7 @@ public class SignupActivity extends AppCompatActivity {
         usersReference.child("email").setValue(mUser.getEmail());
         usersReference.child("currency").setValue("RON");
         usersReference.child("distance_unit").setValue("kilometers (km)");
+        usersReference.child("trips").setValue("");
     }
 
     private void reload() { }

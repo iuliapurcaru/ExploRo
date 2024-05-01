@@ -23,7 +23,7 @@
 
     <TextView
             android:id="@+id/text_account"
-            android:layout_width="332dp"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:textSize="27sp"
             app:layout_constraintTop_toTopOf="parent"

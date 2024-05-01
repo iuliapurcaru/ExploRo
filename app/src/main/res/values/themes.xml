@@ -22,7 +22,12 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-  <!-- Base application theme. -->
+    <style name="CustomSearchViewStyle">
+        <item name="android:fontFamily">@font/poppins_light</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Base application theme. -->
     <style name="Base.Theme.ExploRo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:popupBackground">@color/white</item>

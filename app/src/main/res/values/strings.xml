@@ -23,16 +23,13 @@
     </string>
     <string name="passwords_do_not_match">Passwords do not match!</string>
 
-    <!-- Strings related to home activity -->
-    <string name="title_activity_home">HomeActivity</string>
+    <!-- Strings related to main activity -->
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_explore">Explore</string>
     <string name="title_account">Your account</string>
 
     <!-- Strings related to home fragment -->
-
-
-    <!-- Strings related to explore fragment -->
 
 
     <!-- Strings related to account fragment -->
@@ -53,5 +50,9 @@
     <string name="confirm_delete_account">Are you sure you want to delete your account?</string>
     <string name="confirm_delete">Yes, confirm</string>
     <string name="no_delete_account">No</string>
+
+    <!-- Strings related to explore fragment -->
+    <string name="your_destination">What\'s your destination?</string>
+    <string name="search_destination">Search destination</string>
 
 </resources>
