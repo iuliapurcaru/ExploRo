@@ -9,8 +9,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class AccountViewModel extends ViewModel {
 
     private final MutableLiveData<String> displayNameLiveData;
@@ -32,9 +30,8 @@ public class AccountViewModel extends ViewModel {
         mNameReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-
                 if (dataSnapshot.exists()) {
-                    String displayName = Objects.requireNonNull(dataSnapshot.getValue()).toString();
+                    String displayName = dataSnapshot.getValue(String.class);
                     displayNameLiveData.setValue(displayName);
                 }
                 else {

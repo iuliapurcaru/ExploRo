@@ -122,21 +122,25 @@ public class PopupMenu {
         mDistanceReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String currencyValue = dataSnapshot.getValue(String.class);
+                    RadioButton selectedRadioButton = null;
 
-                String currencyValue = dataSnapshot.getValue(String.class);
-                RadioButton selectedRadioButton = null;
-
-                if (currencyValue != null) {
-                    switch (currencyValue) {
-                        case "kilometers (km)":
-                            selectedRadioButton = radioOptionKilometers;
-                            break;
-                        case "miles (mi)":
-                            selectedRadioButton = radioOptionMiles;
-                            break;
+                    if (currencyValue != null) {
+                        switch (currencyValue) {
+                            case "kilometers (km)":
+                                selectedRadioButton = radioOptionKilometers;
+                                break;
+                            case "miles (mi)":
+                                selectedRadioButton = radioOptionMiles;
+                                break;
+                        }
+                        assert selectedRadioButton != null;
+                        selectedRadioButton.setChecked(true);
                     }
-                    assert selectedRadioButton != null;
-                    selectedRadioButton.setChecked(true);
+                }
+                else {
+                    Log.w("DATABASE", "Failed to get database data.");
                 }
             }
 

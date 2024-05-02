@@ -9,8 +9,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> displayNameLiveData;
@@ -32,7 +30,7 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String displayName = Objects.requireNonNull(dataSnapshot.getValue()).toString();
+                    String displayName = dataSnapshot.getValue(String.class);
                     displayNameLiveData.setValue("Hello, " + displayName + "!");
                 }
                 else {
@@ -49,12 +47,15 @@ public class HomeViewModel extends ViewModel {
         mTripsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                String trips = Objects.requireNonNull(dataSnapshot.getValue()).toString();
-                if (!trips.isEmpty()) {
-                    tripsLiveData.setValue("You have " + trips + " trips!");
-                }
-                else {
-                    tripsLiveData.setValue("You haven't planned any trips yet!");
+                if (dataSnapshot.exists()) {
+                    String trips = dataSnapshot.getValue(String.class);
+                    assert trips != null;
+                    if (trips.isEmpty()) {
+                        tripsLiveData.setValue("You haven't planned any trips yet!");
+                    }
+                    else {
+                        tripsLiveData.setValue("You have " + trips + " trips!");
+                    }
                 }
             }
 

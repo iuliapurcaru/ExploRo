@@ -54,5 +54,8 @@
     <!-- Strings related to explore fragment -->
     <string name="your_destination">What\'s your destination?</string>
     <string name="search_destination">Search destination</string>
+    <string name="title_activity_planning">PlanningActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 </resources>
