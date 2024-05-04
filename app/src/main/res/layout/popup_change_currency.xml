@@ -16,7 +16,6 @@
             android:layout_marginEnd="30dp"/>
     <RadioButton
             android:id="@+id/radio_option1"
-            android:textSize="20sp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/ron_currency"
@@ -24,7 +23,6 @@
             android:layout_marginEnd="30dp"/>
     <RadioButton
             android:id="@+id/radio_option2"
-            android:textSize="20sp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/eur_currency"
@@ -33,7 +31,6 @@
 
     <RadioButton
             android:id="@+id/radio_option3"
-            android:textSize="20sp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/usd_currency"

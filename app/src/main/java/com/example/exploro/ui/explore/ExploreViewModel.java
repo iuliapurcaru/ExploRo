@@ -5,20 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.R;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import com.example.exploro.PlanningActivity;
 
 public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.ExploreViewHolder> {
 
     private final List<String> destinationsImageUrls;
-    private final List<String> destinationsTexts;
 
     public ExploreViewModel(List<String> destinationsImageUrls, List<String> destinationsTexts) {
         this.destinationsImageUrls = destinationsImageUrls;
-        this.destinationsTexts = destinationsTexts;
     }
 
     @NotNull
@@ -32,6 +32,8 @@ public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.Expl
     public void onBindViewHolder(@NonNull ExploreViewHolder holder, int position) {
         Picasso.get().load(destinationsImageUrls.get(position)).into(holder.imageViewPhoto);
         holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), PlanningActivity.class);
+            v.getContext().startActivity(intent);
             //TODO: Add planning functionality
         });
     }

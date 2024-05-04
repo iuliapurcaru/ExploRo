@@ -16,6 +16,10 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
+                android:name=".PlanningActivity"
+                android:exported="false"
+                android:label="@string/title_activity_planning"/>
+        <activity
                 android:name=".MainActivity"
                 android:exported="false"
                 android:label="@string/title_activity_main"/>

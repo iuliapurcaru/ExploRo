@@ -20,7 +20,6 @@
             android:id="@+id/text_trips"
             android:layout_width="370dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:fontFamily="@font/poppins_light"
             app:layout_constraintTop_toBottomOf="@id/text_home"
             app:layout_constraintBottom_toBottomOf="parent"
