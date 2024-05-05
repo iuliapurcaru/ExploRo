@@ -1,6 +1,8 @@
 package com.example.exploro;
 
 import android.app.DatePickerDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,6 +29,43 @@ public class PlanningActivity extends AppCompatActivity {
 
         startDateEditText.setOnClickListener(v -> showDatePicker(startDateEditText));
         endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
+
+        startDateEditText.addTextChangedListener(new TextWatcher() { //TODO: Test this
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (startDateEditText.getText().toString().isEmpty()) {
+                    startDateEditText.setError("Start date is required!");
+                }
+            }
+        });
+
+        endDateEditText.addTextChangedListener(new TextWatcher() { //TODO: Test this
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (endDateEditText.getText().toString().isEmpty()) {
+                    endDateEditText.setError("End date is required!");
+                }
+                else if (!checkDates()) {
+                    endDateEditText.setError("End date must be after Start date!");
+                }
+            }
+        });
     }
 
     public void showDatePicker(EditText editText) {
@@ -43,7 +82,7 @@ public class PlanningActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    public void checkDates(View view) {
+    public boolean checkDates() {
         String startDateStr = startDateEditText.getText().toString();
         String endDateStr = endDateEditText.getText().toString();
 
@@ -59,15 +98,10 @@ public class PlanningActivity extends AppCompatActivity {
             int endMonth = Integer.parseInt(endDateParts[1]);
             int endYear = Integer.parseInt(endDateParts[2]);
 
-            if (endYear < startYear ||
-                    (endYear == startYear && endMonth < startMonth) ||
-                    (endYear == startYear && endMonth == startMonth && endDay < startDay)) {
-                Log.d("PlanningActivity", "End date is earlier than start date");
-            } else {
-                Log.d("PlanningActivity", "End date is not earlier than start date");
-            }
-        } else {
-            Log.d("PlanningActivity", "Please select both start and end dates");
+            return endYear >= startYear &&
+                    (endYear != startYear || endMonth >= startMonth) &&
+                    (endYear != startYear || endMonth != startMonth || endDay >= startDay);
         }
+        return false;
     }
 }

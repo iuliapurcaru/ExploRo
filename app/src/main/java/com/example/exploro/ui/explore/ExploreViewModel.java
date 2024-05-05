@@ -34,7 +34,6 @@ public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.Expl
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), PlanningActivity.class);
             v.getContext().startActivity(intent);
-            //TODO: Add planning functionality
         });
     }
 

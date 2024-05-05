@@ -53,7 +53,7 @@
 
     <!-- Strings related to explore fragment -->
     <string name="your_destination">What\'s your destination?</string>
-    <string name="search_destination">Search destination</string>
+    <string name="select_destination">Select a city to visit and generate a new trip plan.</string>
 
     <!-- Strings related to planning activity -->
     <string name="title_activity_planning">PlanningActivity</string>
@@ -61,5 +61,9 @@
     <string name="start_date">Start date</string>
     <string name="end_date">End date</string>
     <string name="dates">Dates</string>
+    <string name="when_is_trip">When are you going on your trip?</string>
+    <string name="details">Details</string>
+    <string name="placeholder_attraction_name">Attraction name</string>
+    <string name="select_attractions_to_visit">Select attractions to visit:</string>
 
 </resources>
