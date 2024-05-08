@@ -125,9 +125,25 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="525dp"
+                android:layout_height="370dp"
                 android:layout_margin="20dp"/>
 
+        <Button
+                android:id="@+id/continue_button"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:text="@string/continue_button"
+                android:backgroundTint="@color/yellow_200"
+                android:textColor="@color/black"/>
+
     </LinearLayout>
+
+    <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
