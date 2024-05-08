@@ -68,15 +68,19 @@
     <string name="placeholder_attraction_description">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ullamcorper vulputate mollis. Nam maximus aliquam.
     </string>
-    <string name="placeholder_attraction_address">Address: example street</string>
+    <string name="placeholder_attraction_address">Address: </string>
     <string name="entrance_fees">Entrance fees:</string>
-    <string name="price_placeholder">Adults: 20 RON&#xA;Children/students: 10 RON</string>
-    <string name="student_price_placeholder">Children/students: 10 RON</string>
+    <string name="adult_price">Adults: </string>
+    <string name="student_price">Children/students: </string>
     <string name="attraction_hours">Opening hours:</string>
-    <string name="hours_placeholder">
-        Monday: &#xA;Tuesday: &#xA;Wednesday: &#xA;Thursday: &#xA;Friday: &#xA;Saturday: &#xA;Sunday:
-    </string>
-    <string name="average_time_spent">Average time spent:</string>
+    <string name="monday_hours">Monday: </string>
+    <string name="tuesday_hours">Tuesday: </string>
+    <string name="wednesday_hours">Wednesday: </string>
+    <string name="thursday_hours">Thursday: </string>
+    <string name="friday_hours">Friday: </string>
+    <string name="saturday_hours">Saturday: </string>
+    <string name="sunday_hours">Sunday: </string>
+    <string name="average_time_spent">Average time spent: </string>
     <string name="continue_button">Continue to your trip!</string>
     <string name="close_button">Close</string>
 

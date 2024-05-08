@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.PopupMenu;
@@ -18,11 +18,15 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
     private final List<String> attractionsNames;
     private final List<String> selectedItems;
     private final View overlay;
+    private final String destinationID;
+    private final List<String> attractionsIDs;
 
-    public PlanningViewModel(List<String> attractionsNames, List<String> selectedItems, View overlay) {
+    public PlanningViewModel(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
         this.attractionsNames = attractionsNames;
         this.selectedItems = selectedItems;
         this.overlay = overlay;
+        this.destinationID = destinationID;
+        this.attractionsIDs = attractionsIDs;
     }
 
     @NotNull
@@ -34,21 +38,23 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
 
     @Override
     public void onBindViewHolder(@NonNull PlanningViewHolder holder, int position) {
-        String item = attractionsNames.get(position);
-        holder.attractionRadioButton.setText(item);
+        String itemName = attractionsNames.get(position);
+        holder.attractionCheckBox.setText(itemName);
 
-        holder.attractionRadioButton.setChecked(selectedItems.contains(item));
-        holder.attractionRadioButton.setOnClickListener(v -> {
-            if (holder.attractionRadioButton.isChecked()) {
-                selectedItems.add(item);
+        holder.attractionCheckBox.setChecked(selectedItems.contains(itemName));
+        holder.attractionCheckBox.setOnClickListener(v -> {
+            if (holder.attractionCheckBox.isChecked()) {
+                selectedItems.add(itemName);
             } else {
-                selectedItems.remove(item);
+                selectedItems.remove(itemName);
             }
         });
 
+        String itemID = attractionsIDs.get(position);
+
         holder.attractionDetails.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
-            PopupMenu.showAttractionDetailsPopup(v.getContext(), holder.attractionDetails, () -> overlay.setVisibility(View.GONE));
+            PopupMenu.showAttractionDetailsPopup(v.getContext(), holder.attractionDetails, () -> overlay.setVisibility(View.GONE), destinationID, itemID);
         });
 
     }
@@ -59,12 +65,12 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
     }
 
     public static class PlanningViewHolder extends RecyclerView.ViewHolder {
-        RadioButton attractionRadioButton;
+        CheckBox attractionCheckBox;
         TextView attractionDetails;
 
         public PlanningViewHolder(@NonNull View itemView) {
             super(itemView);
-            attractionRadioButton = itemView.findViewById(R.id.attraction_name);
+            attractionCheckBox = itemView.findViewById(R.id.attraction_name);
             attractionDetails = itemView.findViewById(R.id.details_button);
         }
     }

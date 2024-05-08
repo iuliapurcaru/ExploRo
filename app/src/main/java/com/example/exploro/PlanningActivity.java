@@ -24,6 +24,7 @@ public class PlanningActivity extends AppCompatActivity {
     private EditText startDateEditText;
     private EditText endDateEditText;
     private final List<String> attractionsNames = new ArrayList<>();
+    private final List<String> attractionsIDs = new ArrayList<>();
     private final List<String> selectedAttractions = new ArrayList<>();
     private RecyclerView recyclerView;
 
@@ -114,10 +115,12 @@ public class PlanningActivity extends AppCompatActivity {
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String attractionID = snapshot.getKey();
+                        attractionsIDs.add(attractionID);
                         String attractionName = snapshot.child("name").getValue(String.class);
                         attractionsNames.add(attractionName);
                     }
-                    PlanningViewModel adapter = new PlanningViewModel(attractionsNames, selectedAttractions, findViewById(R.id.overlay));
+                    PlanningViewModel adapter = new PlanningViewModel(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }

@@ -5,18 +5,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <RadioButton
+    <CheckBox
             android:id="@+id/attraction_name"
             android:text="@string/placeholder_attraction_name"
-            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"/>
     <TextView
             android:id="@+id/details_button"
             android:text="@string/details"
             android:fontFamily="@font/poppins_light"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginStart="40dp"/>
+            android:layout_marginStart="20dp"/>
 </LinearLayout>
