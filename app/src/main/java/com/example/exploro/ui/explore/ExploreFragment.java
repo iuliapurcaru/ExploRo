@@ -19,7 +19,7 @@ public class ExploreFragment extends Fragment {
 
     private FragmentExploreBinding binding;
     private final List<String> destinationsImageUrls = new ArrayList<>();
-    private final List<String> destinationsTexts = new ArrayList<>();
+    private final List<String> destinationsIDs = new ArrayList<>();
     private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,12 +49,12 @@ public class ExploreFragment extends Fragment {
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String destinationText = snapshot.child("text").getValue(String.class);
-                        destinationsTexts.add(destinationText);
+                        String destinationID = snapshot.getKey();
+                        destinationsIDs.add(destinationID);
                         String destinationImageUrl = snapshot.child("image").getValue(String.class);
                         destinationsImageUrls.add(destinationImageUrl);
                     }
-                    ExploreViewModel adapter = new ExploreViewModel(destinationsImageUrls, destinationsTexts);
+                    ExploreViewModel adapter = new ExploreViewModel(destinationsImageUrls, destinationsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }

@@ -11,15 +11,13 @@
             android:layout_width="308dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:layout_marginStart="31dp"
-            android:layout_marginEnd="31dp"
+            android:layout_marginHorizontal="31dp"
             android:gravity="center_horizontal"/>
     <EditText
             android:id="@+id/display_name"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginHorizontal="10dp"
             android:maxLength="20"
             android:inputType="textPersonName"
             android:autofillHints="@string/full_name"
@@ -31,8 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
-            android:layout_marginEnd="118dp"
-            android:layout_marginStart="118dp"
+            android:layout_marginHorizontal="118dp"
             android:text="@string/confirm_name"
             android:backgroundTint="@color/yellow_200"
             android:textColor="@color/black"/>

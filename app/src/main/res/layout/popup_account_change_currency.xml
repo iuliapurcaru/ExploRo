@@ -12,29 +12,25 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginTop="13dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginHorizontal="30dp"/>
     <RadioButton
             android:id="@+id/radio_option1"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/ron_currency"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginHorizontal="30dp"/>
     <RadioButton
             android:id="@+id/radio_option2"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/eur_currency"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginHorizontal="30dp"/>
 
     <RadioButton
             android:id="@+id/radio_option3"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/usd_currency"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="13dp"/>
 </RadioGroup>

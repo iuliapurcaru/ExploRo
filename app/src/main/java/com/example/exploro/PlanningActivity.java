@@ -1,21 +1,32 @@
 package com.example.exploro;
 
 import android.app.DatePickerDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.content.Intent;
 import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.databinding.ActivityPlanningBinding;
+import com.example.exploro.ui.planning.PlanningViewModel;
+import com.google.firebase.database.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class PlanningActivity extends AppCompatActivity {
 
     private EditText startDateEditText;
     private EditText endDateEditText;
+    private final List<String> attractionsNames = new ArrayList<>();
+    private final List<String> selectedAttractions = new ArrayList<>();
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,48 +35,38 @@ public class PlanningActivity extends AppCompatActivity {
         ActivityPlanningBinding binding = ActivityPlanningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Intent intent = getIntent();
+        String destinationID = intent.getStringExtra("destination");
+
         startDateEditText = binding.editStartDate;
         endDateEditText = binding.editEndDate;
+        final Button confirmButton = binding.continueButton;
 
         startDateEditText.setOnClickListener(v -> showDatePicker(startDateEditText));
         endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
 
-        startDateEditText.addTextChangedListener(new TextWatcher() { //TODO: Test this
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (startDateEditText.getText().toString().isEmpty()) {
+        confirmButton.setOnClickListener(v -> {
+            Log.d("PLANNING", "Selected attractions: " + selectedAttractions);
+            if (startDateEditText.getText().toString().isEmpty() || endDateEditText.getText().toString().isEmpty()) {
+                if (startDateEditText.getText().toString().isEmpty()) { //TODO: See why error message is not displayed
                     startDateEditText.setError("Start date is required!");
                 }
-            }
-        });
-
-        endDateEditText.addTextChangedListener(new TextWatcher() { //TODO: Test this
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
                 if (endDateEditText.getText().toString().isEmpty()) {
                     endDateEditText.setError("End date is required!");
                 }
-                else if (!checkDates()) {
-                    endDateEditText.setError("End date must be after Start date!");
-                }
+            } else if (!checkDates()) {
+                endDateEditText.setError("End date must be after Start date!");
+            } else if (selectedAttractions.isEmpty()) {
+                Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("PLANNING", "All good!");
             }
         });
+
+        recyclerView = binding.recyclerView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        getAttractionsNames(destinationID);
     }
 
     public void showDatePicker(EditText editText) {
@@ -103,5 +104,28 @@ public class PlanningActivity extends AppCompatActivity {
                     (endYear != startYear || endMonth != startMonth || endDay >= startDay);
         }
         return false;
+    }
+
+    private void getAttractionsNames(String destinationID) {
+
+        DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference("attractions/" + destinationID);
+        mAttractionsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String attractionName = snapshot.child("name").getValue(String.class);
+                        attractionsNames.add(attractionName);
+                    }
+                    PlanningViewModel adapter = new PlanningViewModel(attractionsNames, selectedAttractions, findViewById(R.id.overlay));
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
     }
 }

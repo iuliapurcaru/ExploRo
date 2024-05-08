@@ -1,5 +1,6 @@
 package com.example.exploro;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,7 +26,7 @@ public class PopupMenu {
     private static FirebaseUser mUser;
 
     public static void showForgotPasswordPopup(LoginActivity activity, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(activity).inflate(R.layout.popup_forgot_password, (ViewGroup) activity.getWindow().getDecorView(), false);
+        View popupView = LayoutInflater.from(activity).inflate(R.layout.popup_login_forgot_password, (ViewGroup) activity.getWindow().getDecorView(), false);
 
         final EditText emailEditText = popupView.findViewById(R.id.email);
         final Button resetPassButton = popupView.findViewById(R.id.reset_password);
@@ -45,7 +46,7 @@ public class PopupMenu {
     }
 
     public static void showPopupCurrency(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_change_currency, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_change_currency, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -106,7 +107,7 @@ public class PopupMenu {
     }
 
     public static void showPopupDistance(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_change_distance, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_change_distance, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -165,7 +166,7 @@ public class PopupMenu {
     }
 
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_reset_password, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_reset_password, (ViewGroup) fragment.getView(), false);
 
         AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
 
@@ -180,7 +181,7 @@ public class PopupMenu {
     }
 
     public static void showEditDisplayNamePopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_edit_name, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_edit_name, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -191,7 +192,6 @@ public class PopupMenu {
 
         mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mNameReference = mDatabase.getReference("users/" + mUser.getUid() + "/display_name");
-
 
         confirmButton.setOnClickListener(v -> {
             if (displayNameEditText.getText().toString().isEmpty()) {
@@ -209,13 +209,12 @@ public class PopupMenu {
     }
 
     public static void showDeleteAccountPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_delete_account, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_delete_account, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
 
         final Button yesButton = popupView.findViewById(R.id.yes_button);
         final Button noButton = popupView.findViewById(R.id.no_button);
-
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         noButton.setOnClickListener(v -> popupWindow.dismiss());
@@ -234,6 +233,50 @@ public class PopupMenu {
             fragment.requireActivity().finish();
             mUserReference.removeValue();
         });
+    }
+
+    public static void showAttractionDetailsPopup(Context context, View anchorView, PopupWindow.OnDismissListener dismissListener) {
+        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_planning_attraction_details, null, false);
+
+        PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
+        final TextView attractionNameTextView = popupView.findViewById(R.id.attraction_name);
+        final TextView attractionDescriptionTextView = popupView.findViewById(R.id.attraction_description);
+        final TextView attractionTimeTextView = popupView.findViewById(R.id.attraction_time);
+        final TextView attractionPricesTextView = popupView.findViewById(R.id.prices);
+        final TextView attractionHoursTextView = popupView.findViewById(R.id.opening_hours);
+        final TextView attractionAddressTextView = popupView.findViewById(R.id.attraction_address);
+        final Button closeButton = popupView.findViewById(R.id.close_button);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mAttractionsReference = mDatabase.getReference("attractions/02-Brasov/id"); //TODO: Generalize this
+
+        mAttractionsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String attractionName = dataSnapshot.child("name").getValue(String.class);
+                    String attractionDescription = dataSnapshot.child("description").getValue(String.class);
+//                    String attractionTime = dataSnapshot.child("time").getValue(String.class);
+//                    String attractionPrices = dataSnapshot.child("prices").getValue(String.class);
+//                    String attractionHours = dataSnapshot.child("hours").getValue(String.class);
+//                    String attractionAddress = dataSnapshot.child("address").getValue(String.class);
+
+                    attractionNameTextView.setText(attractionName);
+                    attractionDescriptionTextView.setText(attractionDescription);
+//                    attractionTimeTextView.setText(attractionTime);
+//                    attractionPricesTextView.setText(attractionPrices);
+//                    attractionHoursTextView.setText(attractionHours);
+//                    attractionAddressTextView.setText(attractionAddress);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
+
+        closeButton.setOnClickListener(v -> popupWindow.dismiss());
     }
 
     private static PopupWindow configurePopupWindow(View anchorView, PopupWindow.OnDismissListener dismissListener, View popupView) {

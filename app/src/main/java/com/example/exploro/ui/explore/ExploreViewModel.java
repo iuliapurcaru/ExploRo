@@ -16,9 +16,11 @@ import com.example.exploro.PlanningActivity;
 public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.ExploreViewHolder> {
 
     private final List<String> destinationsImageUrls;
+    private final List<String> destinationsIDs;
 
-    public ExploreViewModel(List<String> destinationsImageUrls, List<String> destinationsTexts) {
+    public ExploreViewModel(List<String> destinationsImageUrls, List<String> destinationsIDs) {
         this.destinationsImageUrls = destinationsImageUrls;
+        this.destinationsIDs = destinationsIDs;
     }
 
     @NotNull
@@ -33,6 +35,7 @@ public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.Expl
         Picasso.get().load(destinationsImageUrls.get(position)).into(holder.imageViewPhoto);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), PlanningActivity.class);
+            intent.putExtra("destination", destinationsIDs.get(position));
             v.getContext().startActivity(intent);
         });
     }

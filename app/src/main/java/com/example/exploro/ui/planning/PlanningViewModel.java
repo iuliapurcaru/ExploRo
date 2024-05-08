@@ -4,19 +4,25 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.exploro.PopupMenu;
 import com.example.exploro.R;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.PlanningViewHolder> {
 
     private final List<String> attractionsNames;
-    //TODO: Add other info if necessary
+    private final List<String> selectedItems;
+    private final View overlay;
 
-    public PlanningViewModel(List<String> attractionsNames) {
+    public PlanningViewModel(List<String> attractionsNames, List<String> selectedItems, View overlay) {
         this.attractionsNames = attractionsNames;
+        this.selectedItems = selectedItems;
+        this.overlay = overlay;
     }
 
     @NotNull
@@ -28,12 +34,23 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
 
     @Override
     public void onBindViewHolder(@NonNull PlanningViewHolder holder, int position) {
-//        Picasso.get().load(attractionsNames.get(position)).into(holder.imageViewPhoto);
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(v.getContext(), PlanningActivity.class);
-//            v.getContext().startActivity(intent);
-//        });
-        //TODO: Bind attractionsNames to the view
+        String item = attractionsNames.get(position);
+        holder.attractionRadioButton.setText(item);
+
+        holder.attractionRadioButton.setChecked(selectedItems.contains(item));
+        holder.attractionRadioButton.setOnClickListener(v -> {
+            if (holder.attractionRadioButton.isChecked()) {
+                selectedItems.add(item);
+            } else {
+                selectedItems.remove(item);
+            }
+        });
+
+        holder.attractionDetails.setOnClickListener(v -> {
+            overlay.setVisibility(View.VISIBLE);
+            PopupMenu.showAttractionDetailsPopup(v.getContext(), holder.attractionDetails, () -> overlay.setVisibility(View.GONE));
+        });
+
     }
 
     @Override
@@ -42,12 +59,13 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
     }
 
     public static class PlanningViewHolder extends RecyclerView.ViewHolder {
-        TextView attractionName;
+        RadioButton attractionRadioButton;
+        TextView attractionDetails;
 
         public PlanningViewHolder(@NonNull View itemView) {
             super(itemView);
-            attractionName = itemView.findViewById(R.id.attraction_name);
+            attractionRadioButton = itemView.findViewById(R.id.attraction_name);
+            attractionDetails = itemView.findViewById(R.id.details_button);
         }
     }
-
 }
