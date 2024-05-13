@@ -16,6 +16,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
+                android:name=".TripResultActivity"
+                android:exported="false"/>
+        <activity
                 android:name=".PlanningActivity"
                 android:exported="false"
                 android:label="@string/title_activity_planning"/>

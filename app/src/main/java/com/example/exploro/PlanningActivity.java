@@ -27,6 +27,7 @@ public class PlanningActivity extends AppCompatActivity {
     private final List<String> attractionsIDs = new ArrayList<>();
     private final List<String> selectedAttractions = new ArrayList<>();
     private RecyclerView recyclerView;
+    private int numberOfDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class PlanningActivity extends AppCompatActivity {
         endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
 
         confirmButton.setOnClickListener(v -> {
-            Log.d("PLANNING", "Selected attractions: " + selectedAttractions);
             if (startDateEditText.getText().toString().isEmpty() || endDateEditText.getText().toString().isEmpty()) {
                 if (startDateEditText.getText().toString().isEmpty()) { //TODO: See why error message is not displayed
                     startDateEditText.setError("Start date is required!");
@@ -60,7 +60,13 @@ public class PlanningActivity extends AppCompatActivity {
             } else if (selectedAttractions.isEmpty()) {
                 Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
             } else {
-                Log.d("PLANNING", "All good!");
+                Intent intentTrip = new Intent(PlanningActivity.this, TripResultActivity.class);
+                intentTrip.putExtra("destination", destinationID);
+                intentTrip.putExtra("startDate", startDateEditText.getText().toString());
+                intentTrip.putExtra("endDate", endDateEditText.getText().toString());
+                intentTrip.putExtra("numberOfDays", numberOfDays);
+                intentTrip.putStringArrayListExtra("selectedAttractions", (ArrayList<String>) selectedAttractions);
+                startActivity(intentTrip);
             }
         });
 
@@ -99,6 +105,8 @@ public class PlanningActivity extends AppCompatActivity {
             int endDay = Integer.parseInt(endDateParts[0]);
             int endMonth = Integer.parseInt(endDateParts[1]);
             int endYear = Integer.parseInt(endDateParts[2]);
+
+            numberOfDays = endDay - startDay + 1;
 
             return endYear >= startYear &&
                     (endYear != startYear || endMonth >= startMonth) &&

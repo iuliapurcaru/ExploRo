@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.exploro.LoginActivity;
 import com.example.exploro.databinding.FragmentAccountBinding;
-import com.example.exploro.PopupMenu;
+import com.example.exploro.ui.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

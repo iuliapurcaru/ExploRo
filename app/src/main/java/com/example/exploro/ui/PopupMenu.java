@@ -1,4 +1,4 @@
-package com.example.exploro;
+package com.example.exploro.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,16 @@ import android.view.ViewGroup;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.exploro.LoginActivity;
+import com.example.exploro.R;
 import com.example.exploro.ui.account.AccountViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class PopupMenu {
 
@@ -26,10 +30,10 @@ public class PopupMenu {
     private static FirebaseUser mUser;
 
     public static void showForgotPasswordPopup(LoginActivity activity, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(activity).inflate(R.layout.popup_login_forgot_password, (ViewGroup) activity.getWindow().getDecorView(), false);
+        View popupView = LayoutInflater.from(activity).inflate(com.example.exploro.R.layout.popup_login_forgot_password, (ViewGroup) activity.getWindow().getDecorView(), false);
 
-        final EditText emailEditText = popupView.findViewById(R.id.email);
-        final Button resetPassButton = popupView.findViewById(R.id.reset_password);
+        final EditText emailEditText = popupView.findViewById(com.example.exploro.R.id.email);
+        final Button resetPassButton = popupView.findViewById(com.example.exploro.R.id.reset_password);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         mAuth = FirebaseAuth.getInstance();
@@ -46,7 +50,7 @@ public class PopupMenu {
     }
 
     public static void showPopupCurrency(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_change_currency, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_change_currency, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -55,10 +59,10 @@ public class PopupMenu {
         assert mUser != null;
         DatabaseReference mCurrencyReference = mDatabase.getReference("users/" + mUser.getUid() + "/currency/");
 
-        RadioButton radioOptionRON = popupView.findViewById(R.id.radio_option1);
-        RadioButton radioOptionEUR = popupView.findViewById(R.id.radio_option2);
-        RadioButton radioOptionUSD = popupView.findViewById(R.id.radio_option3);
-        final RadioGroup radioGroup = popupView.findViewById(R.id.radio_group);
+        RadioButton radioOptionRON = popupView.findViewById(com.example.exploro.R.id.radio_option1);
+        RadioButton radioOptionEUR = popupView.findViewById(com.example.exploro.R.id.radio_option2);
+        RadioButton radioOptionUSD = popupView.findViewById(com.example.exploro.R.id.radio_option3);
+        final RadioGroup radioGroup = popupView.findViewById(com.example.exploro.R.id.radio_group);
 
         mCurrencyReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,11 +96,11 @@ public class PopupMenu {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             String selectedOption = "";
-            if (checkedId == R.id.radio_option1) {
+            if (checkedId == com.example.exploro.R.id.radio_option1) {
                 selectedOption = "RON";
-            } else if (checkedId == R.id.radio_option2) {
+            } else if (checkedId == com.example.exploro.R.id.radio_option2) {
                 selectedOption = "EUR";
-            } else if (checkedId == R.id.radio_option3) {
+            } else if (checkedId == com.example.exploro.R.id.radio_option3) {
                 selectedOption = "USD";
             }
 
@@ -107,7 +111,7 @@ public class PopupMenu {
     }
 
     public static void showPopupDistance(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_change_distance, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_change_distance, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -116,9 +120,9 @@ public class PopupMenu {
         assert mUser != null;
         DatabaseReference mDistanceReference = mDatabase.getReference("users/" + mUser.getUid() + "/distance_unit/");
 
-        RadioButton radioOptionKilometers = popupView.findViewById(R.id.radio_option1);
-        RadioButton radioOptionMiles = popupView.findViewById(R.id.radio_option2);
-        final RadioGroup radioGroup = popupView.findViewById(R.id.radio_group);
+        RadioButton radioOptionKilometers = popupView.findViewById(com.example.exploro.R.id.radio_option1);
+        RadioButton radioOptionMiles = popupView.findViewById(com.example.exploro.R.id.radio_option2);
+        final RadioGroup radioGroup = popupView.findViewById(com.example.exploro.R.id.radio_group);
 
         mDistanceReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -153,9 +157,9 @@ public class PopupMenu {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             String selectedOption = "";
-            if (checkedId == R.id.radio_option1) {
+            if (checkedId == com.example.exploro.R.id.radio_option1) {
                 selectedOption = "kilometers (km)";
-            } else if (checkedId == R.id.radio_option2) {
+            } else if (checkedId == com.example.exploro.R.id.radio_option2) {
                 selectedOption = "miles (mi)";
             }
 
@@ -166,14 +170,14 @@ public class PopupMenu {
     }
 
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_reset_password, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_reset_password, (ViewGroup) fragment.getView(), false);
 
         AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        final TextView emailTextView = popupView.findViewById(R.id.reset_email);
+        final TextView emailTextView = popupView.findViewById(com.example.exploro.R.id.reset_email);
 
         accountViewModel.getEmailText().observe(fragment.getViewLifecycleOwner(), emailTextView::setText);
 
@@ -181,13 +185,13 @@ public class PopupMenu {
     }
 
     public static void showEditDisplayNamePopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_edit_name, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_edit_name, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        final EditText displayNameEditText = popupView.findViewById(R.id.display_name);
-        final Button confirmButton = popupView.findViewById(R.id.confirm_button);
+        final EditText displayNameEditText = popupView.findViewById(com.example.exploro.R.id.display_name);
+        final Button confirmButton = popupView.findViewById(com.example.exploro.R.id.confirm_button);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         mDatabase = FirebaseDatabase.getInstance();
@@ -209,12 +213,12 @@ public class PopupMenu {
     }
 
     public static void showDeleteAccountPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.popup_account_delete_account, (ViewGroup) fragment.getView(), false);
+        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_delete_account, (ViewGroup) fragment.getView(), false);
 
         mAuth = FirebaseAuth.getInstance();
 
-        final Button yesButton = popupView.findViewById(R.id.yes_button);
-        final Button noButton = popupView.findViewById(R.id.no_button);
+        final Button yesButton = popupView.findViewById(com.example.exploro.R.id.yes_button);
+        final Button noButton = popupView.findViewById(com.example.exploro.R.id.no_button);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         noButton.setOnClickListener(v -> popupWindow.dismiss());
@@ -235,20 +239,21 @@ public class PopupMenu {
         });
     }
 
-    public static void showAttractionDetailsPopup(Context context, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_planning_attraction_details, null, false);
+    public static void showAttractionDetailsPopup(Context context, View anchorView, PopupWindow.OnDismissListener dismissListener, String destinationID, String attractionID) {
+        View popupView = LayoutInflater.from(context).inflate(com.example.exploro.R.layout.popup_planning_attraction_details, null, false);
 
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
-        final TextView attractionNameTextView = popupView.findViewById(R.id.attraction_name);
-        final TextView attractionDescriptionTextView = popupView.findViewById(R.id.attraction_description);
-        final TextView attractionTimeTextView = popupView.findViewById(R.id.attraction_time);
-        final TextView attractionPricesTextView = popupView.findViewById(R.id.prices);
-        final TextView attractionHoursTextView = popupView.findViewById(R.id.opening_hours);
-        final TextView attractionAddressTextView = popupView.findViewById(R.id.attraction_address);
-        final Button closeButton = popupView.findViewById(R.id.close_button);
+        final TextView attractionNameTextView = popupView.findViewById(com.example.exploro.R.id.attraction_name);
+        final TextView attractionDescriptionTextView = popupView.findViewById(com.example.exploro.R.id.attraction_description);
+        final TextView attractionTimeTextView = popupView.findViewById(com.example.exploro.R.id.attraction_time);
+        final TextView attractionAdultPriceTextView = popupView.findViewById(com.example.exploro.R.id.adult_price);
+        final TextView attractionStudentPriceTextView = popupView.findViewById(com.example.exploro.R.id.student_price);
+        final TextView attractionAddressTextView = popupView.findViewById(com.example.exploro.R.id.attraction_address);
+        final Button closeButton = popupView.findViewById(com.example.exploro.R.id.close_button);
+        final TextView attractionHoursTextView = popupView.findViewById(com.example.exploro.R.id.attraction_hours);
 
         mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mAttractionsReference = mDatabase.getReference("attractions/02-Brasov/id"); //TODO: Generalize this
+        DatabaseReference mAttractionsReference = mDatabase.getReference("attractions/" + destinationID + "/" + attractionID);
 
         mAttractionsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -256,17 +261,19 @@ public class PopupMenu {
                 if (dataSnapshot.exists()) {
                     String attractionName = dataSnapshot.child("name").getValue(String.class);
                     String attractionDescription = dataSnapshot.child("description").getValue(String.class);
-//                    String attractionTime = dataSnapshot.child("time").getValue(String.class);
-//                    String attractionPrices = dataSnapshot.child("prices").getValue(String.class);
-//                    String attractionHours = dataSnapshot.child("hours").getValue(String.class);
-//                    String attractionAddress = dataSnapshot.child("address").getValue(String.class);
+                    String attractionTime = attractionTimeTextView.getText() + dataSnapshot.child("time").getValue(String.class);
+                    String attractionAdultPrice = attractionAdultPriceTextView.getText() + dataSnapshot.child("prices/adult").getValue(String.class);
+                    String attractionStudentPrice = attractionStudentPriceTextView.getText() + dataSnapshot.child("prices/student").getValue(String.class);
+                    String attractionAddress = attractionAddressTextView.getText() + dataSnapshot.child("address").getValue(String.class);
+                    String attractionHours = attractionHoursTextView.getText() + dataSnapshot.child("hours").getValue(String.class);
 
                     attractionNameTextView.setText(attractionName);
                     attractionDescriptionTextView.setText(attractionDescription);
-//                    attractionTimeTextView.setText(attractionTime);
-//                    attractionPricesTextView.setText(attractionPrices);
-//                    attractionHoursTextView.setText(attractionHours);
-//                    attractionAddressTextView.setText(attractionAddress);
+                    attractionTimeTextView.setText(attractionTime);
+                    attractionAdultPriceTextView.setText(attractionAdultPrice);
+                    attractionStudentPriceTextView.setText(attractionStudentPrice);
+                    attractionAddressTextView.setText(attractionAddress);
+                    attractionHoursTextView.setText(attractionHours);
                 }
             }
 

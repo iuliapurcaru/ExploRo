@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.exploro.PopupMenu;
+import com.example.exploro.ui.PopupMenu;
 import com.example.exploro.R;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
 
     @Override
     public void onBindViewHolder(@NonNull PlanningViewHolder holder, int position) {
-        String itemName = attractionsNames.get(position);
+        String itemName = attractionsIDs.get(position);
         holder.attractionCheckBox.setText(itemName);
 
         holder.attractionCheckBox.setChecked(selectedItems.contains(itemName));
@@ -65,8 +65,8 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
     }
 
     public static class PlanningViewHolder extends RecyclerView.ViewHolder {
-        CheckBox attractionCheckBox;
-        TextView attractionDetails;
+        final CheckBox attractionCheckBox;
+        final TextView attractionDetails;
 
         public PlanningViewHolder(@NonNull View itemView) {
             super(itemView);

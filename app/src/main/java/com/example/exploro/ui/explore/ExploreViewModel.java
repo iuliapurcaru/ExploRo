@@ -46,7 +46,7 @@ public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.Expl
     }
 
     public static class ExploreViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewPhoto;
+        final ImageView imageViewPhoto;
 
         public ExploreViewHolder(@NonNull View itemView) {
             super(itemView);
