@@ -38,25 +38,24 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
 
     @Override
     public void onBindViewHolder(@NonNull PlanningViewHolder holder, int position) {
-        String itemName = attractionsIDs.get(position);
-        holder.attractionCheckBox.setText(itemName);
+        String itemName = attractionsNames.get(position);
+        String itemID = attractionsIDs.get(position);
 
+        holder.attractionCheckBox.setText(itemName);
         holder.attractionCheckBox.setChecked(selectedItems.contains(itemName));
         holder.attractionCheckBox.setOnClickListener(v -> {
             if (holder.attractionCheckBox.isChecked()) {
-                selectedItems.add(itemName);
+                selectedItems.add(itemID);
             } else {
-                selectedItems.remove(itemName);
+                selectedItems.remove(itemID);
             }
         });
 
-        String itemID = attractionsIDs.get(position);
 
         holder.attractionDetails.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
             PopupMenu.showAttractionDetailsPopup(v.getContext(), holder.attractionDetails, () -> overlay.setVisibility(View.GONE), destinationID, itemID);
         });
-
     }
 
     @Override

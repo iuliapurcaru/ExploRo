@@ -62,10 +62,10 @@ public class PlanningActivity extends AppCompatActivity {
             } else {
                 Intent intentTrip = new Intent(PlanningActivity.this, TripResultActivity.class);
                 intentTrip.putExtra("destination", destinationID);
+                intentTrip.putStringArrayListExtra("selectedAttractions", (ArrayList<String>) selectedAttractions);
                 intentTrip.putExtra("startDate", startDateEditText.getText().toString());
                 intentTrip.putExtra("endDate", endDateEditText.getText().toString());
                 intentTrip.putExtra("numberOfDays", numberOfDays);
-                intentTrip.putStringArrayListExtra("selectedAttractions", (ArrayList<String>) selectedAttractions);
                 startActivity(intentTrip);
             }
         });
