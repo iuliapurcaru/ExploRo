@@ -1,4 +1,4 @@
-package com.example.exploro;
+package com.example.exploro.ui;
 
 import android.content.Intent;
 import android.util.Log;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.exploro.R;
 import com.example.exploro.databinding.ActivityLoginBinding;
-import com.example.exploro.ui.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {

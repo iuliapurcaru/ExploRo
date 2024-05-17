@@ -12,16 +12,12 @@ import android.view.ViewGroup;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.exploro.LoginActivity;
-import com.example.exploro.R;
 import com.example.exploro.ui.account.AccountViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class PopupMenu {
 

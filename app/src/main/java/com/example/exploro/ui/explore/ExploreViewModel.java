@@ -11,7 +11,7 @@ import com.example.exploro.R;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
-import com.example.exploro.PlanningActivity;
+import com.example.exploro.ui.PlanningActivity;
 
 public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.ExploreViewHolder> {
 

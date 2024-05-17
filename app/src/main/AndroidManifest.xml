@@ -16,21 +16,21 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
-                android:name=".TripResultActivity"
+                android:name=".ui.TripResultActivity"
                 android:exported="false"/>
         <activity
-                android:name=".PlanningActivity"
+                android:name=".ui.PlanningActivity"
                 android:exported="false"
                 android:label="@string/title_activity_planning"/>
         <activity
-                android:name=".MainActivity"
+                android:name=".ui.MainActivity"
                 android:exported="false"
                 android:label="@string/title_activity_main"/>
         <activity
-                android:name=".SignupActivity"
+                android:name=".ui.SignupActivity"
                 android:exported="false"/>
         <activity
-                android:name=".LoginActivity"
+                android:name=".ui.LoginActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -1,18 +1,18 @@
 package com.example.exploro;
 
-public class AttractionsInfo {
+public class AttractionInfo {
     private final String id;
     private final String name;
-    private final int openingHours;
-    private final int closingHours;
+    private final double openingHours;
+    private final double closingHours;
     private final int adultPrice;
     private final int studentPrice;
-    private final int timeSpent;
+    private final double timeSpent;
     private final double latitude;
     private final double longitude;
 
-    public AttractionsInfo(String id, String name, int openingHours, int closingHours, int adultPrice,
-                           int studentPrice, int timeSpent, double latitude, double longitude) {
+    public AttractionInfo(String id, String name, double openingHours, double closingHours, int adultPrice,
+                          int studentPrice, double timeSpent, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.openingHours = openingHours;
@@ -32,11 +32,11 @@ public class AttractionsInfo {
         return name;
     }
 
-    public int getOpeningHours() {
+    public double getOpeningHour() {
         return openingHours;
     }
 
-    public int getClosingHours() {
+    public double getClosingHour() {
         return closingHours;
     }
 
@@ -48,7 +48,7 @@ public class AttractionsInfo {
         return studentPrice;
     }
 
-    public int getTimeSpent() {
+    public double getTimeSpent() {
         return timeSpent;
     }
 

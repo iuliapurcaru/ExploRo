@@ -1,4 +1,4 @@
-package com.example.exploro;
+package com.example.exploro.ui;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.exploro.R;
 import com.example.exploro.databinding.ActivitySignupBinding;
 
 import com.google.firebase.auth.*;
@@ -27,7 +28,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(com.example.exploro.R.layout.activity_signup);
 
         ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -38,10 +39,10 @@ public class SignupActivity extends AppCompatActivity {
         final EditText confirmPassEditText = binding.confirmPassword;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
-        progressBar = findViewById(R.id.loading);
+        progressBar = findViewById(com.example.exploro.R.id.loading);
 
-        String errorEmail = getString(R.string.invalid_email);
-        String errorPassword = getString(R.string.invalid_password);
+        String errorEmail = getString(com.example.exploro.R.string.invalid_email);
+        String errorPassword = getString(com.example.exploro.R.string.invalid_password);
         String confirmPassword = getString(R.string.passwords_do_not_match);
 
         mAuth = FirebaseAuth.getInstance();

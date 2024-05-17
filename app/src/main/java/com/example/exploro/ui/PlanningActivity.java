@@ -1,4 +1,4 @@
-package com.example.exploro;
+package com.example.exploro.ui;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.exploro.R;
 import com.example.exploro.databinding.ActivityPlanningBinding;
 import com.example.exploro.ui.planning.PlanningViewModel;
 import com.google.firebase.database.*;
@@ -32,7 +33,7 @@ public class PlanningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_planning);
+        setContentView(com.example.exploro.R.layout.activity_planning);
 
         ActivityPlanningBinding binding = ActivityPlanningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
