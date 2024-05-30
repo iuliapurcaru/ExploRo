@@ -20,10 +20,8 @@ public class AccountFragment extends Fragment {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-
     private FragmentAccountBinding binding;
     private TextView changeCurrency;
-    private TextView changeDistance;
     private TextView resetPassword;
     private TextView editDisplayName;
     private TextView deleteAccount;
@@ -44,7 +42,6 @@ public class AccountFragment extends Fragment {
         final View progressBar = binding.loading;
         overlay = binding.overlay;
         changeCurrency = binding.changeCurrency;
-        changeDistance = binding.changeDistance;
         resetPassword = binding.resetPassword;
         editDisplayName = binding.editName;
         deleteAccount = binding.deleteAccount;
@@ -61,11 +58,6 @@ public class AccountFragment extends Fragment {
         changeCurrency.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
             showChangeCurrencyPopupMenu();
-        });
-
-        changeDistance.setOnClickListener(v -> {
-            overlay.setVisibility(View.VISIBLE);
-            showChangeDistancePopupMenu();
         });
 
         resetPassword.setOnClickListener(v -> {
@@ -113,10 +105,6 @@ public class AccountFragment extends Fragment {
     
     private void showChangeCurrencyPopupMenu() {
         PopupMenu.showPopupCurrency(requireParentFragment(), changeCurrency, () -> overlay.setVisibility(View.GONE));
-    }
-
-    private void showChangeDistancePopupMenu() {
-        PopupMenu.showPopupDistance(requireParentFragment(), changeDistance, () -> overlay.setVisibility(View.GONE));
     }
 
     private void showResetPasswordPopupMenu() {

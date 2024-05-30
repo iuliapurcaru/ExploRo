@@ -106,65 +106,6 @@ public class PopupMenu {
         configurePopupWindow(anchorView, dismissListener, popupView);
     }
 
-    public static void showPopupDistance(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
-        View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_change_distance, (ViewGroup) fragment.getView(), false);
-
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance();
-
-        assert mUser != null;
-        DatabaseReference mDistanceReference = mDatabase.getReference("users/" + mUser.getUid() + "/distance_unit/");
-
-        RadioButton radioOptionKilometers = popupView.findViewById(com.example.exploro.R.id.radio_option1);
-        RadioButton radioOptionMiles = popupView.findViewById(com.example.exploro.R.id.radio_option2);
-        final RadioGroup radioGroup = popupView.findViewById(com.example.exploro.R.id.radio_group);
-
-        mDistanceReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String currencyValue = dataSnapshot.getValue(String.class);
-                    RadioButton selectedRadioButton = null;
-
-                    if (currencyValue != null) {
-                        switch (currencyValue) {
-                            case "kilometers (km)":
-                                selectedRadioButton = radioOptionKilometers;
-                                break;
-                            case "miles (mi)":
-                                selectedRadioButton = radioOptionMiles;
-                                break;
-                        }
-                        assert selectedRadioButton != null;
-                        selectedRadioButton.setChecked(true);
-                    }
-                }
-                else {
-                    Log.w("DATABASE", "Failed to get database data.");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
-
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            String selectedOption = "";
-            if (checkedId == com.example.exploro.R.id.radio_option1) {
-                selectedOption = "kilometers (km)";
-            } else if (checkedId == com.example.exploro.R.id.radio_option2) {
-                selectedOption = "miles (mi)";
-            }
-
-            mDistanceReference.setValue(selectedOption);
-        });
-
-        configurePopupWindow(anchorView, dismissListener, popupView);
-    }
-
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
         View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_reset_password, (ViewGroup) fragment.getView(), false);
 

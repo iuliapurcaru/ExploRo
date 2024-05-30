@@ -2,18 +2,24 @@ package com.example.exploro;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public class ItineraryPlanner {
+public class ItineraryTripPlanner {
     private final List<AttractionInfo> attractions;
     private final int numberOfDays;
     private final List<List<Double>> travelTimeMatrix;
+    private final String startDate;
+    private final int numberOfAdults;
+    private final int numberOfStudents;
 
-    public ItineraryPlanner(List<AttractionInfo> attractions, int numberOfDays) {
+    public ItineraryTripPlanner(List<AttractionInfo> attractions, int numberOfDays, String startDate, int numberOfAdults, int numberOfStudents) {
         this.attractions = attractions;
         this.numberOfDays = numberOfDays;
         this.travelTimeMatrix = calculateTravelTimeMatrix(calculateDistanceMatrix(attractions));
+        this.startDate = startDate;
+        this.numberOfAdults = numberOfAdults;
+        this.numberOfStudents = numberOfStudents;
     }
 
     public static double haversineFormula(double lat1, double lon1, double lat2, double lon2) {
@@ -80,6 +86,17 @@ public class ItineraryPlanner {
             itinerary.add(new ArrayList<>());
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        try {
+                Date startDateParsed = sdf.parse(startDate);
+            if (startDateParsed != null) {
+                calendar.setTime(startDateParsed);
+            }
+        } catch (Exception e) {
+            Log.e("ItineraryTripPlanner", "Error parsing start date", e);
+        }
+
         boolean[] visited = new boolean[attractions.size()];
         int currentDay = 0;
 
@@ -95,10 +112,10 @@ public class ItineraryPlanner {
                     currentDayTime = currentAttraction.getOpeningHour();
                 }
 
-                // Round up currentDayTime to the nearest whole hour
                 currentDayTime = Math.ceil(currentDayTime);
 
-                Log.d("ItineraryPlanner", "Current time is " + currentDayTime + " and the attraction opens at " + currentAttraction.getOpeningHour() + " and closes at " + currentAttraction.getClosingHour() + " hours");
+                // TODO Remove this log statement
+                Log.d("ItineraryTripPlanner", "Current time is " + currentDayTime + " and the attraction opens at " + currentAttraction.getOpeningHour() + " and closes at " + currentAttraction.getClosingHour() + " hours");
 
                 if (currentDayTime + currentAttraction.getTimeSpent() > currentAttraction.getClosingHour() ||
                         currentDayTime < currentAttraction.getOpeningHour()) {
@@ -128,10 +145,12 @@ public class ItineraryPlanner {
                     break;
                 }
 
-                Log.d("ItineraryPlanner", "Day " + (currentDay + 1) + ": " + currentAttraction.getName() + " - " + currentDayTime + " hours");
-                Log.d("ItineraryPlanner", currentAttraction.getName() + " -> " + attractions.get(nextAttractionIndex).getName());
+                // TODO Remove this log statement
+                Log.d("ItineraryTripPlanner", "Day " + (currentDay + 1) + ": " + currentAttraction.getName() + " - " + currentDayTime + " hours");
+                Log.d("ItineraryTripPlanner", currentAttraction.getName() + " -> " + attractions.get(nextAttractionIndex).getName());
             }
             currentDay++;
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         return itinerary;
@@ -173,5 +192,13 @@ public class ItineraryPlanner {
             }
         }
         return closestAttraction;
+    }
+
+    public double calculateTotalPrice() {
+        double totalPrice = 0;
+        for (AttractionInfo attraction : attractions) {
+            totalPrice += (attraction.getAdultPrice() * numberOfAdults) + (attraction.getStudentPrice() * numberOfStudents);
+        }
+        return totalPrice;
     }
 }

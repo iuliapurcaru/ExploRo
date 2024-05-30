@@ -81,5 +81,10 @@
     <!-- Strings related to trip activity -->
     <string name="title_activity_trip_planner">TripPlannerActivity</string>
     <string name="title_trip">Your trip plan</string>
+    <string name="who_is_traveling">Who is traveling?</string>
+    <string name="num_of_adults">Adults</string>
+    <string name="num_of_students">Children/Students</string>
+    <string name="total_price">Total Price:</string>
+    <string name="save_plan">Save plan</string>
 
 </resources>

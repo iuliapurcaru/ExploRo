@@ -44,26 +44,26 @@ public class HomeViewModel extends ViewModel {
             }
         });
 
-        mTripsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String trips = dataSnapshot.getValue(String.class);
-                    assert trips != null;
-                    if (trips.isEmpty()) {
-                        tripsLiveData.setValue("You haven't planned any trips yet!");
-                    }
-                    else {
-                        tripsLiveData.setValue("You have " + trips + " trips!");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
+//        mTripsReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    String trips = dataSnapshot.getValue(String.class);
+//                    assert trips != null;
+//                    if (trips.isEmpty()) {
+//                        tripsLiveData.setValue("You haven't planned any trips yet!");
+//                    }
+//                    else {
+//                        tripsLiveData.setValue("You have trips!");
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NotNull DatabaseError error) {
+//                Log.w("DATABASE", "Failed to get database data.", error.toException());
+//            }
+//        });
     }
 
     public LiveData<String> getHomeText() {

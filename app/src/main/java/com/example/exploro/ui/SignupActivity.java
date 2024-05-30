@@ -173,6 +173,7 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
+                        // TODO Remove this log statement
                         Log.d("SIGNUP", "createUserWithEmail:success");
                         FirebaseUser mUser = mAuth.getCurrentUser();
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()

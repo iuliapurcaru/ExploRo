@@ -100,13 +100,56 @@
                 android:layout_toEndOf="@+id/editStartDate"
                 android:layout_below="@+id/when_is_trip"/>
 
+        <TextView
+                android:id="@+id/number_of_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/who_is_traveling"
+                android:textSize="23sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/editStartDate"/>
+        <EditText
+                android:id="@+id/num_adults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="@string/num_of_adults"
+                android:autofillHints="@string/num_of_adults"
+                android:fontFamily="@font/poppins_light"
+                android:textSize="16sp"
+                android:ems="5"
+                android:layout_marginStart="50dp"
+                android:layout_below="@+id/number_of_people"/>
+        <EditText
+                android:id="@+id/num_students"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="@string/num_of_students"
+                android:autofillHints="@string/num_of_students"
+                android:fontFamily="@font/poppins_light"
+                android:textSize="16sp"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@+id/num_adults"
+                android:layout_below="@+id/number_of_people"/>
+        <ImageView
+                android:id="@+id/people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_people_24"
+                android:importantForAccessibility="no"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_below="@+id/number_of_people"/>
+
         <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
                 android:layout_marginTop="15dp"
-                android:layout_below="@id/editEndDate"/>
+                android:layout_below="@id/num_adults"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -128,7 +171,7 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="370dp"
+                android:layout_height="300dp"
                 android:layout_margin="20dp"/>
 
         <Button

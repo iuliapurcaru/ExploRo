@@ -69,10 +69,12 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
+                        // TODO Remove this log statement
                         Log.d("LOGIN", "signInWithEmail:success");
                         updateUI();
                         finish();
                     } else {
+                        // TODO Remove this log statement
                         Log.w("LOGIN", "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                     }

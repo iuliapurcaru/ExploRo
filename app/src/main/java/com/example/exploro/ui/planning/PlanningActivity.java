@@ -42,12 +42,14 @@ public class PlanningActivity extends AppCompatActivity {
 
         startDateEditText = binding.editStartDate;
         endDateEditText = binding.editEndDate;
-        final Button confirmButton = binding.continueButton;
+        final EditText numberOfAdultsEditText = binding.numAdults;
+        final EditText numberOfStudentsEditText = binding.numStudents;
+        final Button continueButton = binding.continueButton;
 
         startDateEditText.setOnClickListener(v -> showDatePicker(startDateEditText));
         endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
 
-        confirmButton.setOnClickListener(v -> {
+        continueButton.setOnClickListener(v -> {
             if (startDateEditText.getText().toString().isEmpty() || endDateEditText.getText().toString().isEmpty()) {
                 if (startDateEditText.getText().toString().isEmpty()) { //TODO: See why error message is not displayed
                     startDateEditText.setError("Start date is required!");
@@ -66,6 +68,8 @@ public class PlanningActivity extends AppCompatActivity {
                 intentTrip.putExtra("startDate", startDateEditText.getText().toString());
                 intentTrip.putExtra("endDate", endDateEditText.getText().toString());
                 intentTrip.putExtra("numberOfDays", numberOfDays);
+                intentTrip.putExtra("numberOfAdults", Integer.parseInt(numberOfAdultsEditText.getText().toString()));
+                intentTrip.putExtra("numberOfStudents", Integer.parseInt(numberOfStudentsEditText.getText().toString()));
                 startActivity(intentTrip);
             }
         });
