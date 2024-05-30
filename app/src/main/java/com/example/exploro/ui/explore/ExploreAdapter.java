@@ -11,21 +11,21 @@ import com.example.exploro.R;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
-import com.example.exploro.ui.PlanningActivity;
+import com.example.exploro.ui.planning.PlanningActivity;
 
-public class ExploreViewModel extends RecyclerView.Adapter<ExploreViewModel.ExploreViewHolder> {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreViewHolder> {
 
     private final List<String> destinationsImageUrls;
     private final List<String> destinationsIDs;
 
-    public ExploreViewModel(List<String> destinationsImageUrls, List<String> destinationsIDs) {
+    public ExploreAdapter(List<String> destinationsImageUrls, List<String> destinationsIDs) {
         this.destinationsImageUrls = destinationsImageUrls;
         this.destinationsIDs = destinationsIDs;
     }
 
     @NotNull
     @Override
-    public ExploreViewModel.ExploreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ExploreAdapter.ExploreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_destinations, parent, false);
         return new ExploreViewHolder(view);
     }

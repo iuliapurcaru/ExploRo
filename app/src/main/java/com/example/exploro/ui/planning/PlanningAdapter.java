@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.PlanningViewHolder> {
+public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.PlanningViewHolder> {
 
     private final List<String> attractionsNames;
     private final List<String> selectedItems;
@@ -21,7 +21,7 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
     private final String destinationID;
     private final List<String> attractionsIDs;
 
-    public PlanningViewModel(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
+    public PlanningAdapter(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
         this.attractionsNames = attractionsNames;
         this.selectedItems = selectedItems;
         this.overlay = overlay;
@@ -31,7 +31,7 @@ public class PlanningViewModel extends RecyclerView.Adapter<PlanningViewModel.Pl
 
     @NotNull
     @Override
-    public PlanningViewModel.PlanningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlanningAdapter.PlanningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_attractions, parent, false);
         return new PlanningViewHolder(view);
     }

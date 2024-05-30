@@ -1,44 +1,45 @@
-package com.example.exploro.ui;
+package com.example.exploro.ui.planning;
 
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Button;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.AttractionInfo;
 import com.example.exploro.ItineraryPlanner;
-import com.example.exploro.R;
 import com.example.exploro.databinding.ActivityTripResultBinding;
 import com.google.firebase.database.*;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripResultActivity extends AppCompatActivity {
+public class ItineraryActivity extends AppCompatActivity {
 
     private final List<AttractionInfo> selectedAttractions = new ArrayList<>();
+    private ItineraryAdapter itineraryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_result);
 
-        ActivityTripResultBinding binding = ActivityTripResultBinding.inflate(getLayoutInflater());
+        com.example.exploro.databinding.ActivityTripResultBinding binding = ActivityTripResultBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
         String destinationID = intent.getStringExtra("destination");
         ArrayList<String> selectedAttractionsID = intent.getStringArrayListExtra("selectedAttractions");
-        String startDate = intent.getStringExtra("startDate");
-        String endDate = intent.getStringExtra("endDate");
         int numberOfDays = intent.getIntExtra("numberOfDays", 0);
+
+        RecyclerView recyclerView = binding.recyclerView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
         mAttractionsReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    selectedAttractions.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String attractionID = snapshot.getKey();
                         if (selectedAttractionsID.contains(attractionID)) {
@@ -55,26 +56,19 @@ public class TripResultActivity extends AppCompatActivity {
                             selectedAttractions.add(attraction);
                         }
                     }
+
+                    // Plan the itinerary once the data is loaded
+                    ItineraryPlanner planner = new ItineraryPlanner(selectedAttractions, numberOfDays);
+                    List<List<AttractionInfo>> itinerary = planner.planItinerary();
+
+                    itineraryAdapter = new ItineraryAdapter(itinerary);
+                    recyclerView.setAdapter(itineraryAdapter);
                 }
             }
 
             @Override
-            public void onCancelled(@NotNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("TripResultActivity", "Error reading data from Firebase", databaseError.toException());
-            }
-        });
-
-        final Button testButton = binding.testButton1;
-
-        testButton.setOnClickListener(v -> {
-            ItineraryPlanner planner = new ItineraryPlanner(selectedAttractions, numberOfDays);
-            List<List<AttractionInfo>> itinerary = planner.planItinerary();
-
-            for (int i = 0; i < itinerary.size(); i++) {
-                Log.d("TripResultActivity", "Day " + (i + 1) + ":");
-                for (AttractionInfo attraction : itinerary.get(i)) {
-                    Log.d("TripResultActivity", "- " + attraction.getName());
-                }
             }
         });
     }

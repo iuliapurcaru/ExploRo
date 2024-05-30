@@ -16,10 +16,10 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
-                android:name=".ui.TripResultActivity"
+                android:name=".ui.planning.ItineraryActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.PlanningActivity"
+                android:name=".ui.planning.PlanningActivity"
                 android:exported="false"
                 android:label="@string/title_activity_planning"/>
         <activity

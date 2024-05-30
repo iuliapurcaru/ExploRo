@@ -1,4 +1,4 @@
-package com.example.exploro.ui;
+package com.example.exploro.ui.planning;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -8,11 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.exploro.databinding.ActivityPlanningBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.R;
-import com.example.exploro.databinding.ActivityPlanningBinding;
-import com.example.exploro.ui.planning.PlanningViewModel;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +60,7 @@ public class PlanningActivity extends AppCompatActivity {
             } else if (selectedAttractions.isEmpty()) {
                 Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intentTrip = new Intent(PlanningActivity.this, TripResultActivity.class);
+                Intent intentTrip = new Intent(PlanningActivity.this, ItineraryActivity.class);
                 intentTrip.putExtra("destination", destinationID);
                 intentTrip.putStringArrayListExtra("selectedAttractions", (ArrayList<String>) selectedAttractions);
                 intentTrip.putExtra("startDate", startDateEditText.getText().toString());
@@ -129,7 +128,7 @@ public class PlanningActivity extends AppCompatActivity {
                         String attractionName = snapshot.child("name").getValue(String.class);
                         attractionsNames.add(attractionName);
                     }
-                    PlanningViewModel adapter = new PlanningViewModel(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
+                    PlanningAdapter adapter = new PlanningAdapter(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }

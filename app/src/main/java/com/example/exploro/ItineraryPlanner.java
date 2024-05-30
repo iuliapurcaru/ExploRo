@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItineraryPlanner {
-
-    private final double START_HOUR = 9.0;
-    private final double END_HOUR = 18.0;
     private final List<AttractionInfo> attractions;
     private final int numberOfDays;
     private final List<List<Double>> travelTimeMatrix;
@@ -27,7 +24,7 @@ public class ItineraryPlanner {
         lat2 = Math.toRadians(lat2);
 
         double a = Math.pow(Math.sin(dLat / 2), 2) +
-                        Math.pow(Math.sin(dLon / 2), 2) *
+                Math.pow(Math.sin(dLon / 2), 2) *
                         Math.cos(lat1) *
                         Math.cos(lat2);
 
@@ -60,7 +57,7 @@ public class ItineraryPlanner {
     public static List<List<Double>> calculateTravelTimeMatrix(List<List<Double>> distanceMatrix) {
         int n = distanceMatrix.size();
         List<List<Double>> travelTimeMatrix = new ArrayList<>(n);
-        double averageSpeed = 4.0;
+        double averageSpeed = 3.0;
 
         for (int i = 0; i < n; i++) {
             List<Double> travelTimes = new ArrayList<>(n);
@@ -88,17 +85,43 @@ public class ItineraryPlanner {
 
         while (currentDay < numberOfDays && hasUnvisitedAttractions(visited)) {
             List<AttractionInfo> dayPlan = itinerary.get(currentDay);
-            double currentDayTime = START_HOUR;
+            double currentDayTime = 9.0;
             int currentAttractionIndex = findFirstUnvisitedAttraction(visited);
 
-            while (currentDayTime < END_HOUR && currentAttractionIndex != -1) {
-                visited[currentAttractionIndex] = true;
+            while (currentAttractionIndex != -1) {
                 AttractionInfo currentAttraction = attractions.get(currentAttractionIndex);
+
+                if (currentDayTime < currentAttraction.getOpeningHour()) {
+                    currentDayTime = currentAttraction.getOpeningHour();
+                }
+
+                // Round up currentDayTime to the nearest whole hour
+                currentDayTime = Math.ceil(currentDayTime);
+
+                Log.d("ItineraryPlanner", "Current time is " + currentDayTime + " and the attraction opens at " + currentAttraction.getOpeningHour() + " and closes at " + currentAttraction.getClosingHour() + " hours");
+
+                if (currentDayTime + currentAttraction.getTimeSpent() > currentAttraction.getClosingHour() ||
+                        currentDayTime < currentAttraction.getOpeningHour()) {
+                    currentAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                    if (currentAttractionIndex == -1) {
+                        break;
+                    }
+                    continue;
+                }
+
+                visited[currentAttractionIndex] = true;
+                currentAttraction.setVisitTime(currentDayTime);
                 dayPlan.add(currentAttraction);
                 currentDayTime += currentAttraction.getTimeSpent();
 
-                int nextAttractionIndex = findClosestAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
-                if (nextAttractionIndex != -1 && currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) + attractions.get(nextAttractionIndex).getTimeSpent() <= END_HOUR) {
+                int nextAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                while (nextAttractionIndex != -1 &&
+                        (currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) < attractions.get(nextAttractionIndex).getOpeningHour() ||
+                                currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) + attractions.get(nextAttractionIndex).getTimeSpent() > attractions.get(nextAttractionIndex).getClosingHour())) {
+                    nextAttractionIndex = findClosestEligibleAttraction(nextAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                }
+
+                if (nextAttractionIndex != -1) {
                     currentDayTime += travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex);
                     currentAttractionIndex = nextAttractionIndex;
                 } else {
@@ -106,7 +129,7 @@ public class ItineraryPlanner {
                 }
 
                 Log.d("ItineraryPlanner", "Day " + (currentDay + 1) + ": " + currentAttraction.getName() + " - " + currentDayTime + " hours");
-                Log.d("ItineraryPlanner", currentAttraction.getName() + " -> " +  attractions.get(nextAttractionIndex).getName());
+                Log.d("ItineraryPlanner", currentAttraction.getName() + " -> " + attractions.get(nextAttractionIndex).getName());
             }
             currentDay++;
         }
@@ -132,18 +155,23 @@ public class ItineraryPlanner {
         return -1;
     }
 
-    private int findClosestAttraction(int index, boolean[] visited, List<List<Double>> travelTimeMatrix, double currentDayTime) {
+    private int findClosestEligibleAttraction(int index, boolean[] visited, List<List<Double>> travelTimeMatrix, double currentDayTime) {
         double minTravelTime = Double.MAX_VALUE;
         int closestAttraction = -1;
         for (int i = 0; i < travelTimeMatrix.get(index).size(); i++) {
-            if (!visited[i] && travelTimeMatrix.get(index).get(i) < minTravelTime) {
-                if (currentDayTime + travelTimeMatrix.get(index).get(i) <= END_HOUR) {
-                    minTravelTime = travelTimeMatrix.get(index).get(i);
-                    closestAttraction = i;
+            if (!visited[i]) {
+                AttractionInfo nextAttraction = attractions.get(i);
+                double travelTime = travelTimeMatrix.get(index).get(i);
+
+                if (currentDayTime + travelTime >= nextAttraction.getOpeningHour() &&
+                        currentDayTime + travelTime + nextAttraction.getTimeSpent() <= nextAttraction.getClosingHour()) {
+                    if (travelTime < minTravelTime) {
+                        minTravelTime = travelTime;
+                        closestAttraction = i;
+                    }
                 }
             }
         }
         return closestAttraction;
     }
-
 }

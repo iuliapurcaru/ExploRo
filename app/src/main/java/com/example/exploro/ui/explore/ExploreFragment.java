@@ -54,7 +54,7 @@ public class ExploreFragment extends Fragment {
                         String destinationImageUrl = snapshot.child("image").getValue(String.class);
                         destinationsImageUrls.add(destinationImageUrl);
                     }
-                    ExploreViewModel adapter = new ExploreViewModel(destinationsImageUrls, destinationsIDs);
+                    ExploreAdapter adapter = new ExploreAdapter(destinationsImageUrls, destinationsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }
