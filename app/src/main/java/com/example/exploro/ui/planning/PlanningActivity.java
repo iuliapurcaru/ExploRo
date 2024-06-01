@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.exploro.TripInfo;
 import com.example.exploro.databinding.ActivityPlanningBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,17 +60,25 @@ public class PlanningActivity extends AppCompatActivity {
                 }
             } else if (!checkDates()) {
                 endDateEditText.setError("End date must be after Start date!");
+            } else if (numberOfAdultsEditText.getText().toString().isEmpty() || numberOfStudentsEditText.getText().toString().isEmpty()) {
+                if (numberOfAdultsEditText.getText().toString().isEmpty()) {
+                    numberOfAdultsEditText.setError("Number of adults is required!");
+                }
+                if (numberOfStudentsEditText.getText().toString().isEmpty()) {
+                    numberOfStudentsEditText.setError("Number of students is required!");
+                }
             } else if (selectedAttractions.isEmpty()) {
                 Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
             } else {
                 Intent intentTrip = new Intent(PlanningActivity.this, ItineraryActivity.class);
-                intentTrip.putExtra("destination", destinationID);
-                intentTrip.putStringArrayListExtra("selectedAttractions", (ArrayList<String>) selectedAttractions);
-                intentTrip.putExtra("startDate", startDateEditText.getText().toString());
-                intentTrip.putExtra("endDate", endDateEditText.getText().toString());
-                intentTrip.putExtra("numberOfDays", numberOfDays);
-                intentTrip.putExtra("numberOfAdults", Integer.parseInt(numberOfAdultsEditText.getText().toString()));
-                intentTrip.putExtra("numberOfStudents", Integer.parseInt(numberOfStudentsEditText.getText().toString()));
+                TripInfo tripInfo = new TripInfo(destinationID,
+                        startDateEditText.getText().toString(),
+                        endDateEditText.getText().toString(),
+                        numberOfDays,
+                        Integer.parseInt(numberOfAdultsEditText.getText().toString()),
+                        Integer.parseInt(numberOfStudentsEditText.getText().toString()),
+                        selectedAttractions);
+                intentTrip.putExtra("tripInfo", tripInfo);
                 startActivity(intentTrip);
             }
         });

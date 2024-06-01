@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.exploro.AttractionInfo;
 import com.example.exploro.ItineraryTripPlanner;
+import com.example.exploro.TripInfo;
 import com.example.exploro.databinding.ActivityItineraryBinding;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,65 +38,66 @@ public class ItineraryActivity extends AppCompatActivity {
         binding = ActivityItineraryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
         }
 
         Intent intent = getIntent();
-        String destinationID = intent.getStringExtra("destination");
-        ArrayList<String> selectedAttractionsID = intent.getStringArrayListExtra("selectedAttractions");
-        String startDate = intent.getStringExtra("startDate");
-        int numberOfDays = intent.getIntExtra("numberOfDays", 0);
-        int numberOfAdults = intent.getIntExtra("numberOfAdults", 0);
-        int numberOfStudents = intent.getIntExtra("numberOfStudents", 0);
+        TripInfo tripInfo = intent.getSerializableExtra("tripInfo", TripInfo.class);
 
-        RecyclerView recyclerView = binding.recyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (tripInfo != null) {
 
-        DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
-        mAttractionsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    selectedAttractions.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String attractionID = snapshot.getKey();
-                        if (selectedAttractionsID.contains(attractionID)) {
-                            String attractionName = snapshot.child("name").getValue(String.class);
-                            double openingHours = getValueOrDefault(snapshot.child("hours").child("opening"), Double.class, 0.0);
-                            double closingHours = getValueOrDefault(snapshot.child("hours").child("closing"), Double.class, 0.0);
-                            int adultPrice = getValueOrDefault(snapshot.child("price").child("adult"), Integer.class, -1);
-                            int studentPrice = getValueOrDefault(snapshot.child("price").child("student"), Integer.class, -1);
-                            double timeSpent = getValueOrDefault(snapshot.child("time"), Double.class, 0.0);
-                            double latitude = getValueOrDefault(snapshot.child("coordinates").child("lat"), Double.class, 0.0);
-                            double longitude = getValueOrDefault(snapshot.child("coordinates").child("long"), Double.class, 0.0);
+            String destinationID = tripInfo.getDestinationID();
+            String startDate = tripInfo.getStartDate();
+            List<String> selectedAttractionsID = tripInfo.getSelectedAttractions();
 
-                            AttractionInfo attraction = new AttractionInfo(attractionID, attractionName, openingHours, closingHours, adultPrice, studentPrice, timeSpent, latitude, longitude);
-                            selectedAttractions.add(attraction);
+            RecyclerView recyclerView = binding.recyclerView;
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
+            mAttractionsReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        selectedAttractions.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String attractionID = snapshot.getKey();
+                            if (selectedAttractionsID.contains(attractionID)) {
+                                String attractionName = snapshot.child("name").getValue(String.class);
+                                double openingHours = getValueOrDefault(snapshot.child("hours").child("opening"), Double.class, 0.0);
+                                double closingHours = getValueOrDefault(snapshot.child("hours").child("closing"), Double.class, 0.0);
+                                int adultPrice = getValueOrDefault(snapshot.child("price").child("adult"), Integer.class, -1);
+                                int studentPrice = getValueOrDefault(snapshot.child("price").child("student"), Integer.class, -1);
+                                double timeSpent = getValueOrDefault(snapshot.child("time"), Double.class, 0.0);
+                                double latitude = getValueOrDefault(snapshot.child("coordinates").child("lat"), Double.class, 0.0);
+                                double longitude = getValueOrDefault(snapshot.child("coordinates").child("long"), Double.class, 0.0);
+
+                                AttractionInfo attraction = new AttractionInfo(attractionID, attractionName, openingHours, closingHours, adultPrice, studentPrice, timeSpent, latitude, longitude);
+                                selectedAttractions.add(attraction);
+                            }
                         }
+
+                        ItineraryTripPlanner planner = new ItineraryTripPlanner(tripInfo, selectedAttractions);
+                        List<List<AttractionInfo>> itinerary = planner.planItinerary();
+
+                        itineraryAdapter = new ItineraryAdapter(itinerary, startDate);
+                        recyclerView.setAdapter(itineraryAdapter);
+
+                        double totalPrice = planner.calculateTotalPrice();
+                        String totalPriceText = "Total Price: " + totalPrice + " RON";
+                        binding.totalPriceTextView.setText(totalPriceText);
                     }
-
-                    ItineraryTripPlanner planner = new ItineraryTripPlanner(selectedAttractions, numberOfDays, startDate, numberOfAdults, numberOfStudents);
-                    List<List<AttractionInfo>> itinerary = planner.planItinerary();
-
-                    itineraryAdapter = new ItineraryAdapter(itinerary, startDate);
-                    recyclerView.setAdapter(itineraryAdapter);
-
-                    double totalPrice = planner.calculateTotalPrice();
-                    String totalPriceText = "Total Price: " + totalPrice + " RON";
-                    binding.totalPriceTextView.setText(totalPriceText);
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get database data.", error.toException());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.w("DATABASE", "Failed to get database data.", error.toException());
+                }
+            });
 
-        binding.saveButton.setOnClickListener(v -> saveTripPlan());
+            binding.saveButton.setOnClickListener(v -> saveTripPlan());
+        }
     }
 
     private <T> T getValueOrDefault(DataSnapshot snapshot, Class<T> clazz, T defaultValue) {
@@ -111,44 +113,37 @@ public class ItineraryActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> tripPlan = new HashMap<>();
-        tripPlan.put("startDate", getIntent().getStringExtra("startDate"));
-        tripPlan.put("endDate", getIntent().getStringExtra("endDate"));
-        tripPlan.put("numberOfAdults", getIntent().getIntExtra("numberOfAdults", 0));
-        tripPlan.put("numberOfStudents", getIntent().getIntExtra("numberOfStudents", 0));
-        tripPlan.put("totalPrice", binding.totalPriceTextView.getText().toString());
+        TripInfo tripInfo = getIntent().getSerializableExtra("tripInfo", TripInfo.class);
+        if (tripInfo != null) {
+            String destinationID = tripInfo.getDestinationID();
+            String startDate = tripInfo.getStartDate();
+            String endDate = tripInfo.getEndDate();
+            int numberOfDays = tripInfo.getNumberOfDays();
+            int numberOfAdults = tripInfo.getNumberOfAdults();
+            int numberOfStudents = tripInfo.getNumberOfStudents();
 
-        List<String> attractionsNames = new ArrayList<>();
-        for (AttractionInfo attraction : selectedAttractions) {
-            attractionsNames.add(attraction.getId());
+            Map<String, Object> tripPlan = new HashMap<>();
+            tripPlan.put("destination_id", destinationID);
+            tripPlan.put("start_date", startDate);
+            tripPlan.put("end_date", endDate);
+            tripPlan.put("number_days", numberOfDays);
+            tripPlan.put("number_adults", numberOfAdults);
+            tripPlan.put("number_students", numberOfStudents);
+
+            List<String> attractionsNames = new ArrayList<>();
+            for (AttractionInfo attraction : selectedAttractions) {
+                attractionsNames.add(attraction.getId());
+            }
+            tripPlan.put("attractions", attractionsNames);
+
+            userRef.child("trips").child(tripId).setValue(tripPlan)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ItineraryActivity.this, "Trip plan saved successfully!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ItineraryActivity.this, "Failed to save trip plan.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
-        tripPlan.put("selectedAttractions", attractionsNames);
-
-        String destinationID = getIntent().getStringExtra("destination");
-        DatabaseReference destinationRef = FirebaseDatabase.getInstance().getReference().child("destinations/" + destinationID + "/text");
-
-        destinationRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String destinationName = snapshot.getValue(String.class);
-                    tripPlan.put("destination", destinationName);
-
-                    userRef.child("trips").child(tripId).setValue(tripPlan)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ItineraryActivity.this, "Trip plan saved successfully!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ItineraryActivity.this, "Failed to save trip plan.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("DATABASE", "Failed to get destination name.", error.toException());
-            }
-        });
     }
 }

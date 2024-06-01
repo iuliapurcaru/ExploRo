@@ -51,7 +51,6 @@ public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.Planni
             }
         });
 
-
         holder.attractionDetails.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
             PopupMenu.showAttractionDetailsPopup(v.getContext(), holder.attractionDetails, () -> overlay.setVisibility(View.GONE), destinationID, itemID);

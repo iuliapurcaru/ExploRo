@@ -84,7 +84,9 @@
     <string name="who_is_traveling">Who is traveling?</string>
     <string name="num_of_adults">Adults</string>
     <string name="num_of_students">Children/Students</string>
-    <string name="total_price">Total Price:</string>
+    <string name="total_price">Total price:</string>
     <string name="save_plan">Save plan</string>
+    <string name="show_trip">Show trip</string>
+    <string name="delete_trip">Delete trip</string>
 
 </resources>

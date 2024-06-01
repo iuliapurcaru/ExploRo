@@ -2,7 +2,6 @@ package com.example.exploro.ui;
 
 import android.os.Bundle;
 import com.example.exploro.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.navigation.NavController;

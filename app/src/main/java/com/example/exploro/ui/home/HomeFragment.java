@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.exploro.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -25,6 +26,10 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getHomeText().observe(getViewLifecycleOwner(), textHome::setText);
         homeViewModel.getTripsText().observe(getViewLifecycleOwner(), textTrips::setText);
+
+        //TODO: Make it so that the user can see their trips immediately when opening the app
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerView.setAdapter(homeViewModel.getTripAdapter());
 
         return root;
     }
