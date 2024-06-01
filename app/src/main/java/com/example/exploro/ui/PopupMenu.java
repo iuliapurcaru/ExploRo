@@ -12,7 +12,11 @@ import android.view.ViewGroup;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.exploro.R;
+import com.example.exploro.TripInfo;
 import com.example.exploro.ui.account.AccountViewModel;
+import com.example.exploro.ui.home.TripAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -158,8 +162,6 @@ public class PopupMenu {
         final Button noButton = popupView.findViewById(com.example.exploro.R.id.no_button);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        noButton.setOnClickListener(v -> popupWindow.dismiss());
-
         yesButton.setOnClickListener(v -> {
             mDatabase = FirebaseDatabase.getInstance();
             mUser = mAuth.getCurrentUser();
@@ -174,6 +176,8 @@ public class PopupMenu {
             fragment.requireActivity().finish();
             mUserReference.removeValue();
         });
+
+        noButton.setOnClickListener(v -> popupWindow.dismiss());
     }
 
     public static void showAttractionDetailsPopup(Context context, View anchorView, PopupWindow.OnDismissListener dismissListener, String destinationID, String attractionID) {
@@ -221,6 +225,32 @@ public class PopupMenu {
         });
 
         closeButton.setOnClickListener(v -> popupWindow.dismiss());
+    }
+
+    public static void showDeleteTripPopup(Context context, View anchorView, PopupWindow.OnDismissListener dismissListener, TripInfo tripInfo, TripAdapter adapter, int position) {
+        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_home_delete_trip, null, false);
+
+        final Button yesButton = popupView.findViewById(com.example.exploro.R.id.yes_button);
+        final Button noButton = popupView.findViewById(com.example.exploro.R.id.no_button);
+        PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
+
+        yesButton.setOnClickListener(v -> {
+            DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().getUid() + "/trips/" + tripInfo.getTripID());
+            tripRef.removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (position != RecyclerView.NO_POSITION) {
+                        adapter.removeTrip(position);
+                    } else {
+                        Log.w("PopupMenu", "Attempted to remove item at invalid RecyclerView position: " + position);
+                    }
+                } else {
+                    Log.w("PopupMenu", "Failed to delete trip.", task.getException());
+                }
+            });
+            popupWindow.dismiss();
+        });
+
+        noButton.setOnClickListener(v -> popupWindow.dismiss());
     }
 
     private static PopupWindow configurePopupWindow(View anchorView, PopupWindow.OnDismissListener dismissListener, View popupView) {

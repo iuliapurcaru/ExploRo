@@ -31,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="37sp"
+                android:fontFamily="@font/poppins_bold"
                 android:layout_marginTop="92dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,11 +47,11 @@
                 android:hint="@string/full_name"
                 android:ems="10"
                 android:selectAllOnFocus="true"
-                android:fontFamily="@font/poppins_light"
+                android:textSize="20sp"
                 android:maxLength="20"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" android:minHeight="48dp"/>
         <EditText
                 android:id="@+id/email"
                 android:layout_width="370dp"
@@ -60,10 +61,10 @@
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:selectAllOnFocus="true"
-                android:fontFamily="@font/poppins_light"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
-                app:layout_constraintTop_toBottomOf="@+id/display_name"/>
+                app:layout_constraintTop_toBottomOf="@+id/display_name" android:minHeight="48dp"/>
         <EditText
                 android:id="@+id/password"
                 android:layout_width="370dp"
@@ -75,10 +76,10 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:selectAllOnFocus="true"
-                android:fontFamily="@font/poppins_light"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
-                app:layout_constraintTop_toBottomOf="@+id/email"/>
+                app:layout_constraintTop_toBottomOf="@+id/email" android:minHeight="48dp"/>
         <EditText
                 android:id="@+id/confirm_password"
                 android:layout_width="370dp"
@@ -90,10 +91,10 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:selectAllOnFocus="true"
-                android:fontFamily="@font/poppins_light"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
-                app:layout_constraintTop_toBottomOf="@+id/password"/>
+                app:layout_constraintTop_toBottomOf="@+id/password" android:minHeight="48dp"/>
         <Button
                 android:id="@+id/signup"
                 android:enabled="true"
@@ -102,6 +103,8 @@
                 android:layout_gravity="start"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="64dp"
+                android:fontFamily="@font/poppins_bold"
+                android:textSize="20sp"
                 android:text="@string/sign_up"
                 android:textColor="@color/black"
                 android:backgroundTint="@color/yellow_200"
@@ -116,6 +119,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
+                android:fontFamily="@font/poppins_bold"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/create_account"
                 app:layout_constraintTop_toBottomOf="@+id/signup"
@@ -128,6 +133,8 @@
                 android:layout_gravity="start"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="64dp"
+                android:fontFamily="@font/poppins_bold"
+                android:textSize="20sp"
                 android:text="@string/action_sign_in"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/red_500"

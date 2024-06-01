@@ -17,9 +17,9 @@ public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.Planni
 
     private final List<String> attractionsNames;
     private final List<String> selectedItems;
-    private final View overlay;
     private final String destinationID;
     private final List<String> attractionsIDs;
+    private final View overlay;
 
     public PlanningAdapter(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
         this.attractionsNames = attractionsNames;

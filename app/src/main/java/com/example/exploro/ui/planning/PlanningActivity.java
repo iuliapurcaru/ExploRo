@@ -22,8 +22,6 @@ import java.util.List;
 
 public class PlanningActivity extends AppCompatActivity {
 
-    private EditText startDateEditText;
-    private EditText endDateEditText;
     private final List<String> attractionsNames = new ArrayList<>();
     private final List<String> attractionsIDs = new ArrayList<>();
     private final List<String> selectedAttractions = new ArrayList<>();
@@ -41,8 +39,8 @@ public class PlanningActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String destinationID = intent.getStringExtra("destination");
 
-        startDateEditText = binding.editStartDate;
-        endDateEditText = binding.editEndDate;
+        final EditText startDateEditText = binding.editStartDate;
+        final EditText endDateEditText = binding.editEndDate;
         final EditText numberOfAdultsEditText = binding.numAdults;
         final EditText numberOfStudentsEditText = binding.numStudents;
         final Button continueButton = binding.continueButton;
@@ -51,25 +49,40 @@ public class PlanningActivity extends AppCompatActivity {
         endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
 
         continueButton.setOnClickListener(v -> {
-            if (startDateEditText.getText().toString().isEmpty() || endDateEditText.getText().toString().isEmpty()) {
-                if (startDateEditText.getText().toString().isEmpty()) { //TODO: See why error message is not displayed
-                    startDateEditText.setError("Start date is required!");
-                }
-                if (endDateEditText.getText().toString().isEmpty()) {
-                    endDateEditText.setError("End date is required!");
-                }
-            } else if (!checkDates()) {
+            boolean isValid = true;
+
+            if (startDateEditText.getText().toString().isEmpty()) {
+                startDateEditText.setError("Start date is required!");
+                isValid = false;
+            }
+
+            if (endDateEditText.getText().toString().isEmpty()) {
+                endDateEditText.setError("End date is required!");
+                isValid = false;
+            }
+
+            if (!startDateEditText.getText().toString().isEmpty() && !endDateEditText.getText().toString().isEmpty()
+                    && !checkDates(startDateEditText.getText().toString(), endDateEditText.getText().toString())) {
                 endDateEditText.setError("End date must be after Start date!");
-            } else if (numberOfAdultsEditText.getText().toString().isEmpty() || numberOfStudentsEditText.getText().toString().isEmpty()) {
-                if (numberOfAdultsEditText.getText().toString().isEmpty()) {
-                    numberOfAdultsEditText.setError("Number of adults is required!");
-                }
-                if (numberOfStudentsEditText.getText().toString().isEmpty()) {
-                    numberOfStudentsEditText.setError("Number of students is required!");
-                }
-            } else if (selectedAttractions.isEmpty()) {
+                isValid = false;
+            }
+
+            if (numberOfAdultsEditText.getText().toString().isEmpty()) {
+                numberOfAdultsEditText.setError("Number of adults is required!");
+                isValid = false;
+            }
+
+            if (numberOfStudentsEditText.getText().toString().isEmpty()) {
+                numberOfStudentsEditText.setError("Number of students is required!");
+                isValid = false;
+            }
+
+            if (selectedAttractions.isEmpty()) {
                 Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
-            } else {
+                isValid = false;
+            }
+
+            if (isValid) {
                 Intent intentTrip = new Intent(PlanningActivity.this, ItineraryActivity.class);
                 TripInfo tripInfo = new TripInfo(destinationID,
                         startDateEditText.getText().toString(),
@@ -103,13 +116,11 @@ public class PlanningActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    public boolean checkDates() {
-        String startDateStr = startDateEditText.getText().toString();
-        String endDateStr = endDateEditText.getText().toString();
+    public boolean checkDates(String startDate, String endDate) {
 
-        if (!startDateStr.isEmpty() && !endDateStr.isEmpty()) {
-            String[] startDateParts = startDateStr.split("/");
-            String[] endDateParts = endDateStr.split("/");
+        if (!startDate.isEmpty() && !endDate.isEmpty()) {
+            String[] startDateParts = startDate.split("/");
+            String[] endDateParts = endDate.split("/");
 
             int startDay = Integer.parseInt(startDateParts[0]);
             int startMonth = Integer.parseInt(startDateParts[1]);

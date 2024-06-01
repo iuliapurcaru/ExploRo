@@ -8,24 +8,32 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.exploro.R;
 import com.example.exploro.TripInfo;
+import com.example.exploro.ui.PopupMenu;
 import com.example.exploro.ui.planning.ItineraryActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
     private List<TripInfo> tripList;
+    private final View overlay;
 
-    public TripAdapter(List<TripInfo> tripList) {
+    public TripAdapter(List<TripInfo> tripList, View overlay) {
         this.tripList = tripList;
+        this.overlay = overlay;
     }
 
     public void setTrips(List<TripInfo> tripList) {
         this.tripList = tripList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -46,7 +54,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // TODO get destination name
                     String destination = dataSnapshot.child("text").getValue(String.class);
                     holder.textDestination.setText(destination);
                 } else {
@@ -66,16 +73,24 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             v.getContext().startActivity(intent);
         });
 
-        // TODO: Implement delete trip functionality to immediately delete a trip from the interface
         holder.buttonDeleteTrip.setOnClickListener(v -> {
-            DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().getUid() + "/trips/" + tripInfo.getTripID());
-            tripRef.removeValue();
+            overlay.setVisibility(View.VISIBLE);
+            PopupMenu.showDeleteTripPopup(v.getContext(), holder.buttonDeleteTrip, () -> overlay.setVisibility(View.GONE), tripInfo, TripAdapter.this, position);
         });
     }
 
     @Override
     public int getItemCount() {
         return tripList.size();
+    }
+
+    public void removeTrip(int position) {
+        if (position >= 0 && position < tripList.size()) {
+            tripList.remove(position);
+            notifyItemRemoved(position);
+        } else {
+            Log.w("TripAdapter", "Attempted to remove item at invalid position: " + position);
+        }
     }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder {
