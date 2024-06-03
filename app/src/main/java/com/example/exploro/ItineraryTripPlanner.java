@@ -34,20 +34,23 @@ public class ItineraryTripPlanner {
         while (currentDay < numberOfDays && hasUnvisitedAttractions(visited)) {
             List<AttractionInfo> dayPlan = itinerary.get(currentDay);
             double currentDayTime = 9.0;
-            int currentAttractionIndex = findUnvisitedAttraction(visited);
+            int dayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
+            int currentAttractionIndex = findEarliestOpeningAttraction(visited, dayOfWeek);
 
             while (currentAttractionIndex != -1) {
                 AttractionInfo currentAttraction = attractions.get(currentAttractionIndex);
 
-                if (currentDayTime < currentAttraction.getOpeningHour()) {
-                    currentDayTime = currentAttraction.getOpeningHour();
+                double openingHour = currentAttraction.getOpeningHour(dayOfWeek);
+                double closingHour = currentAttraction.getClosingHour(dayOfWeek);
+
+                if (currentDayTime < openingHour) {
+                    currentDayTime = openingHour;
                 }
 
                 currentDayTime = TimeDistanceHandler.roundHour(currentDayTime);
 
-                if (currentDayTime + currentAttraction.getTimeSpent() > currentAttraction.getClosingHour() ||
-                        currentDayTime < currentAttraction.getOpeningHour()) {
-                    currentAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                if (currentDayTime + currentAttraction.getTimeSpent() > closingHour || currentDayTime < openingHour) {
+                    currentAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime, dayOfWeek);
                     if (currentAttractionIndex == -1) {
                         break;
                     }
@@ -62,11 +65,11 @@ public class ItineraryTripPlanner {
 
                 currentDayTime += currentAttraction.getTimeSpent();
 
-                int nextAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                int nextAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime, dayOfWeek);
                 while (nextAttractionIndex != -1 &&
-                        (currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) < attractions.get(nextAttractionIndex).getOpeningHour() ||
-                                currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) + attractions.get(nextAttractionIndex).getTimeSpent() > attractions.get(nextAttractionIndex).getClosingHour())) {
-                    nextAttractionIndex = findClosestEligibleAttraction(nextAttractionIndex, visited, travelTimeMatrix, currentDayTime);
+                        (currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) < attractions.get(nextAttractionIndex).getOpeningHour(dayOfWeek) ||
+                                currentDayTime + travelTimeMatrix.get(currentAttractionIndex).get(nextAttractionIndex) + attractions.get(nextAttractionIndex).getTimeSpent() > attractions.get(nextAttractionIndex).getClosingHour(dayOfWeek))) {
+                    nextAttractionIndex = findClosestEligibleAttraction(nextAttractionIndex, visited, travelTimeMatrix, currentDayTime, dayOfWeek);
                 }
 
                 if (nextAttractionIndex != -1) {
@@ -92,23 +95,31 @@ public class ItineraryTripPlanner {
         return false;
     }
 
-    private int findUnvisitedAttraction(boolean[] visited) {
-        for (int i = 0; i < visited.length; i++) {
+    private int findEarliestOpeningAttraction(boolean[] visited, int dayOfWeek) {
+        int earliestAttractionIndex = -1;
+        double earliestOpeningTime = Double.MAX_VALUE;
+
+        for (int i = 0; i < attractions.size(); i++) {
             if (!visited[i]) {
-                return i;
+                double openingTime = attractions.get(i).getOpeningHour(dayOfWeek);
+                if (openingTime < earliestOpeningTime) {
+                    earliestOpeningTime = openingTime;
+                    earliestAttractionIndex = i;
+                }
             }
         }
-        return -1;
+
+        return earliestAttractionIndex;
     }
 
-    private int findClosestEligibleAttraction(int index, boolean[] visited, List<List<Double>> travelTimeMatrix, double currentDayTime) {
+    private int findClosestEligibleAttraction(int index, boolean[] visited, List<List<Double>> travelTimeMatrix, double currentDayTime, int dayOfWeek) {
         PriorityQueue<AttractionWithTravelTime> queue = new PriorityQueue<>(Comparator.comparingDouble(attraction -> attraction.travelTime));
         for (int i = 0; i < travelTimeMatrix.get(index).size(); i++) {
             if (!visited[i]) {
                 AttractionInfo nextAttraction = attractions.get(i);
                 double travelTime = travelTimeMatrix.get(index).get(i);
-                if (currentDayTime + travelTime >= nextAttraction.getOpeningHour() &&
-                        currentDayTime + travelTime + nextAttraction.getTimeSpent() <= nextAttraction.getClosingHour()) {
+                if (currentDayTime + travelTime >= nextAttraction.getOpeningHour(dayOfWeek) &&
+                        currentDayTime + travelTime + nextAttraction.getTimeSpent() <= nextAttraction.getClosingHour(dayOfWeek)) {
                     queue.add(new AttractionWithTravelTime(i, travelTime));
                 }
             }

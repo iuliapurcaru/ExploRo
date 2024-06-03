@@ -3,8 +3,8 @@ package com.example.exploro;
 public class AttractionInfo {
     private final String id;
     private final String name;
-    private final double openingHours;
-    private final double closingHours;
+    private final double[] openingHours;
+    private final double[] closingHours;
     private final int adultPrice;
     private final int studentPrice;
     private final double timeSpent;
@@ -14,7 +14,7 @@ public class AttractionInfo {
     private String visitDate;
     private double visitTime;
 
-    public AttractionInfo(String id, String name, double openingHours, double closingHours, int adultPrice,
+    public AttractionInfo(String id, String name, double[] openingHours, double[] closingHours, int adultPrice,
                           int studentPrice, double timeSpent, double latitude, double longitude) {
         this.id = id;
         this.name = name;
@@ -35,12 +35,12 @@ public class AttractionInfo {
         return name;
     }
 
-    public double getOpeningHour() {
-        return openingHours;
+    public double getOpeningHour(int dayOfWeek) {
+        return openingHours[dayOfWeek];
     }
 
-    public double getClosingHour() {
-        return closingHours;
+    public double getClosingHour(int dayOfWeek) {
+        return closingHours[dayOfWeek];
     }
 
     public int getAdultPrice() {

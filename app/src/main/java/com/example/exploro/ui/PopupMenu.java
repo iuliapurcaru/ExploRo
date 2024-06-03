@@ -184,14 +184,14 @@ public class PopupMenu {
         View popupView = LayoutInflater.from(context).inflate(com.example.exploro.R.layout.popup_planning_attraction_details, null, false);
 
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
-        final TextView attractionNameTextView = popupView.findViewById(com.example.exploro.R.id.attraction_name);
-        final TextView attractionDescriptionTextView = popupView.findViewById(com.example.exploro.R.id.attraction_description);
-        final TextView attractionTimeTextView = popupView.findViewById(com.example.exploro.R.id.attraction_time);
+        final TextView nameTextView = popupView.findViewById(com.example.exploro.R.id.attraction_name);
+        final TextView descriptionTextView = popupView.findViewById(com.example.exploro.R.id.attraction_description);
+        final TextView timeSpentTextView = popupView.findViewById(com.example.exploro.R.id.attraction_time);
         final TextView attractionAdultPriceTextView = popupView.findViewById(com.example.exploro.R.id.adult_price);
-        final TextView attractionStudentPriceTextView = popupView.findViewById(com.example.exploro.R.id.student_price);
-        final TextView attractionAddressTextView = popupView.findViewById(com.example.exploro.R.id.attraction_address);
+        final TextView studentPriceTextView = popupView.findViewById(com.example.exploro.R.id.student_price);
+        final TextView addressTextView = popupView.findViewById(com.example.exploro.R.id.attraction_address);
+        final TextView hoursTextView = popupView.findViewById(com.example.exploro.R.id.attraction_hours);
         final Button closeButton = popupView.findViewById(com.example.exploro.R.id.close_button);
-        final TextView attractionHoursTextView = popupView.findViewById(com.example.exploro.R.id.attraction_hours);
 
         mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mAttractionsReference = mDatabase.getReference("attractions/" + destinationID + "/" + attractionID);
@@ -202,19 +202,32 @@ public class PopupMenu {
                 if (dataSnapshot.exists()) {
                     String attractionName = dataSnapshot.child("name").getValue(String.class);
                     String attractionDescription = dataSnapshot.child("description").getValue(String.class);
-                    String attractionTime = attractionTimeTextView.getText() + dataSnapshot.child("time").getValue(String.class);
+                    String attractionTime = timeSpentTextView.getText() + dataSnapshot.child("time").getValue(String.class);
                     String attractionAdultPrice = attractionAdultPriceTextView.getText() + dataSnapshot.child("prices/adult").getValue(String.class);
-                    String attractionStudentPrice = attractionStudentPriceTextView.getText() + dataSnapshot.child("prices/student").getValue(String.class);
-                    String attractionAddress = attractionAddressTextView.getText() + dataSnapshot.child("address").getValue(String.class);
-                    String attractionHours = attractionHoursTextView.getText() + dataSnapshot.child("hours").getValue(String.class);
+                    String attractionStudentPrice = studentPriceTextView.getText() + dataSnapshot.child("prices/student").getValue(String.class);
+                    String attractionAddress = addressTextView.getText() + dataSnapshot.child("address").getValue(String.class);
 
-                    attractionNameTextView.setText(attractionName);
-                    attractionDescriptionTextView.setText(attractionDescription);
-                    attractionTimeTextView.setText(attractionTime);
+                    String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
+                    StringBuilder hoursBuilder = new StringBuilder();
+                    for (String day : days) {
+                        String hoursString = dataSnapshot.child("hours").child(day).getValue(String.class);
+                        if (hoursString != null) {
+                            hoursBuilder.append(day.substring(0, 1).toUpperCase())
+                                    .append(day.substring(1))
+                                    .append(": ")
+                                    .append(hoursString)
+                                    .append("\n");
+                        }
+                    }
+                    String attractionHours = hoursBuilder.toString().trim();
+
+                    nameTextView.setText(attractionName);
+                    descriptionTextView.setText(attractionDescription);
+                    timeSpentTextView.setText(attractionTime);
                     attractionAdultPriceTextView.setText(attractionAdultPrice);
-                    attractionStudentPriceTextView.setText(attractionStudentPrice);
-                    attractionAddressTextView.setText(attractionAddress);
-                    attractionHoursTextView.setText(attractionHours);
+                    studentPriceTextView.setText(attractionStudentPrice);
+                    addressTextView.setText(attractionAddress);
+                    hoursTextView.setText(attractionHours);
                 }
             }
 

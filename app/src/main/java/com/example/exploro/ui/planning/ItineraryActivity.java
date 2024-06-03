@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -70,9 +71,16 @@ public class ItineraryActivity extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             String attractionID = snapshot.getKey();
                             if (selectedAttractionsID.contains(attractionID)) {
+
+                                double[] openingHours = new double[7];
+                                double[] closingHours = new double[7];
+                                String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
+                                for (int i = 0; i < days.length; i++) {
+                                    openingHours[i] = getValueOrDefault(snapshot.child("hours").child(days[i]).child("opening"), Double.class, 0.0);
+                                    closingHours[i] = getValueOrDefault(snapshot.child("hours").child(days[i]).child("closing"), Double.class, 0.0);
+                                }
+
                                 String attractionName = snapshot.child("name").getValue(String.class);
-                                double openingHours = getValueOrDefault(snapshot.child("hours").child("opening"), Double.class, 0.0);
-                                double closingHours = getValueOrDefault(snapshot.child("hours").child("closing"), Double.class, 0.0);
                                 int adultPrice = getValueOrDefault(snapshot.child("price").child("adult"), Integer.class, -1);
                                 int studentPrice = getValueOrDefault(snapshot.child("price").child("student"), Integer.class, -1);
                                 double timeSpent = getValueOrDefault(snapshot.child("time"), Double.class, 0.0);
@@ -122,6 +130,7 @@ public class ItineraryActivity extends AppCompatActivity {
     private void addMarkersToMap(List<List<AttractionInfo>> itinerary) {
         if (googleMap != null) {
             googleMap.clear();
+            LatLng lastPosition = null;
             for (List<AttractionInfo> dayPlan : itinerary) {
                 for (AttractionInfo attraction : dayPlan) {
                     int hours = (int) attraction.getVisitTime();
@@ -133,7 +142,16 @@ public class ItineraryActivity extends AppCompatActivity {
                             .title(attraction.getName())
                             .snippet("Day: " + attraction.getVisitDay() + " - " + attraction.getVisitDate() + " - Visit time: " + formattedVisitTime)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    lastPosition = location;
                 }
+            }
+            if (lastPosition != null) {
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(lastPosition)
+                        .zoom(15)
+                        .tilt(30)
+                        .build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
             if (!itinerary.isEmpty() && !itinerary.get(0).isEmpty()) {
                 LatLng firstAttraction = new LatLng(itinerary.get(0).get(0).getLatitude(), itinerary.get(0).get(0).getLongitude());
