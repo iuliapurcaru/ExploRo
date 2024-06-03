@@ -1,7 +1,5 @@
 package com.example.exploro;
 
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -16,68 +14,10 @@ public class ItineraryTripPlanner {
     public ItineraryTripPlanner(TripInfo tripInfo, List<AttractionInfo> attractions) {
         this.attractions = attractions;
         this.numberOfDays = tripInfo.getNumberOfDays();
-        this.travelTimeMatrix = calculateTravelTimeMatrix(calculateDistanceMatrix(attractions));
+        this.travelTimeMatrix = TimeDistanceHandler.calculateTravelTimeMatrix(TimeDistanceHandler.calculateDistanceMatrix(attractions));
         this.startDate = tripInfo.getStartDate();
         this.numberOfAdults = tripInfo.getNumberOfAdults();
         this.numberOfStudents = tripInfo.getNumberOfStudents();
-    }
-
-    public static double haversineFormula(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-
-        double a = Math.pow(Math.sin(dLat / 2), 2) +
-                Math.pow(Math.sin(dLon / 2), 2) *
-                        Math.cos(lat1) *
-                        Math.cos(lat2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double rad = 6371;
-
-        return rad * c;
-    }
-
-    public static List<List<Double>> calculateDistanceMatrix(List<AttractionInfo> attractions) {
-        int n = attractions.size();
-        List<List<Double>> distanceMatrix = new ArrayList<>(n);
-
-        for (int i = 0; i < n; i++) {
-            List<Double> distances = new ArrayList<>(n);
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    distances.add(0.0);
-                } else {
-                    double distance = haversineFormula(attractions.get(i).getLatitude(), attractions.get(i).getLongitude(),
-                            attractions.get(j).getLatitude(), attractions.get(j).getLongitude());
-                    distances.add(distance);
-                }
-            }
-            distanceMatrix.add(distances);
-        }
-        return distanceMatrix;
-    }
-
-    public static List<List<Double>> calculateTravelTimeMatrix(List<List<Double>> distanceMatrix) {
-        int n = distanceMatrix.size();
-        List<List<Double>> travelTimeMatrix = new ArrayList<>(n);
-        double averageSpeed = 3.0;
-
-        for (int i = 0; i < n; i++) {
-            List<Double> travelTimes = new ArrayList<>(n);
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    travelTimes.add(0.0);
-                } else {
-                    double travelTime = distanceMatrix.get(i).get(j) / averageSpeed;
-                    travelTimes.add(travelTime);
-                }
-            }
-            travelTimeMatrix.add(travelTimes);
-        }
-        return travelTimeMatrix;
     }
 
     public List<List<AttractionInfo>> planItinerary() {
@@ -86,16 +26,7 @@ public class ItineraryTripPlanner {
             itinerary.add(new ArrayList<>());
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        try {
-                Date startDateParsed = sdf.parse(startDate);
-            if (startDateParsed != null) {
-                calendar.setTime(startDateParsed);
-            }
-        } catch (Exception e) {
-            Log.e("ItineraryTripPlanner", "Error parsing start date", e);
-        }
+        Calendar calendar = TimeDistanceHandler.parseStartDate(startDate);
 
         boolean[] visited = new boolean[attractions.size()];
         int currentDay = 0;
@@ -103,7 +34,7 @@ public class ItineraryTripPlanner {
         while (currentDay < numberOfDays && hasUnvisitedAttractions(visited)) {
             List<AttractionInfo> dayPlan = itinerary.get(currentDay);
             double currentDayTime = 9.0;
-            int currentAttractionIndex = findFirstUnvisitedAttraction(visited);
+            int currentAttractionIndex = findUnvisitedAttraction(visited);
 
             while (currentAttractionIndex != -1) {
                 AttractionInfo currentAttraction = attractions.get(currentAttractionIndex);
@@ -112,7 +43,7 @@ public class ItineraryTripPlanner {
                     currentDayTime = currentAttraction.getOpeningHour();
                 }
 
-                currentDayTime = Math.ceil(currentDayTime);
+                currentDayTime = TimeDistanceHandler.roundHour(currentDayTime);
 
                 if (currentDayTime + currentAttraction.getTimeSpent() > currentAttraction.getClosingHour() ||
                         currentDayTime < currentAttraction.getOpeningHour()) {
@@ -124,8 +55,11 @@ public class ItineraryTripPlanner {
                 }
 
                 visited[currentAttractionIndex] = true;
+                currentAttraction.setVisitDay(currentDay + 1);
+                currentAttraction.setVisitDate(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime()));
                 currentAttraction.setVisitTime(currentDayTime);
                 dayPlan.add(currentAttraction);
+
                 currentDayTime += currentAttraction.getTimeSpent();
 
                 int nextAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime);
@@ -158,7 +92,7 @@ public class ItineraryTripPlanner {
         return false;
     }
 
-    private int findFirstUnvisitedAttraction(boolean[] visited) {
+    private int findUnvisitedAttraction(boolean[] visited) {
         for (int i = 0; i < visited.length; i++) {
             if (!visited[i]) {
                 return i;
@@ -168,24 +102,31 @@ public class ItineraryTripPlanner {
     }
 
     private int findClosestEligibleAttraction(int index, boolean[] visited, List<List<Double>> travelTimeMatrix, double currentDayTime) {
-        double minTravelTime = Double.MAX_VALUE;
-        int closestAttraction = -1;
+        PriorityQueue<AttractionWithTravelTime> queue = new PriorityQueue<>(Comparator.comparingDouble(attraction -> attraction.travelTime));
         for (int i = 0; i < travelTimeMatrix.get(index).size(); i++) {
             if (!visited[i]) {
                 AttractionInfo nextAttraction = attractions.get(i);
                 double travelTime = travelTimeMatrix.get(index).get(i);
-
                 if (currentDayTime + travelTime >= nextAttraction.getOpeningHour() &&
                         currentDayTime + travelTime + nextAttraction.getTimeSpent() <= nextAttraction.getClosingHour()) {
-                    if (travelTime < minTravelTime) {
-                        minTravelTime = travelTime;
-                        closestAttraction = i;
-                    }
+                    queue.add(new AttractionWithTravelTime(i, travelTime));
                 }
             }
         }
-        return closestAttraction;
+        AttractionWithTravelTime nextAttraction = queue.poll();
+        return (nextAttraction != null) ? nextAttraction.index : -1;
     }
+
+    private static class AttractionWithTravelTime {
+        int index;
+        double travelTime;
+
+        AttractionWithTravelTime(int index, double travelTime) {
+            this.index = index;
+            this.travelTime = travelTime;
+        }
+    }
+
 
     public double calculateTotalPrice() {
         double totalPrice = 0;

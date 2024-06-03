@@ -14,15 +14,20 @@ import com.example.exploro.AttractionInfo;
 import com.example.exploro.ItineraryTripPlanner;
 import com.example.exploro.TripInfo;
 import com.example.exploro.databinding.ActivityItineraryBinding;
+import com.example.exploro.R;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItineraryActivity extends AppCompatActivity {
 
@@ -30,6 +35,7 @@ public class ItineraryActivity extends AppCompatActivity {
     private ItineraryAdapter itineraryAdapter;
     private ActivityItineraryBinding binding;
     private DatabaseReference userRef;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,14 @@ public class ItineraryActivity extends AppCompatActivity {
                         double totalPrice = planner.calculateTotalPrice();
                         String totalPriceText = "Total Price: " + totalPrice + " RON";
                         binding.totalPriceTextView.setText(totalPriceText);
+
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                        if (mapFragment != null) {
+                            mapFragment.getMapAsync(googleMap -> {
+                                ItineraryActivity.this.googleMap = googleMap;
+                                addMarkersToMap(itinerary);
+                            });
+                        }
                     }
                 }
 
@@ -103,6 +117,29 @@ public class ItineraryActivity extends AppCompatActivity {
     private <T> T getValueOrDefault(DataSnapshot snapshot, Class<T> clazz, T defaultValue) {
         T value = snapshot.getValue(clazz);
         return (value != null) ? value : defaultValue;
+    }
+
+    private void addMarkersToMap(List<List<AttractionInfo>> itinerary) {
+        if (googleMap != null) {
+            googleMap.clear();
+            for (List<AttractionInfo> dayPlan : itinerary) {
+                for (AttractionInfo attraction : dayPlan) {
+                    int hours = (int) attraction.getVisitTime();
+                    int minutes = (int) ((attraction.getVisitTime() - hours) * 60);
+                    String formattedVisitTime = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                    LatLng location = new LatLng(attraction.getLatitude(), attraction.getLongitude());
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(location)
+                            .title(attraction.getName())
+                            .snippet("Day: " + attraction.getVisitDay() + " - " + attraction.getVisitDate() + " - Visit time: " + formattedVisitTime)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+            }
+            if (!itinerary.isEmpty() && !itinerary.get(0).isEmpty()) {
+                LatLng firstAttraction = new LatLng(itinerary.get(0).get(0).getLatitude(), itinerary.get(0).get(0).getLongitude());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstAttraction, 15));
+            }
+        }
     }
 
     private void saveTripPlan() {

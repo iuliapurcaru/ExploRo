@@ -10,6 +10,8 @@ public class AttractionInfo {
     private final double timeSpent;
     private final double latitude;
     private final double longitude;
+    private int visitDay;
+    private String visitDate;
     private double visitTime;
 
     public AttractionInfo(String id, String name, double openingHours, double closingHours, int adultPrice,
@@ -23,7 +25,6 @@ public class AttractionInfo {
         this.timeSpent = timeSpent;
         this.latitude = latitude;
         this.longitude = longitude;
-
     }
 
     public String getId() {
@@ -61,6 +62,23 @@ public class AttractionInfo {
     public double getLongitude() {
         return longitude;
     }
+
+    public int getVisitDay() {
+        return visitDay;
+    }
+
+    public void setVisitDay(int visitDay) {
+        this.visitDay = visitDay;
+    }
+
+    public String getVisitDate() {
+        return visitDate;
+    }
+
+    public void setVisitDate(String visitDate) {
+        this.visitDate = visitDate;
+    }
+
     public double getVisitTime() {
         return visitTime;
     }

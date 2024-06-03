@@ -1,20 +1,20 @@
 package com.example.exploro.ui.planning;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.exploro.AttractionInfo;
 import com.example.exploro.R;
+import com.example.exploro.TimeDistanceHandler;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,17 +25,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
 
     public ItineraryAdapter(List<List<AttractionInfo>> itinerary, String startDate) {
         this.itinerary = itinerary;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        calendar = Calendar.getInstance();
-        try {
-            Date startDateParsed = dateFormat.parse(startDate);
-            if (startDateParsed != null) {
-                calendar.setTime(startDateParsed);
-            }
-        } catch (Exception e) {
-            Log.e("ItineraryAdapter", "Error parsing start date", e);
-        }
+        this.calendar = TimeDistanceHandler.parseStartDate(startDate);
     }
 
     @NotNull
@@ -46,9 +36,10 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItineraryViewHolder holder, int position) {
-        List<AttractionInfo> dayPlan = itinerary.get(position);
-        holder.bind(dayPlan, position, calendar);
+    public void onBindViewHolder(@NonNull ItineraryViewHolder holder, int day) {
+        List<AttractionInfo> dayPlan = itinerary.get(day);
+
+        holder.bind(dayPlan, day, calendar);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
     }
 
