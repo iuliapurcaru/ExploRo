@@ -5,11 +5,16 @@
         <item name="android:fontFamily">@font/poppins_bold</item>
     </style>
 
+    <style name="ToolbarTextAppearance" parent="@style/TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/poppins_bold</item>
+    </style>
+
+    <!-- Base application theme. -->
     <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
         <item name="android:textSize">15sp</item>
     </style>
 
-    <!-- Base application theme. -->
     <style name="Base.Theme.ExploRo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:popupBackground">@color/white</item>
@@ -25,10 +30,14 @@
         <item name="colorSecondaryVariant">@color/blue_500</item>
         <item name="colorOnSecondary">@color/black</item>
     </style>
+
     <style name="Theme.ExploRo.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.ExploRo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="Theme.ExploRo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 </resources>

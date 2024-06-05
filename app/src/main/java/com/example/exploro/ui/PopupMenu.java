@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.R;
 import com.example.exploro.TripInfo;
-import com.example.exploro.ui.account.AccountViewModel;
 import com.example.exploro.ui.home.TripAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -113,14 +111,13 @@ public class PopupMenu {
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
         View popupView = LayoutInflater.from(fragment.getContext()).inflate(com.example.exploro.R.layout.popup_account_reset_password, (ViewGroup) fragment.getView(), false);
 
-        AccountViewModel accountViewModel = new ViewModelProvider(fragment).get(AccountViewModel.class);
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         final TextView emailTextView = popupView.findViewById(com.example.exploro.R.id.reset_email);
+        String emailText = "Reset email password sent to " + mUser.getEmail();
 
-        accountViewModel.getEmailText().observe(fragment.getViewLifecycleOwner(), emailTextView::setText);
+        emailTextView.setText(emailText);
 
         configurePopupWindow(anchorView, dismissListener, popupView);
     }
