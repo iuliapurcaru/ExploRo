@@ -1,4 +1,4 @@
-package com.example.exploro.ui.explore;
+package com.example.exploro.ui.adapters;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -8,25 +8,25 @@ import android.widget.ImageView;
 import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.R;
+import com.example.exploro.ui.activities.PlanningActivity;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
-import com.example.exploro.ui.planning.PlanningActivity;
 
-public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreViewHolder> {
+public class ExploreDestinationsAdapter extends RecyclerView.Adapter<ExploreDestinationsAdapter.ExploreViewHolder> {
 
     private final List<String> destinationsImageUrls;
     private final List<String> destinationsIDs;
 
-    public ExploreAdapter(List<String> destinationsImageUrls, List<String> destinationsIDs) {
+    public ExploreDestinationsAdapter(List<String> destinationsImageUrls, List<String> destinationsIDs) {
         this.destinationsImageUrls = destinationsImageUrls;
         this.destinationsIDs = destinationsIDs;
     }
 
     @NotNull
     @Override
-    public ExploreAdapter.ExploreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_destinations, parent, false);
+    public ExploreDestinationsAdapter.ExploreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_explore_destinations, parent, false);
         return new ExploreViewHolder(view);
     }
 

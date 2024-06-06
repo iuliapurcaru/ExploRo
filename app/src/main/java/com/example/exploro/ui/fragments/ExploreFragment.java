@@ -1,4 +1,4 @@
-package com.example.exploro.ui.explore;
+package com.example.exploro.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.databinding.FragmentExploreBinding;
+import com.example.exploro.ui.adapters.ExploreDestinationsAdapter;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ExploreFragment extends Fragment {
                         String destinationImageUrl = snapshot.child("image").getValue(String.class);
                         destinationsImageUrls.add(destinationImageUrl);
                     }
-                    ExploreAdapter adapter = new ExploreAdapter(destinationsImageUrls, destinationsIDs);
+                    ExploreDestinationsAdapter adapter = new ExploreDestinationsAdapter(destinationsImageUrls, destinationsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }

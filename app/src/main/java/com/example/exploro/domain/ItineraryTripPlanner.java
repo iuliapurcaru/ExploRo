@@ -1,44 +1,47 @@
-package com.example.exploro;
+package com.example.exploro.domain;
+
+import com.example.exploro.models.Attraction;
+import com.example.exploro.models.Trip;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ItineraryTripPlanner {
-    private final List<AttractionInfo> attractions;
+    private final List<Attraction> attractions;
     private final int numberOfDays;
     private final List<List<Double>> travelTimeMatrix;
     private final String startDate;
     private final int numberOfAdults;
     private final int numberOfStudents;
 
-    public ItineraryTripPlanner(TripInfo tripInfo, List<AttractionInfo> attractions) {
+    public ItineraryTripPlanner(Trip trip, List<Attraction> attractions) {
         this.attractions = attractions;
-        this.numberOfDays = tripInfo.getNumberOfDays();
-        this.travelTimeMatrix = TimeDistanceHandler.calculateTravelTimeMatrix(TimeDistanceHandler.calculateDistanceMatrix(attractions));
-        this.startDate = tripInfo.getStartDate();
-        this.numberOfAdults = tripInfo.getNumberOfAdults();
-        this.numberOfStudents = tripInfo.getNumberOfStudents();
+        this.numberOfDays = trip.getNumberOfDays();
+        this.travelTimeMatrix = TimeDistanceManager.calculateTravelTimeMatrix(TimeDistanceManager.calculateDistanceMatrix(attractions));
+        this.startDate = trip.getStartDate();
+        this.numberOfAdults = trip.getNumberOfAdults();
+        this.numberOfStudents = trip.getNumberOfStudents();
     }
 
-    public List<List<AttractionInfo>> planItinerary() {
-        List<List<AttractionInfo>> itinerary = new ArrayList<>();
+    public List<List<Attraction>> planItinerary() {
+        List<List<Attraction>> itinerary = new ArrayList<>();
         for (int i = 0; i < numberOfDays; i++) {
             itinerary.add(new ArrayList<>());
         }
 
-        Calendar calendar = TimeDistanceHandler.parseStartDate(startDate);
+        Calendar calendar = PlanningManager.parseStartDate(startDate);
 
         boolean[] visited = new boolean[attractions.size()];
         int currentDay = 0;
 
         while (currentDay < numberOfDays && hasUnvisitedAttractions(visited)) {
-            List<AttractionInfo> dayPlan = itinerary.get(currentDay);
+            List<Attraction> dayPlan = itinerary.get(currentDay);
             double currentDayTime = 9.0;
             int dayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
             int currentAttractionIndex = findEarliestOpeningAttraction(visited, dayOfWeek);
 
             while (currentAttractionIndex != -1) {
-                AttractionInfo currentAttraction = attractions.get(currentAttractionIndex);
+                Attraction currentAttraction = attractions.get(currentAttractionIndex);
 
                 double openingHour = currentAttraction.getOpeningHour(dayOfWeek);
                 double closingHour = currentAttraction.getClosingHour(dayOfWeek);
@@ -47,7 +50,7 @@ public class ItineraryTripPlanner {
                     currentDayTime = openingHour;
                 }
 
-                currentDayTime = TimeDistanceHandler.roundHour(currentDayTime);
+                currentDayTime = TimeDistanceManager.roundHour(currentDayTime);
 
                 if (currentDayTime + currentAttraction.getTimeSpent() > closingHour || currentDayTime < openingHour) {
                     currentAttractionIndex = findClosestEligibleAttraction(currentAttractionIndex, visited, travelTimeMatrix, currentDayTime, dayOfWeek);
@@ -116,7 +119,7 @@ public class ItineraryTripPlanner {
         PriorityQueue<AttractionWithTravelTime> queue = new PriorityQueue<>(Comparator.comparingDouble(attraction -> attraction.travelTime));
         for (int i = 0; i < travelTimeMatrix.get(index).size(); i++) {
             if (!visited[i]) {
-                AttractionInfo nextAttraction = attractions.get(i);
+                Attraction nextAttraction = attractions.get(i);
                 double travelTime = travelTimeMatrix.get(index).get(i);
                 if (currentDayTime + travelTime >= nextAttraction.getOpeningHour(dayOfWeek) &&
                         currentDayTime + travelTime + nextAttraction.getTimeSpent() <= nextAttraction.getClosingHour(dayOfWeek)) {
@@ -141,7 +144,7 @@ public class ItineraryTripPlanner {
 
     public double calculateTotalPrice() {
         double totalPrice = 0;
-        for (AttractionInfo attraction : attractions) {
+        for (Attraction attraction : attractions) {
             totalPrice += (attraction.getAdultPrice() * numberOfAdults) + (attraction.getStudentPrice() * numberOfStudents);
         }
         return totalPrice;

@@ -1,4 +1,4 @@
-package com.example.exploro.ui.home;
+package com.example.exploro.ui.adapters;
 
 import android.content.Intent;
 import android.util.Log;
@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.exploro.R;
-import com.example.exploro.TripInfo;
-import com.example.exploro.ui.PopupMenu;
-import com.example.exploro.ui.planning.ItineraryActivity;
+import com.example.exploro.models.Trip;
+import com.example.exploro.utils.PopupMenu;
+import com.example.exploro.ui.activities.ItineraryActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,17 +21,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
+public class HomeSavedTripsAdapter extends RecyclerView.Adapter<HomeSavedTripsAdapter.TripViewHolder> {
 
-    private List<TripInfo> tripList;
+    private List<Trip> tripList;
     private final View overlay;
 
-    public TripAdapter(List<TripInfo> tripList, View overlay) {
+    public HomeSavedTripsAdapter(List<Trip> tripList, View overlay) {
         this.tripList = tripList;
         this.overlay = overlay;
     }
 
-    public void setTrips(List<TripInfo> tripList) {
+    public void setTrips(List<Trip> tripList) {
         this.tripList = tripList;
         notifyDataSetChanged();
     }
@@ -45,11 +45,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        TripInfo tripInfo = tripList.get(position);
-        holder.textStartDate.setText(tripInfo.getStartDate());
-        holder.textEndDate.setText(tripInfo.getEndDate());
+        Trip trip = tripList.get(position);
+        holder.textStartDate.setText(trip.getStartDate());
+        holder.textEndDate.setText(trip.getEndDate());
 
-        DatabaseReference destinationRef = FirebaseDatabase.getInstance().getReference("destinations/" + tripInfo.getDestinationID());
+        DatabaseReference destinationRef = FirebaseDatabase.getInstance().getReference("destinations/" + trip.getDestinationID());
         destinationRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -69,28 +69,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
         holder.buttonShowTrip.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ItineraryActivity.class);
-            intent.putExtra("tripInfo", tripInfo);
+            intent.putExtra("trip", trip);
             v.getContext().startActivity(intent);
         });
 
         holder.buttonDeleteTrip.setOnClickListener(v -> {
             overlay.setVisibility(View.VISIBLE);
-            PopupMenu.showDeleteTripPopup(v.getContext(), holder.buttonDeleteTrip, () -> overlay.setVisibility(View.GONE), tripInfo, TripAdapter.this, position);
+            PopupMenu.showDeleteTripPopup(v.getContext(), holder.buttonDeleteTrip, () -> overlay.setVisibility(View.GONE), trip, HomeSavedTripsAdapter.this, position);
         });
     }
 
     @Override
     public int getItemCount() {
         return tripList.size();
-    }
-
-    public void removeTrip(int position) {
-        if (position >= 0 && position < tripList.size()) {
-            tripList.remove(position);
-            notifyItemRemoved(position);
-        } else {
-            Log.w("TripAdapter", "Attempted to remove item at invalid position: " + position);
-        }
     }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder {

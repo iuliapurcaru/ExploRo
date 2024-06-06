@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:context=".ui.LoginActivity">
+            tools:context=".ui.activities.LoginActivity">
 
         <ProgressBar
                 android:id="@+id/loading"

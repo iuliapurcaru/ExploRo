@@ -1,4 +1,4 @@
-package com.example.exploro.ui;
+package com.example.exploro.ui.activities;
 
 import android.os.Bundle;
 import com.example.exploro.R;

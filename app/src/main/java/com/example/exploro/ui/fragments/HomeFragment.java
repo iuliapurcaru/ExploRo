@@ -1,4 +1,4 @@
-package com.example.exploro.ui.home;
+package com.example.exploro.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.exploro.TripInfo;
+import com.example.exploro.models.Trip;
 import com.example.exploro.databinding.FragmentHomeBinding;
+import com.example.exploro.ui.adapters.HomeSavedTripsAdapter;
+import com.example.exploro.utils.VariousUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
@@ -26,7 +28,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private MutableLiveData<String> displayNameLiveData;
     private MutableLiveData<String> tripsLiveData;
-    private TripAdapter tripAdapter;
+    private HomeSavedTripsAdapter homeSavedTripsAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -34,8 +36,8 @@ public class HomeFragment extends Fragment {
 
         displayNameLiveData = new MutableLiveData<>();
         tripsLiveData = new MutableLiveData<>();
-        List<TripInfo> tripList = new ArrayList<>();
-        tripAdapter = new TripAdapter(tripList, binding.overlay);
+        List<Trip> tripList = new ArrayList<>();
+        homeSavedTripsAdapter = new HomeSavedTripsAdapter(tripList, binding.overlay);
 
         final TextView textHome = binding.textHome;
         final TextView textTrips = binding.textTrips;
@@ -44,7 +46,7 @@ public class HomeFragment extends Fragment {
         tripsLiveData.observe(getViewLifecycleOwner(), textTrips::setText);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.setAdapter(tripAdapter);
+        binding.recyclerView.setAdapter(homeSavedTripsAdapter);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         assert currentUser != null;
@@ -72,7 +74,7 @@ public class HomeFragment extends Fragment {
         mTripsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
-                List<TripInfo> trips = new ArrayList<>();
+                List<Trip> trips = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     tripsLiveData.setValue("Your trips:");
                     for (DataSnapshot tripSnapshot : dataSnapshot.getChildren()) {
@@ -80,18 +82,18 @@ public class HomeFragment extends Fragment {
                         String destinationID = tripSnapshot.child("destination_id").getValue(String.class);
                         String startDate = tripSnapshot.child("start_date").getValue(String.class);
                         String endDate = tripSnapshot.child("end_date").getValue(String.class);
-                        int numberOfAdults = getValueOrDefault(tripSnapshot.child("number_adults"));
-                        int numberOfStudents = getValueOrDefault(tripSnapshot.child("number_students"));
-                        int numberOfDays = getValueOrDefault(tripSnapshot.child("number_days"));
+                        int numberOfAdults = VariousUtils.getValueOrDefault(tripSnapshot.child("number_adults"), Integer.class, -1);
+                        int numberOfStudents = VariousUtils.getValueOrDefault(tripSnapshot.child("number_students"), Integer.class, -1);
+                        int numberOfDays = VariousUtils.getValueOrDefault(tripSnapshot.child("number_days"), Integer.class, -1);
                         List<String> selectedAttractions = new ArrayList<>();
                         for (DataSnapshot attractionSnapshot : tripSnapshot.child("attractions").getChildren()) {
                             selectedAttractions.add(attractionSnapshot.getValue(String.class));
                         }
-                        TripInfo trip = new TripInfo(tripID, destinationID, startDate, endDate, numberOfDays, numberOfAdults, numberOfStudents, selectedAttractions);
+                        Trip trip = new Trip(tripID, destinationID, startDate, endDate, numberOfDays, numberOfAdults, numberOfStudents, selectedAttractions);
                         trips.add(trip);
                     }
-                    tripAdapter.setTrips(trips);
-                    tripAdapter.notifyDataSetChanged();
+                    homeSavedTripsAdapter.setTrips(trips);
+                    homeSavedTripsAdapter.notifyDataSetChanged();
                 } else {
                     tripsLiveData.setValue("You haven't planned any trips yet!");
                 }
@@ -104,11 +106,6 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
-    }
-
-    private int getValueOrDefault(DataSnapshot snapshot) {
-        Integer value = snapshot.getValue(Integer.class);
-        return (value != null) ? value : -1;
     }
 
     @Override

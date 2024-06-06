@@ -1,10 +1,10 @@
-package com.example.exploro;
+package com.example.exploro.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripInfo implements Serializable {
+public class Trip implements Serializable {
 
     private String tripId;
     private final String destinationID;
@@ -15,7 +15,7 @@ public class TripInfo implements Serializable {
     private final int numberOfStudents;
     private final List<String> selectedAttractions = new ArrayList<>();
 
-    public TripInfo(String tripId, String destinationID, String startDate, String endDate, int numberOfDays, int numberOfAdults, int numberOfStudents, List<String> selectedAttractions) {
+    public Trip(String tripId, String destinationID, String startDate, String endDate, int numberOfDays, int numberOfAdults, int numberOfStudents, List<String> selectedAttractions) {
         this.tripId = tripId;
         this.destinationID = destinationID;
         this.startDate = startDate;
@@ -25,7 +25,7 @@ public class TripInfo implements Serializable {
         this.numberOfStudents = numberOfStudents;
         this.selectedAttractions.addAll(selectedAttractions);
     }
-    public TripInfo(String destinationID, String startDate, String endDate, int numberOfDays, int numberOfAdults, int numberOfStudents, List<String> selectedAttractions) {
+    public Trip(String destinationID, String startDate, String endDate, int numberOfDays, int numberOfAdults, int numberOfStudents, List<String> selectedAttractions) {
         this.destinationID = destinationID;
         this.startDate = startDate;
         this.endDate = endDate;

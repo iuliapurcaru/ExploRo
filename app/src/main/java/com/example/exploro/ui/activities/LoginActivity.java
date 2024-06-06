@@ -1,19 +1,19 @@
-package com.example.exploro.ui;
+package com.example.exploro.ui.activities;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
 import com.example.exploro.R;
 import com.example.exploro.databinding.ActivityLoginBinding;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.exploro.domain.AuthManager;
+import com.example.exploro.utils.PopupMenu;
 
 public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView forgotPasswordTextView;
-    private FirebaseAuth mAuth;
     private View overlay;
 
     @Override
@@ -32,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.loading);
         overlay = binding.overlay;
 
-        mAuth = FirebaseAuth.getInstance();
-
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             progressBar.setVisibility(ProgressBar.VISIBLE);
@@ -41,12 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-            if (emailEditText.getText().toString().isEmpty() || passwordEditText.getText().toString().isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Please fill in all fields!", Toast.LENGTH_SHORT).show();
-                return;
-            }
             progressBar.setVisibility(ProgressBar.VISIBLE);
-            login(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            AuthManager.login(emailEditText.getText().toString(), passwordEditText.getText().toString(), this, progressBar);
         });
 
         forgotPasswordTextView.setOnClickListener(v -> {
@@ -62,28 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         if(progressBar != null) {
             progressBar.setVisibility(ProgressBar.INVISIBLE);
         }
-    }
-
-    private void login(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    progressBar.setVisibility(ProgressBar.INVISIBLE);
-                    if (task.isSuccessful()) {
-                        // TODO Remove this log statement
-                        Log.d("LOGIN", "signInWithEmail:success");
-                        updateUI();
-                        finish();
-                    } else {
-                        // TODO Remove this log statement
-                        Log.w("LOGIN", "signInWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    private void updateUI() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void showPopupMenu() {

@@ -1,4 +1,4 @@
-package com.example.exploro.ui.planning;
+package com.example.exploro.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.exploro.AttractionInfo;
+import com.example.exploro.domain.PlanningManager;
+import com.example.exploro.models.Attraction;
 import com.example.exploro.R;
-import com.example.exploro.TimeDistanceHandler;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,14 +18,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
+public class ItineraryListAdapter extends RecyclerView.Adapter<ItineraryListAdapter.ItineraryViewHolder> {
 
-    private final List<List<AttractionInfo>> itinerary;
+    private final List<List<Attraction>> itinerary;
     private final Calendar calendar;
 
-    public ItineraryAdapter(List<List<AttractionInfo>> itinerary, String startDate) {
+    public ItineraryListAdapter(List<List<Attraction>> itinerary, String startDate) {
         this.itinerary = itinerary;
-        this.calendar = TimeDistanceHandler.parseStartDate(startDate);
+        this.calendar = PlanningManager.parseStartDate(startDate);
     }
 
     @NotNull
@@ -37,7 +37,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
 
     @Override
     public void onBindViewHolder(@NonNull ItineraryViewHolder holder, int day) {
-        List<AttractionInfo> dayPlan = itinerary.get(day);
+        List<Attraction> dayPlan = itinerary.get(day);
 
         holder.bind(dayPlan, day, calendar);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -60,7 +60,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             attractionsTextView = itemView.findViewById(R.id.attractionsTextView);
         }
 
-        public void bind(List<AttractionInfo> dayPlan, int dayIndex, Calendar calendar) {
+        public void bind(List<Attraction> dayPlan, int dayIndex, Calendar calendar) {
             String currentDay = "Day " + (dayIndex + 1);
             dayTitleTextView.setText(currentDay);
 
@@ -68,7 +68,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             dateTextView.setText(dateFormat.format(calendar.getTime()));
 
             StringBuilder attractionsStringBuilder = new StringBuilder();
-            for (AttractionInfo attraction : dayPlan) {
+            for (Attraction attraction : dayPlan) {
                 int hours = (int) attraction.getVisitTime();
                 int minutes = (int) ((attraction.getVisitTime() - hours) * 60);
                 String formattedVisitTime = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);

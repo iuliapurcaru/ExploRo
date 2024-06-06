@@ -1,11 +1,9 @@
-package com.example.exploro;
+package com.example.exploro.domain;
 
-import android.util.Log;
-
-import java.text.SimpleDateFormat;
+import com.example.exploro.models.Attraction;
 import java.util.*;
 
-public class TimeDistanceHandler {
+public class TimeDistanceManager {
 
     public static double haversineFormula(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
@@ -25,7 +23,7 @@ public class TimeDistanceHandler {
         return rad * c;
     }
 
-    public static List<List<Double>> calculateDistanceMatrix(List<AttractionInfo> attractions) {
+    public static List<List<Double>> calculateDistanceMatrix(List<Attraction> attractions) {
         int n = attractions.size();
         List<List<Double>> distanceMatrix = new ArrayList<>(n);
 
@@ -63,20 +61,6 @@ public class TimeDistanceHandler {
             travelTimeMatrix.add(travelTimes);
         }
         return travelTimeMatrix;
-    }
-
-    public static Calendar parseStartDate(String startDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        try {
-            Date startDateParsed = dateFormat.parse(startDate);
-            if (startDateParsed != null) {
-                calendar.setTime(startDateParsed);
-            }
-        } catch (Exception e) {
-            Log.e("ItineraryTripPlanner", "Error parsing start date", e);
-        }
-        return calendar;
     }
 
     public static double roundHour(double time) {

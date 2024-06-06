@@ -1,6 +1,6 @@
-package com.example.exploro;
+package com.example.exploro.models;
 
-public class AttractionInfo {
+public class Attraction {
     private final String id;
     private final String name;
     private final double[] openingHours;
@@ -14,8 +14,8 @@ public class AttractionInfo {
     private String visitDate;
     private double visitTime;
 
-    public AttractionInfo(String id, String name, double[] openingHours, double[] closingHours, int adultPrice,
-                          int studentPrice, double timeSpent, double latitude, double longitude) {
+    public Attraction(String id, String name, double[] openingHours, double[] closingHours, int adultPrice,
+                      int studentPrice, double timeSpent, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.openingHours = openingHours;

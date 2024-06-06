@@ -1,4 +1,4 @@
-package com.example.exploro.ui.planning;
+package com.example.exploro.ui.adapters;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.exploro.ui.PopupMenu;
+import com.example.exploro.utils.PopupMenu;
 import com.example.exploro.R;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.PlanningViewHolder> {
+public class PlanningAttractionsAdapter extends RecyclerView.Adapter<PlanningAttractionsAdapter.PlanningViewHolder> {
 
     private final List<String> attractionsNames;
     private final List<String> selectedItems;
@@ -21,7 +21,7 @@ public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.Planni
     private final List<String> attractionsIDs;
     private final View overlay;
 
-    public PlanningAdapter(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
+    public PlanningAttractionsAdapter(List<String> attractionsNames, List<String> selectedItems, View overlay, String destinationID, List<String> attractionsIDs) {
         this.attractionsNames = attractionsNames;
         this.selectedItems = selectedItems;
         this.overlay = overlay;
@@ -31,8 +31,8 @@ public class PlanningAdapter extends RecyclerView.Adapter<PlanningAdapter.Planni
 
     @NotNull
     @Override
-    public PlanningAdapter.PlanningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_attractions, parent, false);
+    public PlanningAttractionsAdapter.PlanningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_planning_attractions, parent, false);
         return new PlanningViewHolder(view);
     }
 

@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.account.AccountFragment">
+        tools:context=".ui.fragments.AccountFragment">
 
     <ProgressBar
             android:id="@+id/loading"
@@ -69,8 +69,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.05" />
     <TextView
-            android:id="@+id/change_currency"
-            android:text="@string/change_currency"
+            android:id="@+id/reset_password"
+            android:text="@string/reset_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -79,17 +79,6 @@
             app:layout_constraintTop_toBottomOf="@+id/user_settings"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.04"/>
-    <TextView
-            android:id="@+id/reset_password"
-            android:text="@string/reset_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/text_account"
-            app:layout_constraintTop_toBottomOf="@+id/change_currency"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.075"/>
     <TextView
             android:id="@+id/edit_name"
             android:text="@string/edit_display_name"

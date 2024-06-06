@@ -1,23 +1,24 @@
-package com.example.exploro.ui.planning;
+package com.example.exploro.ui.activities;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.exploro.TripInfo;
-import com.example.exploro.databinding.ActivityPlanningBinding;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.exploro.databinding.ActivityPlanningBinding;
+import com.example.exploro.domain.PlanningManager;
+import com.example.exploro.models.Trip;
 import com.example.exploro.R;
+import com.example.exploro.ui.adapters.PlanningAttractionsAdapter;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class PlanningActivity extends AppCompatActivity {
@@ -26,7 +27,6 @@ public class PlanningActivity extends AppCompatActivity {
     private final List<String> attractionsIDs = new ArrayList<>();
     private final List<String> selectedAttractions = new ArrayList<>();
     private RecyclerView recyclerView;
-    private int numberOfDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +45,25 @@ public class PlanningActivity extends AppCompatActivity {
         final EditText numberOfStudentsEditText = binding.numStudents;
         final Button continueButton = binding.continueButton;
 
-        startDateEditText.setOnClickListener(v -> showDatePicker(startDateEditText));
-        endDateEditText.setOnClickListener(v -> showDatePicker(endDateEditText));
+        startDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(startDateEditText, this));
+        endDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(endDateEditText, this));
 
         continueButton.setOnClickListener(v -> {
             boolean isValid = true;
+            String startDate = startDateEditText.getText().toString();
+            String endDate = endDateEditText.getText().toString();
 
-            if (startDateEditText.getText().toString().isEmpty()) {
+            if (startDate.isEmpty()) {
                 startDateEditText.setError("Start date is required!");
                 isValid = false;
             }
 
-            if (endDateEditText.getText().toString().isEmpty()) {
+            if (endDate.isEmpty()) {
                 endDateEditText.setError("End date is required!");
                 isValid = false;
             }
 
-            if (!startDateEditText.getText().toString().isEmpty() && !endDateEditText.getText().toString().isEmpty()
-                    && !checkDates(startDateEditText.getText().toString(), endDateEditText.getText().toString())) {
+            if (!startDate.isEmpty() && !endDate.isEmpty() && !PlanningManager.checkDates(startDate, endDate)) {
                 endDateEditText.setError("End date must be after Start date!");
                 isValid = false;
             }
@@ -83,15 +84,16 @@ public class PlanningActivity extends AppCompatActivity {
             }
 
             if (isValid) {
+                int numberOfDays = PlanningManager.calculateNumberOfDays(startDate, endDate);
                 Intent intentTrip = new Intent(PlanningActivity.this, ItineraryActivity.class);
-                TripInfo tripInfo = new TripInfo(destinationID,
+                Trip trip = new Trip(destinationID,
                         startDateEditText.getText().toString(),
                         endDateEditText.getText().toString(),
                         numberOfDays,
                         Integer.parseInt(numberOfAdultsEditText.getText().toString()),
                         Integer.parseInt(numberOfStudentsEditText.getText().toString()),
                         selectedAttractions);
-                intentTrip.putExtra("tripInfo", tripInfo);
+                intentTrip.putExtra("trip", trip);
                 startActivity(intentTrip);
             }
         });
@@ -100,43 +102,6 @@ public class PlanningActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getAttractionsNames(destinationID);
-    }
-
-    public void showDatePicker(EditText editText) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(PlanningActivity.this,
-                (datePicker, year1, month1, day) -> {
-                    String selectedDate = day + "/" + (month1 + 1) + "/" + year1;
-                    editText.setText(selectedDate);
-                }, year, month, dayOfMonth);
-        datePickerDialog.show();
-    }
-
-    public boolean checkDates(String startDate, String endDate) {
-
-        if (!startDate.isEmpty() && !endDate.isEmpty()) {
-            String[] startDateParts = startDate.split("/");
-            String[] endDateParts = endDate.split("/");
-
-            int startDay = Integer.parseInt(startDateParts[0]);
-            int startMonth = Integer.parseInt(startDateParts[1]);
-            int startYear = Integer.parseInt(startDateParts[2]);
-
-            int endDay = Integer.parseInt(endDateParts[0]);
-            int endMonth = Integer.parseInt(endDateParts[1]);
-            int endYear = Integer.parseInt(endDateParts[2]);
-
-            numberOfDays = endDay - startDay + 1;
-
-            return endYear >= startYear &&
-                    (endYear != startYear || endMonth >= startMonth) &&
-                    (endYear != startYear || endMonth != startMonth || endDay >= startDay);
-        }
-        return false;
     }
 
     private void getAttractionsNames(String destinationID) {
@@ -152,7 +117,7 @@ public class PlanningActivity extends AppCompatActivity {
                         String attractionName = snapshot.child("name").getValue(String.class);
                         attractionsNames.add(attractionName);
                     }
-                    PlanningAdapter adapter = new PlanningAdapter(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
+                    PlanningAttractionsAdapter adapter = new PlanningAttractionsAdapter(attractionsNames, selectedAttractions, findViewById(R.id.overlay), destinationID, attractionsIDs);
                     recyclerView.setAdapter(adapter);
                 }
             }

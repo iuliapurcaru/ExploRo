@@ -18,21 +18,21 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.ExploRo">
         <activity
-                android:name=".ui.planning.ItineraryActivity"
+                android:name=".ui.activities.ItineraryActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.planning.PlanningActivity"
+                android:name=".ui.activities.PlanningActivity"
                 android:exported="false"
                 android:label="@string/title_activity_planning"/>
         <activity
-                android:name=".ui.MainActivity"
+                android:name=".ui.activities.MainActivity"
                 android:exported="false"
                 android:label="@string/title_activity_main"/>
         <activity
-                android:name=".ui.SignupActivity"
+                android:name=".ui.activities.SignupActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.LoginActivity"
+                android:name=".ui.activities.LoginActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
