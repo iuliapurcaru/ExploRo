@@ -71,6 +71,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ullamcorper vulputate mollis. Nam maximus aliquam.
     </string>
     <string name="placeholder_attraction_address">Address:</string>
+    <string name="placeholder_attraction_website">Link</string>
     <string name="entrance_fees">Entrance fees:</string>
     <string name="adult_price">Adults:</string>
     <string name="student_price">Children/students:</string>

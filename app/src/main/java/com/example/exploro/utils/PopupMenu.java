@@ -76,13 +76,14 @@ public class PopupMenu {
         final TextView attractionAdultPriceTextView = popupView.findViewById(com.example.exploro.R.id.adult_price);
         final TextView studentPriceTextView = popupView.findViewById(com.example.exploro.R.id.student_price);
         final TextView addressTextView = popupView.findViewById(com.example.exploro.R.id.attraction_address);
+        final TextView linkTextView = popupView.findViewById(com.example.exploro.R.id.attraction_website);
         final TextView hoursTextView = popupView.findViewById(com.example.exploro.R.id.attraction_hours);
         final Button closeButton = popupView.findViewById(com.example.exploro.R.id.close_button);
 
         AttractionManager.fetchAttractionPlanningDetails(destinationID, attractionID, nameTextView,
                                                         descriptionTextView, timeSpentTextView,
                                                         attractionAdultPriceTextView, studentPriceTextView,
-                                                        addressTextView, hoursTextView);
+                                                        addressTextView, hoursTextView, linkTextView);
 
         closeButton.setOnClickListener(v -> popupWindow.dismiss());
     }

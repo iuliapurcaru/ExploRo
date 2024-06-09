@@ -1,8 +1,17 @@
 package com.example.exploro.domain;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import com.example.exploro.models.Attraction;
 import com.example.exploro.utils.VariousUtils;
 import com.google.firebase.database.*;
@@ -16,7 +25,7 @@ public class AttractionManager {
     public static void fetchAttractionPlanningDetails(String destinationID, String attractionID, TextView nameTextView,
                                                       TextView descriptionTextView, TextView timeSpentTextView,
                                                       TextView attractionAdultPriceTextView, TextView studentPriceTextView,
-                                                      TextView addressTextView, TextView hoursTextView) {
+                                                      TextView addressTextView, TextView hoursTextView, TextView linkTextView) {
 
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mAttractionsReference = mDatabase.getReference("attractions/" + destinationID + "/" + attractionID);
@@ -31,6 +40,13 @@ public class AttractionManager {
                     String attractionAdultPrice = attractionAdultPriceTextView.getText() + dataSnapshot.child("prices/adult").getValue(String.class);
                     String attractionStudentPrice = studentPriceTextView.getText() + dataSnapshot.child("prices/student").getValue(String.class);
                     String attractionAddress = addressTextView.getText() + dataSnapshot.child("address").getValue(String.class);
+                    String attractionLink = dataSnapshot.child("link").getValue(String.class);
+
+                    if (attractionLink != null) {
+                        setHyperlink(linkTextView.getContext(), linkTextView, attractionLink);
+                    } else {
+                        linkTextView.setText("");
+                    }
 
                     String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
                     StringBuilder hoursBuilder = new StringBuilder();
@@ -62,6 +78,22 @@ public class AttractionManager {
             }
         });
     }
+
+    private static void setHyperlink(final Context context, TextView textView, final String url) {
+        SpannableString spannableString = new SpannableString("Visit the official website");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(browserIntent);
+            }
+        };
+        spannableString.setSpan(clickableSpan, 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannableString);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
 
     public static List<Attraction> fetchAttractionItineraryData(DataSnapshot tripSnapshot, List<String> selectedAttractionsID) {
         List<Attraction> selectedAttractions = new ArrayList<>();
