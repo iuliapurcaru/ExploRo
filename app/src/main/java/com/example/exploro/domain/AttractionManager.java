@@ -11,6 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.*;
+
 import androidx.annotation.NonNull;
 import com.example.exploro.models.Attraction;
 import com.example.exploro.utils.VariousUtils;
@@ -18,7 +22,10 @@ import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class AttractionManager {
 
@@ -94,13 +101,18 @@ public class AttractionManager {
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    public static CompletableFuture<List<Attraction>> fetchAttractionItineraryData(Context context, DataSnapshot tripSnapshot, String destination, List<String> selectedAttractionsID) {
+        List<CompletableFuture<Attraction>> selectedAttractions = new ArrayList<>();
+        PlacesClient placesClient = Places.createClient(context);
 
-    public static List<Attraction> fetchAttractionItineraryData(DataSnapshot tripSnapshot, List<String> selectedAttractionsID) {
-        List<Attraction> selectedAttractions = new ArrayList<>();
         for (DataSnapshot snapshot : tripSnapshot.getChildren()) {
             String attractionID = snapshot.getKey();
             if (selectedAttractionsID.contains(attractionID)) {
-
+                String attractionName = snapshot.child("name").getValue(String.class);
+                String attractionWithDestination = attractionName + " " + destination;
+                int adultPrice = VariousUtils.getValueOrDefault(snapshot.child("price").child("adult"), Integer.class, -1);
+                int studentPrice = VariousUtils.getValueOrDefault(snapshot.child("price").child("student"), Integer.class, -1);
+                double timeSpent = VariousUtils.getValueOrDefault(snapshot.child("time"), Double.class, 0.0);
                 double[] openingHours = new double[7];
                 double[] closingHours = new double[7];
                 String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
@@ -109,19 +121,70 @@ public class AttractionManager {
                     closingHours[i] = VariousUtils.getValueOrDefault(snapshot.child("hours").child(days[i]).child("closing"), Double.class, 0.0);
                 }
 
-                String attractionName = snapshot.child("name").getValue(String.class);
-                int adultPrice = VariousUtils.getValueOrDefault(snapshot.child("price").child("adult"), Integer.class, -1);
-                int studentPrice = VariousUtils.getValueOrDefault(snapshot.child("price").child("student"), Integer.class, -1);
-                double timeSpent = VariousUtils.getValueOrDefault(snapshot.child("time"), Double.class, 0.0);
-                double latitude = VariousUtils.getValueOrDefault(snapshot.child("coordinates").child("lat"), Double.class, 0.0);
-                double longitude = VariousUtils.getValueOrDefault(snapshot.child("coordinates").child("long"), Double.class, 0.0);
+                CompletableFuture<Attraction> attraction = fetchPlaceDetailsByName(placesClient, attractionWithDestination)
+                        .thenApply(place -> {
+                            double latitude = 0.0;
+                            double longitude = 0.0;
 
-                Attraction attraction = new Attraction(attractionID, attractionName, openingHours, closingHours, adultPrice, studentPrice, timeSpent, latitude, longitude);
+                            if (place.getLatLng() != null) {
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                            return new Attraction(attractionID, attractionName, openingHours, closingHours, adultPrice, studentPrice, timeSpent, latitude, longitude);
+                        });
+
                 selectedAttractions.add(attraction);
             }
         }
 
-        return selectedAttractions;
+        return CompletableFuture.allOf(selectedAttractions.toArray(new CompletableFuture[0]))
+                .thenApply(v -> {
+                    List<Attraction> attractions = new ArrayList<>();
+                    for (CompletableFuture<Attraction> future : selectedAttractions) {
+                        try {
+                            attractions.add(future.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            Log.e("AttractionManager", "Error fetching attraction", e);
+                        }
+                    }
+                    return attractions;
+                });
     }
 
+    private static CompletableFuture<Place> fetchPlaceDetailsByName(PlacesClient placesClient, String placeName) {
+        CompletableFuture<Place> completableFuture = new CompletableFuture<>();
+
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setQuery(placeName)
+                .build();
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+            if (!response.getAutocompletePredictions().isEmpty()) {
+                String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
+                fetchPlaceDetailsById(placesClient, placeId).thenAccept(completableFuture::complete)
+                        .exceptionally(ex -> {
+                            completableFuture.completeExceptionally(ex);
+                            return null;
+                        });
+            } else {
+                completableFuture.completeExceptionally(new Exception("Place not found"));
+            }
+        }).addOnFailureListener(completableFuture::completeExceptionally);
+
+        return completableFuture;
+    }
+
+    private static CompletableFuture<Place> fetchPlaceDetailsById(PlacesClient placesClient, String placeId) {
+        CompletableFuture<Place> completableFuture = new CompletableFuture<>();
+
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.OPENING_HOURS);
+        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+
+        placesClient.fetchPlace(request)
+                .addOnSuccessListener(fetchPlaceResponse -> completableFuture
+                        .complete(fetchPlaceResponse.getPlace())).addOnFailureListener(completableFuture::completeExceptionally);
+
+        return completableFuture;
+    }
 }

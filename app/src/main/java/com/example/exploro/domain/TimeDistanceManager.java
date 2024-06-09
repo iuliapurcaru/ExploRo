@@ -53,6 +53,9 @@ public class TimeDistanceManager {
             for (int j = 0; j < n; j++) {
                 if (i == j) {
                     travelTimes.add(0.0);
+                } else if (distanceMatrix.get(i).get(j) > 3.0) {
+                    double travelTime = distanceMatrix.get(i).get(j) / 40.0;
+                    travelTimes.add(travelTime);
                 } else {
                     double travelTime = distanceMatrix.get(i).get(j) / averageSpeed;
                     travelTimes.add(travelTime);
