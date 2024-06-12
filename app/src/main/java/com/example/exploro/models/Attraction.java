@@ -14,6 +14,18 @@ public class Attraction {
     private String visitDate;
     private double visitTime;
 
+    public Attraction() {
+        this.id = "";
+        this.name = "";
+        this.openingHours = new double[7];
+        this.closingHours = new double[7];
+        this.adultPrice = 0;
+        this.studentPrice = 0;
+        this.timeSpent = 0;
+        this.latitude = 0;
+        this.longitude = 0;
+    }
+
     public Attraction(String id, String name, double[] openingHours, double[] closingHours, int adultPrice,
                       int studentPrice, double timeSpent, double latitude, double longitude) {
         this.id = id;

@@ -20,6 +20,7 @@ public class TripManager {
 
     private static FirebaseAuth mAuth;
     private static FirebaseUser mUser;
+    private static final String TAG = TripManager.class.getSimpleName();
 
     public static void saveTrip(Activity activity, Trip trip, List<Attraction> selectedAttractions) {
 
@@ -78,10 +79,10 @@ public class TripManager {
                 if (position != RecyclerView.NO_POSITION) {
                     adapter.notifyItemRemoved(position);
                 } else {
-                    Log.w("PopupMenu", "Attempted to remove item at invalid RecyclerView position: " + position);
+                    Log.w(TAG, "Attempted to remove item at invalid RecyclerView position: " + position);
                 }
             } else {
-                Log.w("PopupMenu", "Failed to delete trip.", task.getException());
+                Log.w(TAG, "Failed to delete trip.", task.getException());
             }
         });
     }

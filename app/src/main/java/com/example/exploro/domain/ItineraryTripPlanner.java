@@ -1,6 +1,5 @@
 package com.example.exploro.domain;
 
-import android.util.Log;
 import com.example.exploro.models.Attraction;
 import com.example.exploro.models.Trip;
 
@@ -28,12 +27,6 @@ public class ItineraryTripPlanner {
         List<List<Attraction>> itinerary = new ArrayList<>();
         for (int i = 0; i < numberOfDays; i++) {
             itinerary.add(new ArrayList<>());
-        }
-
-        Log.d("Trip Planner", "Number of attractions: " + attractions.size());
-
-        for (Attraction attraction : attractions) {
-            Log.d("Trip Planner", attraction.getName() + " " + attraction.getLatitude() + " " + attraction.getLongitude());
         }
 
         Calendar calendar = PlanningManager.parseStartDate(startDate);

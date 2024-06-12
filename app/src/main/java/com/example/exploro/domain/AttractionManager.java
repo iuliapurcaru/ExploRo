@@ -29,6 +29,8 @@ import java.util.concurrent.ExecutionException;
 
 public class AttractionManager {
 
+    private static final String TAG = AttractionManager.class.getSimpleName();
+
     public static void fetchAttractionPlanningDetails(String destinationID, String attractionID, TextView nameTextView,
                                                       TextView descriptionTextView, TextView timeSpentTextView,
                                                       TextView attractionAdultPriceTextView, TextView studentPriceTextView,
@@ -145,7 +147,7 @@ public class AttractionManager {
                         try {
                             attractions.add(future.get());
                         } catch (InterruptedException | ExecutionException e) {
-                            Log.e("AttractionManager", "Error fetching attraction", e);
+                            Log.e(TAG, "Error fetching attraction", e);
                         }
                     }
                     return attractions;

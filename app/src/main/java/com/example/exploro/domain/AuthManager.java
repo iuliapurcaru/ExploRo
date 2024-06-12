@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AuthManager {
 
     private static FirebaseAuth mAuth;
+    private static final String TAG = AuthManager.class.getSimpleName();
 
     public static void login(String email, String password, Activity activity, ProgressBar progressBar) {
         if (!NetworkUtils.isNetworkConnected(activity)) {
@@ -77,7 +78,7 @@ public class AuthManager {
                         Toast.makeText(activity, "Account created successfully!",Toast.LENGTH_SHORT).show();
                         activity.finish();
                     } else {
-                        Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(activity, "Invalid email!",Toast.LENGTH_SHORT).show();
                     }
                 });

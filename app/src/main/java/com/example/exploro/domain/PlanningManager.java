@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public class PlanningManager {
 
+    private static final String TAG = PlanningManager.class.getSimpleName();
+
     public static void showDatePicker(EditText editText, Activity activity) {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -64,7 +66,7 @@ public class PlanningManager {
                 calendar.setTime(startDateParsed);
             }
         } catch (Exception e) {
-            Log.e("ItineraryTripPlanner", "Error parsing start date", e);
+            Log.e(TAG, "Error parsing start date", e);
         }
         return calendar;
     }

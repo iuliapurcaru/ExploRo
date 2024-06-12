@@ -49,52 +49,20 @@ public class PlanningActivity extends AppCompatActivity {
         endDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(endDateEditText, this));
 
         continueButton.setOnClickListener(v -> {
-            boolean isValid = true;
-            String startDate = startDateEditText.getText().toString();
-            String endDate = endDateEditText.getText().toString();
 
-            if (startDate.isEmpty()) {
-                startDateEditText.setError("Start date is required!");
-                isValid = false;
-            }
-
-            if (endDate.isEmpty()) {
-                endDateEditText.setError("End date is required!");
-                isValid = false;
-            }
-
-            if (!startDate.isEmpty() && !endDate.isEmpty() && !PlanningManager.checkDates(startDate, endDate)) {
-                endDateEditText.setError("End date must be after Start date!");
-                isValid = false;
-            }
-
-            if (numberOfAdultsEditText.getText().toString().isEmpty()) {
-                numberOfAdultsEditText.setError("Number of adults is required!");
-                isValid = false;
-            }
-
-            if (numberOfStudentsEditText.getText().toString().isEmpty()) {
-                numberOfStudentsEditText.setError("Number of students is required!");
-                isValid = false;
-            }
-
-            if (selectedAttractions.isEmpty()) {
-                Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
-                isValid = false;
-            }
-
-            if (isValid) {
-                int numberOfDays = PlanningManager.calculateNumberOfDays(startDate, endDate);
-                Intent intentTrip = new Intent(PlanningActivity.this, ItineraryActivity.class);
-                Trip trip = new Trip(destinationID,
+            if (checkValidity(startDateEditText, endDateEditText, numberOfAdultsEditText, numberOfStudentsEditText, selectedAttractions)) {
+                int numberOfDays = PlanningManager.calculateNumberOfDays(startDateEditText.getText().toString(), endDateEditText.getText().toString());
+                Intent intentItinerary = new Intent(PlanningActivity.this, ItineraryActivity.class);
+                Trip trip = new Trip("",
+                        destinationID,
                         startDateEditText.getText().toString(),
                         endDateEditText.getText().toString(),
                         numberOfDays,
                         Integer.parseInt(numberOfAdultsEditText.getText().toString()),
                         Integer.parseInt(numberOfStudentsEditText.getText().toString()),
                         selectedAttractions);
-                intentTrip.putExtra("trip", trip);
-                startActivity(intentTrip);
+                intentItinerary.putExtra("trip", trip);
+                startActivity(intentItinerary);
             }
         });
 
@@ -102,6 +70,45 @@ public class PlanningActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getAttractionsNames(destinationID);
+    }
+
+    private boolean checkValidity(EditText startDateEditText, EditText endDateEditText, EditText numberOfAdultsEditText, EditText numberOfStudentsEditText, List<String> selectedAttractions) {
+        boolean isValid = true;
+
+        String startDate = startDateEditText.getText().toString();
+        String endDate = endDateEditText.getText().toString();
+
+        if (startDate.isEmpty()) {
+            startDateEditText.setError("Start date is required!");
+            isValid = false;
+        }
+
+        if (endDate.isEmpty()) {
+            endDateEditText.setError("End date is required!");
+            isValid = false;
+        }
+
+        if (!startDate.isEmpty() && !endDate.isEmpty() && !PlanningManager.checkDates(startDate, endDate)) {
+            endDateEditText.setError("End date must be after Start date!");
+            isValid = false;
+        }
+
+        if (numberOfAdultsEditText.getText().toString().isEmpty()) {
+            numberOfAdultsEditText.setError("Number of adults is required!");
+            isValid = false;
+        }
+
+        if (numberOfStudentsEditText.getText().toString().isEmpty()) {
+            numberOfStudentsEditText.setError("Number of students is required!");
+            isValid = false;
+        }
+
+        if (selectedAttractions.isEmpty()) {
+            Toast.makeText(PlanningActivity.this, "Please select at least one attraction!", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     private void getAttractionsNames(String destinationID) {
