@@ -26,11 +26,11 @@
             android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:textSize="27sp"
+            android:layout_marginTop="120dp"
+            android:layout_marginStart="20dp"
             android:fontFamily="@font/poppins_bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.129" android:layout_marginStart="20dp"/>
+            app:layout_constraintStart_toStartOf="parent"/>
     <Button
             android:id="@+id/logout"
             android:enabled="true"
@@ -41,21 +41,18 @@
             android:textColor="@color/black"
             android:fontFamily="@font/poppins_bold"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_account"
-            app:layout_constraintHorizontal_bias="0.061" app:layout_constraintVertical_bias="0.03"/>
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/text_account"
+            app:layout_constraintTop_toBottomOf="@+id/text_account"/>
     <View
             android:id="@+id/divider1"
             android:layout_width="409dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.285"/>
+            app:layout_constraintTop_toBottomOf="@+id/logout"/>
     <TextView
             android:id="@+id/user_settings"
             android:text="@string/user_settings"
@@ -63,33 +60,27 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
             android:textSize="23sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="@+id/text_account"
-            app:layout_constraintTop_toTopOf="@+id/divider1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.05" />
+            app:layout_constraintTop_toTopOf="@+id/divider1" />
     <TextView
             android:id="@+id/reset_password"
             android:text="@string/reset_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="@+id/text_account"
-            app:layout_constraintTop_toBottomOf="@+id/user_settings"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.04"/>
+            app:layout_constraintTop_toBottomOf="@+id/user_settings"/>
     <TextView
             android:id="@+id/edit_name"
             android:text="@string/edit_display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="@+id/text_account"
-            app:layout_constraintTop_toBottomOf="@+id/reset_password"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0875"/>
+            app:layout_constraintTop_toBottomOf="@+id/reset_password"/>
     <TextView
             android:id="@+id/delete_account"
             android:text="@string/delete_account"
@@ -97,11 +88,9 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/red_500"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="@+id/text_account"
-            app:layout_constraintTop_toBottomOf="@+id/edit_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.1"/>
+            app:layout_constraintTop_toBottomOf="@+id/edit_name"/>
 
     <View
             android:id="@+id/overlay"

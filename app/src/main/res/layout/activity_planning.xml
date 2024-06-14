@@ -115,7 +115,6 @@
                 android:inputType="number"
                 android:hint="@string/num_of_adults"
                 android:autofillHints="@string/num_of_adults"
-                android:ems="5"
                 android:layout_marginStart="50dp"
                 android:layout_below="@+id/number_of_people"/>
         <EditText

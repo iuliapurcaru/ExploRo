@@ -70,13 +70,11 @@ public class MapManager {
                     if (location != null) {
                         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-                        googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("You are here!"));
                     }
                 } else {
                     Log.w(TAG, "Current location is null. Using defaults.");
                     LatLng defaultLatLng = new LatLng(-34, 151);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, 15));
-                    googleMap.addMarker(new MarkerOptions().position(defaultLatLng).title("Default Location"));
                 }
             });
         } catch (SecurityException e) {
