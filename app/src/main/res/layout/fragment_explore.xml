@@ -15,7 +15,7 @@
             android:layout_marginStart="20dp"
             android:fontFamily="@font/poppins_bold"
             android:textSize="27sp"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="100dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
     <TextView
@@ -40,8 +40,9 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="525dp" />
+                android:layout_height="470dp" />
 
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

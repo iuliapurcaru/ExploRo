@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,8 @@ public class PlanningActivity extends AppCompatActivity {
         final EditText numberOfAdultsEditText = binding.numAdults;
         final EditText numberOfStudentsEditText = binding.numStudents;
         final Button continueButton = binding.continueButton;
+
+
 
         startDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(startDateEditText, this));
         endDateEditText.setOnClickListener(v -> PlanningManager.showDatePicker(endDateEditText, this));
@@ -112,6 +115,24 @@ public class PlanningActivity extends AppCompatActivity {
     }
 
     private void getAttractionsNames(String destinationID) {
+
+        DatabaseReference mDestinationNameReference = FirebaseDatabase.getInstance().getReference("destinations/" + destinationID + "/text");
+
+        mDestinationNameReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String destinationName = "Plan your trip to " + dataSnapshot.getValue(String.class);
+                    TextView destinationTextView = findViewById(R.id.textViewDestination);
+                    destinationTextView.setText(destinationName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w("DATABASE", "Failed to get database data.", error.toException());
+            }
+        });
 
         DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference("attractions/" + destinationID);
         mAttractionsReference.addValueEventListener(new ValueEventListener() {

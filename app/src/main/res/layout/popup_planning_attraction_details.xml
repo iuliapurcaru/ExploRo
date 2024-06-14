@@ -1,106 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="370dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/attraction_name"
-            android:text="@string/placeholder_attraction_name"
-            android:fontFamily="@font/poppins_bold"
-            android:textSize="20sp"
+    <androidx.core.widget.NestedScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"
+            android:fillViewport="true">
 
-    <TextView
-            android:id="@+id/attraction_description"
-            android:text="@string/placeholder_attraction_description"
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"/>
+            android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/attraction_time"
-            android:text="@string/average_time_spent"
-            android:fontFamily="@font/poppins_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/attraction_name"
+                    android:text="@string/placeholder_attraction_name"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="20dp"/>
 
-    <TextView
-            android:id="@+id/attraction_price"
-            android:text="@string/entrance_fees"
-            android:fontFamily="@font/poppins_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/attraction_description"
+                    android:text="@string/placeholder_attraction_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/adult_price"
-            android:text="@string/adult_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-5dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/attraction_time"
+                    android:text="@string/average_time_spent"
+                    android:fontFamily="@font/poppins_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/student_price"
-            android:text="@string/student_price"
-            android:layout_marginTop="-5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/attraction_price"
+                    android:text="@string/entrance_fees"
+                    android:fontFamily="@font/poppins_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/opening_hours"
-            android:text="@string/opening_hours"
-            android:fontFamily="@font/poppins_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/adult_price"
+                    android:text="@string/adult_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/attraction_hours"
-            android:text="@string/attraction_hours"
-            android:layout_marginTop="-5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/student_price"
+                    android:text="@string/student_price"
+                    android:layout_marginTop="-5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/attraction_address"
-            android:text="@string/placeholder_attraction_address"
-            android:textStyle="italic"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/opening_hours"
+                    android:text="@string/opening_hours"
+                    android:fontFamily="@font/poppins_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <TextView
-            android:id="@+id/attraction_website"
-            android:text="@string/placeholder_attraction_website"
-            android:textStyle="italic"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="20dp"/>
+            <TextView
+                    android:id="@+id/attraction_hours"
+                    android:text="@string/attraction_hours"
+                    android:layout_marginTop="-5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"/>
 
-    <Button
-            android:id="@+id/close_button"
-            android:text="@string/close_button"
-            android:fontFamily="@font/poppins_bold"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="15dp"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/yellow_200"
-            android:textColor="@color/black"/>
+            <TextView
+                    android:id="@+id/attraction_address"
+                    android:text="@string/placeholder_attraction_address"
+                    android:textStyle="italic"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
+
+            <TextView
+                    android:id="@+id/attraction_website"
+                    android:text="@string/placeholder_attraction_website"
+                    android:textStyle="italic"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
+
+            <Button
+                    android:id="@+id/close_button"
+                    android:text="@string/close_button"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/yellow_200"
+                    android:textColor="@color/black"/>
+
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 
 </LinearLayout>
