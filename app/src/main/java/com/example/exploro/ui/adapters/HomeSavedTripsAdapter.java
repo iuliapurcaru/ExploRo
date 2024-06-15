@@ -54,7 +54,7 @@ public class HomeSavedTripsAdapter extends RecyclerView.Adapter<HomeSavedTripsAd
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String destination = dataSnapshot.child("text").getValue(String.class);
+                    String destination = dataSnapshot.child("name").getValue(String.class);
                     holder.textDestination.setText(destination);
                 } else {
                     Log.w("DATABASE", "Failed to get destination data.");

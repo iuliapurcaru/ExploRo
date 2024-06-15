@@ -79,7 +79,7 @@ public class PlanningManager {
 
     public static void displayAttractions(String destinationID, List<String> selectedAttractions, ActivityPlanningBinding binding, androidx.recyclerview.widget.RecyclerView recyclerView) {
 
-        DatabaseReference mDestinationNameReference = FirebaseDatabase.getInstance().getReference("destinations/" + destinationID + "/text");
+        DatabaseReference mDestinationNameReference = FirebaseDatabase.getInstance().getReference("destinations/" + destinationID + "/name");
 
         mDestinationNameReference.addValueEventListener(new ValueEventListener() {
             @Override

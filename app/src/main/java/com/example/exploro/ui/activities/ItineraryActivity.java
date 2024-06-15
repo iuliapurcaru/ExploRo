@@ -37,6 +37,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
     private ItineraryListAdapter itineraryListAdapter;
     private ActivityItineraryBinding binding;
     private GoogleMap mMap;
+    private String destinationName;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final String TAG = ItineraryActivity.class.getSimpleName();
 
@@ -62,15 +63,29 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
             RecyclerView recyclerView = binding.recyclerView;
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+            DatabaseReference mDestinationReference = FirebaseDatabase.getInstance().getReference().child("destinations/" + destinationID + "/name");
+            mDestinationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        destinationName = dataSnapshot.getValue(String.class);
+                        destinationTextView.setText(destinationName);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.w("DATABASE", "Failed to get destination data.", error.toException());
+                }
+            });
+
+
             DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
             mAttractionsReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         selectedAttractions.clear();
-
-                        String destinationName = dataSnapshot.child("name").getValue(String.class);
-                        destinationTextView.setText(destinationName);
 
                         AttractionManager.fetchAttractionItineraryData(ItineraryActivity.this, dataSnapshot, destinationName, selectedAttractionsID)
                                 .thenAccept(attractions -> {
