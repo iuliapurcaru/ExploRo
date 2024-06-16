@@ -9,7 +9,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 
-import com.example.exploro.domain.UserManager;
+import com.example.exploro.domain.AuthManager;
+import com.example.exploro.data.repositories.UserRemoteDataSource;
 import com.example.exploro.databinding.FragmentAccountBinding;
 import com.example.exploro.utils.PopupMenu;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,11 +43,11 @@ public class AccountFragment extends Fragment {
         editDisplayName = binding.editName;
         deleteAccount = binding.deleteAccount;
 
-        UserManager.fetchDisplayName(textAccount);
+        UserRemoteDataSource.fetchDisplayName(textAccount);
 
         logoutButton.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
-            UserManager.signOut(this);
+            AuthManager.signOut(this);
         });
 
         resetPassword.setOnClickListener(v -> {
@@ -74,7 +75,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void resetPassword(FirebaseUser user) {
-        UserManager.resetPassword();
+        AuthManager.resetPassword();
         overlay.setVisibility(View.VISIBLE);
         showResetPasswordPopupMenu(user);
     }

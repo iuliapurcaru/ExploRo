@@ -1,11 +1,11 @@
-package com.example.exploro.domain;
+package com.example.exploro.data.repositories;
 
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.exploro.models.Attraction;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.models.Attraction;
+import com.example.exploro.data.models.Trip;
 import com.example.exploro.ui.adapters.HomeSavedTripsAdapter;
 import com.example.exploro.utils.VariousUtils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TripManager {
+public class TripRemoteDataSource {
 
     private static FirebaseAuth mAuth;
     private static FirebaseUser mUser;
-    private static final String TAG = TripManager.class.getSimpleName();
+    private static final String TAG = TripRemoteDataSource.class.getSimpleName();
 
     public static void saveTrip(Activity activity, Trip trip, List<Attraction> selectedAttractions) {
 

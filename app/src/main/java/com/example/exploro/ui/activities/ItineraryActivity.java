@@ -11,16 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.exploro.domain.AttractionManager;
-import com.example.exploro.models.Attraction;
+import com.example.exploro.data.repositories.AttractionRemoteDataSource;
+import com.example.exploro.data.models.Attraction;
+import com.example.exploro.data.repositories.DestinationRemoteDataSource;
 import com.example.exploro.domain.ItineraryTripPlanner;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.models.Trip;
 import com.example.exploro.databinding.ActivityItineraryBinding;
 import com.example.exploro.R;
 
 import com.example.exploro.domain.MapManager;
 import com.example.exploro.ui.adapters.ItineraryListAdapter;
-import com.example.exploro.domain.TripManager;
+import com.example.exploro.data.repositories.TripRemoteDataSource;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,7 +38,6 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
     private ItineraryListAdapter itineraryListAdapter;
     private ActivityItineraryBinding binding;
     private GoogleMap mMap;
-    private String destinationName;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final String TAG = ItineraryActivity.class.getSimpleName();
 
@@ -63,22 +63,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
             RecyclerView recyclerView = binding.recyclerView;
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            DatabaseReference mDestinationReference = FirebaseDatabase.getInstance().getReference().child("destinations/" + destinationID + "/name");
-            mDestinationReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        destinationName = dataSnapshot.getValue(String.class);
-                        destinationTextView.setText(destinationName);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w("DATABASE", "Failed to get destination data.", error.toException());
-                }
-            });
-
+            DestinationRemoteDataSource.fetchDestinationName(destinationID, destinationTextView, null);
 
             DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
             mAttractionsReference.addValueEventListener(new ValueEventListener() {
@@ -87,7 +72,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
                     if (dataSnapshot.exists()) {
                         selectedAttractions.clear();
 
-                        AttractionManager.fetchAttractionItineraryData(ItineraryActivity.this, dataSnapshot, destinationName, selectedAttractionsID)
+                        AttractionRemoteDataSource.fetchAttractionPlanningData(ItineraryActivity.this, dataSnapshot, destinationTextView.getText().toString() , selectedAttractionsID)
                                 .thenAccept(attractions -> {
                                     selectedAttractions.addAll(attractions);
                                     ItineraryTripPlanner planner = new ItineraryTripPlanner(trip, attractions);
@@ -122,7 +107,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
                 }
             });
 
-            binding.saveButton.setOnClickListener(v -> TripManager.saveTrip(this, trip, selectedAttractions));
+            binding.saveButton.setOnClickListener(v -> TripRemoteDataSource.saveTrip(this, trip, selectedAttractions));
         }
     }
 

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.exploro.domain.PlanningManager;
-import com.example.exploro.models.Attraction;
+import com.example.exploro.data.models.Attraction;
 import com.example.exploro.R;
 
 import org.jetbrains.annotations.NotNull;

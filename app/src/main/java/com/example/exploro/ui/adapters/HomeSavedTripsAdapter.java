@@ -1,7 +1,6 @@
 package com.example.exploro.ui.adapters;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.exploro.R;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.models.Trip;
+import com.example.exploro.data.repositories.DestinationRemoteDataSource;
 import com.example.exploro.utils.PopupMenu;
 import com.example.exploro.ui.activities.ItineraryActivity;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -49,23 +44,7 @@ public class HomeSavedTripsAdapter extends RecyclerView.Adapter<HomeSavedTripsAd
         holder.textStartDate.setText(trip.getStartDate());
         holder.textEndDate.setText(trip.getEndDate());
 
-        DatabaseReference destinationRef = FirebaseDatabase.getInstance().getReference("destinations/" + trip.getDestinationID());
-        destinationRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String destination = dataSnapshot.child("name").getValue(String.class);
-                    holder.textDestination.setText(destination);
-                } else {
-                    Log.w("DATABASE", "Failed to get destination data.");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("DATABASE", "Failed to get database data.", databaseError.toException());
-            }
-        });
+        DestinationRemoteDataSource.fetchDestinationName(trip.getDestinationID(), null, holder);
 
         holder.buttonShowTrip.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ItineraryActivity.class);
@@ -86,7 +65,7 @@ public class HomeSavedTripsAdapter extends RecyclerView.Adapter<HomeSavedTripsAd
 
     public static class TripViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView textDestination;
+        public final TextView textDestination;
         final TextView textStartDate;
         final TextView textEndDate;
         final TextView buttonShowTrip;

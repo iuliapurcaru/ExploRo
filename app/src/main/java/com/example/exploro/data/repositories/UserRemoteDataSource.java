@@ -1,20 +1,19 @@
-package com.example.exploro.domain;
+package com.example.exploro.data.repositories;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
-import com.example.exploro.ui.activities.LoginActivity;
+import com.example.exploro.domain.AuthManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class UserManager {
+public class UserRemoteDataSource {
 
     private static FirebaseAuth mAuth;
     private static FirebaseUser mUser;
@@ -93,7 +92,7 @@ public class UserManager {
 
         mUserReference.removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                signOut(fragment);
+                AuthManager.signOut(fragment);
                 mUser.delete();
                 Toast.makeText(fragment.getContext(), "Account deleted!", Toast.LENGTH_SHORT).show();
             } else {
@@ -102,22 +101,10 @@ public class UserManager {
         });
     }
 
-    public static void resetPassword() {
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        if (mUser != null) {
-            String email = mUser.getEmail();
-            if (email != null) {
-                mAuth.sendPasswordResetEmail(email);
-            }
-        }
-    }
-
-    public static void signOut(Fragment fragment) {
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
-        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
-        fragment.startActivity(intent);
-        fragment.requireActivity().finish();
+    public static void addUserToDatabase(FirebaseUser mUser, String name) {
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = mDatabase.getReference("users/" + mUser.getUid());
+        usersReference.child("display_name").setValue(name);
+        usersReference.child("email").setValue(mUser.getEmail());
     }
 }

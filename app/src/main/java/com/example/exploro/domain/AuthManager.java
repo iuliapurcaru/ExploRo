@@ -5,17 +5,19 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import androidx.fragment.app.Fragment;
+import com.example.exploro.data.repositories.UserRemoteDataSource;
+import com.example.exploro.ui.activities.LoginActivity;
 import com.example.exploro.ui.activities.MainActivity;
 import com.example.exploro.utils.NetworkUtils;
 import com.example.exploro.utils.VariousUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class AuthManager {
 
+    private static FirebaseUser mUser;
     private static FirebaseAuth mAuth;
     private static final String TAG = AuthManager.class.getSimpleName();
 
@@ -40,8 +42,8 @@ public class AuthManager {
                             Log.w(TAG, "signInWithEmail:failure");
                             return;
                         }
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        checkEmailVerification(user, activity);
+                        mUser = mAuth.getCurrentUser();
+                        checkEmailVerification(mUser, activity);
                     } else {
                         Toast.makeText(activity, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                     }
@@ -82,7 +84,7 @@ public class AuthManager {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(activity, task -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     if (task.isSuccessful()) {
-                        FirebaseUser mUser = mAuth.getCurrentUser();
+                        mUser = mAuth.getCurrentUser();
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(name)
                                 .build();
@@ -91,7 +93,7 @@ public class AuthManager {
                             return;
                         }
                         mUser.updateProfile(profileUpdates);
-                        addUserToDatabase(mUser, name);
+                        UserRemoteDataSource.addUserToDatabase(mUser, name);
                         sendEmailVerification(mUser, activity);
                         Toast.makeText(activity, "Account created successfully!",Toast.LENGTH_SHORT).show();
                         activity.finish();
@@ -113,11 +115,23 @@ public class AuthManager {
         });
     }
 
-    private static void addUserToDatabase(FirebaseUser mUser, String name) {
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = mDatabase.getReference("users/" + mUser.getUid());
-        usersReference.child("display_name").setValue(name);
-        usersReference.child("email").setValue(mUser.getEmail());
+    public static void resetPassword() {
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        if (mUser != null) {
+            String email = mUser.getEmail();
+            if (email != null) {
+                mAuth.sendPasswordResetEmail(email);
+            }
+        }
+    }
+
+    public static void signOut(Fragment fragment) {
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
+        fragment.startActivity(intent);
+        fragment.requireActivity().finish();
     }
 
 }

@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.exploro.data.repositories.AttractionRemoteDataSource;
 import com.example.exploro.databinding.ActivityPlanningBinding;
 import com.example.exploro.domain.PlanningManager;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.models.Trip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class PlanningActivity extends AppCompatActivity {
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        PlanningManager.displayAttractions(destinationID, selectedAttractions, binding, recyclerView);
+        AttractionRemoteDataSource.displayAttractions(destinationID, selectedAttractions, binding, recyclerView);
     }
 
     private boolean checkValidity(EditText startDateEditText, EditText endDateEditText, EditText numberOfAdultsEditText, EditText numberOfStudentsEditText, List<String> selectedAttractions) {

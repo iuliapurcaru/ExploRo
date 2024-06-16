@@ -1,6 +1,6 @@
 package com.example.exploro.domain;
 
-import com.example.exploro.models.Attraction;
+import com.example.exploro.data.models.Attraction;
 import java.util.*;
 
 public class TimeDistanceManager {

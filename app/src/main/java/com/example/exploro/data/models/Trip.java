@@ -1,4 +1,4 @@
-package com.example.exploro.models;
+package com.example.exploro.data.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -11,10 +11,10 @@ import android.widget.*;
 import androidx.fragment.app.Fragment;
 
 import com.example.exploro.R;
-import com.example.exploro.domain.UserManager;
-import com.example.exploro.domain.AttractionManager;
-import com.example.exploro.domain.TripManager;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.repositories.UserRemoteDataSource;
+import com.example.exploro.data.repositories.AttractionRemoteDataSource;
+import com.example.exploro.data.repositories.TripRemoteDataSource;
+import com.example.exploro.data.models.Trip;
 import com.example.exploro.ui.activities.LoginActivity;
 import com.example.exploro.ui.adapters.HomeSavedTripsAdapter;
 
@@ -27,7 +27,7 @@ public class PopupMenu {
         final Button resetPasswordButton = popupView.findViewById(com.example.exploro.R.id.reset_password);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        resetPasswordButton.setOnClickListener(v -> UserManager.forgotPassword(emailEditText.getText().toString(), activity, popupWindow));
+        resetPasswordButton.setOnClickListener(v -> UserRemoteDataSource.forgotPassword(emailEditText.getText().toString(), activity, popupWindow));
     }
 
     public static void showResetPasswordPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener, String email) {
@@ -48,7 +48,7 @@ public class PopupMenu {
         final Button confirmButton = popupView.findViewById(com.example.exploro.R.id.confirm_button);
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
-        confirmButton.setOnClickListener(v -> UserManager.editDisplayName(displayNameEditText.getText().toString(), fragment, popupWindow));
+        confirmButton.setOnClickListener(v -> UserRemoteDataSource.editDisplayName(displayNameEditText.getText().toString(), fragment, popupWindow));
     }
 
     public static void showDeleteAccountPopup(Fragment fragment, View anchorView, PopupWindow.OnDismissListener dismissListener) {
@@ -59,7 +59,7 @@ public class PopupMenu {
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         yesButton.setOnClickListener(v -> {
-            UserManager.deleteAccount(fragment);
+            UserRemoteDataSource.deleteAccount(fragment);
             popupWindow.dismiss();
         });
 
@@ -80,7 +80,7 @@ public class PopupMenu {
         final TextView hoursTextView = popupView.findViewById(com.example.exploro.R.id.attraction_hours);
         final Button closeButton = popupView.findViewById(com.example.exploro.R.id.close_button);
 
-        AttractionManager.fetchAttractionPlanningDetails(destinationID, attractionID, nameTextView,
+        AttractionRemoteDataSource.fetchAttractionDetails(destinationID, attractionID, nameTextView,
                                                         descriptionTextView, timeSpentTextView,
                                                         attractionAdultPriceTextView, studentPriceTextView,
                                                         addressTextView, hoursTextView, linkTextView);
@@ -96,7 +96,7 @@ public class PopupMenu {
         PopupWindow popupWindow = configurePopupWindow(anchorView, dismissListener, popupView);
 
         yesButton.setOnClickListener(v -> {
-            TripManager.deleteTrip(trip.getTripID(), position, adapter);
+            TripRemoteDataSource.deleteTrip(trip.getTripID(), position, adapter);
             popupWindow.dismiss();
         });
 

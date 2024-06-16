@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.exploro.domain.TripManager;
-import com.example.exploro.domain.UserManager;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.repositories.TripRemoteDataSource;
+import com.example.exploro.data.repositories.UserRemoteDataSource;
+import com.example.exploro.data.models.Trip;
 import com.example.exploro.databinding.FragmentHomeBinding;
 import com.example.exploro.ui.adapters.HomeSavedTripsAdapter;
 
@@ -32,12 +32,12 @@ public class HomeFragment extends Fragment {
         final TextView textHome = binding.textHome;
         final TextView textViewTrips = binding.textTrips;
 
-        UserManager.fetchDisplayName(textHome);
+        UserRemoteDataSource.fetchDisplayName(textHome);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(homeSavedTripsAdapter);
 
-        TripManager.fetchSavedTrips(textViewTrips, homeSavedTripsAdapter);
+        TripRemoteDataSource.fetchSavedTrips(textViewTrips, homeSavedTripsAdapter);
 
         return root;
     }

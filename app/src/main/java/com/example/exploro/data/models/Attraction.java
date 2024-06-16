@@ -1,4 +1,4 @@
-package com.example.exploro.models;
+package com.example.exploro.data.models;
 
 public class Attraction {
     private final String id;

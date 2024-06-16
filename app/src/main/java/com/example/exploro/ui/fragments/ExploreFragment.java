@@ -1,7 +1,6 @@
 package com.example.exploro.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.exploro.databinding.FragmentExploreBinding;
-import com.example.exploro.domain.ExploreManager;
-import com.example.exploro.ui.adapters.ExploreDestinationsAdapter;
-import com.google.firebase.database.*;
-import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import com.example.exploro.data.repositories.DestinationRemoteDataSource;
 
 public class ExploreFragment extends Fragment {
 
@@ -29,7 +23,7 @@ public class ExploreFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ExploreManager.displayDestinationsImageUrls(recyclerView);
+        DestinationRemoteDataSource.displayDestinationsImageUrls(recyclerView);
 
         return root;
     }

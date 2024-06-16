@@ -1,7 +1,7 @@
 package com.example.exploro.domain;
 
-import com.example.exploro.models.Attraction;
-import com.example.exploro.models.Trip;
+import com.example.exploro.data.models.Attraction;
+import com.example.exploro.data.models.Trip;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -132,8 +132,8 @@ public class ItineraryTripPlanner {
     }
 
     private static class AttractionWithTravelTime {
-        int index;
-        double travelTime;
+        final int index;
+        final double travelTime;
 
         AttractionWithTravelTime(int index, double travelTime) {
             this.index = index;
