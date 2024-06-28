@@ -47,6 +47,9 @@ public class AttractionRemoteDataSource {
             }
         });
 
+        attractionsIDs.clear();
+        attractionsNames.clear();
+
         DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference("attractions/" + destinationID);
         mAttractionsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,6 +63,7 @@ public class AttractionRemoteDataSource {
                     }
                     PlanningAttractionsAdapter adapter = new PlanningAttractionsAdapter(attractionsNames, selectedAttractions, binding.overlay, destinationID, attractionsIDs);
                     recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 

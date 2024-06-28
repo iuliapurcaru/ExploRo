@@ -19,6 +19,9 @@ public class DestinationRemoteDataSource {
 
     public static void displayDestinationsImageUrls(RecyclerView recyclerView) {
 
+        destinationsImageUrls.clear();
+        destinationsIDs.clear();
+
         DatabaseReference mDestinationsImageReference = FirebaseDatabase.getInstance().getReference().child("destinations");
         mDestinationsImageReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -32,6 +35,7 @@ public class DestinationRemoteDataSource {
                     }
                     ExploreDestinationsAdapter adapter = new ExploreDestinationsAdapter(destinationsImageUrls, destinationsIDs);
                     recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 

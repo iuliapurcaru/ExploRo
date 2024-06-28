@@ -51,7 +51,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
         Places.initialize(getApplicationContext(), "AIzaSyBdG4NHb0oSCpAifUzVyho8Mdc-OzKyj8c");
 
         Intent intent = getIntent();
-        Trip trip = intent.getSerializableExtra("trip", Trip.class);
+        Trip trip = (Trip) intent.getSerializableExtra("trip");
 
         if (trip != null) {
 
@@ -66,6 +66,7 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
             DestinationRemoteDataSource.fetchDestinationName(destinationID, destinationTextView, null);
 
             DatabaseReference mAttractionsReference = FirebaseDatabase.getInstance().getReference().child("planning_data/" + destinationID);
+
             mAttractionsReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
