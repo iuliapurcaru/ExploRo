@@ -46,7 +46,7 @@ public class TimeDistanceManager {
     public static List<List<Double>> calculateTravelTimeMatrix(List<List<Double>> distanceMatrix) {
         int n = distanceMatrix.size();
         List<List<Double>> travelTimeMatrix = new ArrayList<>(n);
-        double averageWalkingSpeed = 3.0;
+        double averageWalkingSpeed = 5.0;
         double averageDrivingSpeed = 40.0;
 
         for (int i = 0; i < n; i++) {
@@ -54,7 +54,7 @@ public class TimeDistanceManager {
             for (int j = 0; j < n; j++) {
                 if (i == j) {
                     travelTimes.add(0.0);
-                } else if (distanceMatrix.get(i).get(j) > 3.0) {
+                } else if (distanceMatrix.get(i).get(j) > 2.0) {
                     double travelTime = distanceMatrix.get(i).get(j) / averageDrivingSpeed;
                     travelTimes.add(travelTime);
                 } else {

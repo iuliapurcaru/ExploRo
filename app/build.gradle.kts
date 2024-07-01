@@ -1,8 +1,10 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services") version "4.4.1" apply false
 }
-
 
 android {
     namespace = "com.example.exploro"
@@ -16,6 +18,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val apiKeysPropertiesFile = file("${rootDir}/api-keys.properties")
+        val apiKeysProperties = Properties().apply {
+            load(FileInputStream(apiKeysPropertiesFile))
+        }
+
+        buildConfigField("String", "GOOGLE_API_KEY", "\"${apiKeysProperties["GOOGLE_API_KEY"]}\"")
+
+        manifestPlaceholders["googleMapsApiKey"] = apiKeysProperties["GOOGLE_API_KEY"].toString()
     }
 
     buildTypes {
@@ -28,6 +39,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {

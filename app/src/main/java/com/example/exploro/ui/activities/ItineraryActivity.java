@@ -18,6 +18,7 @@ import com.example.exploro.domain.ItineraryTripPlanner;
 import com.example.exploro.data.models.Trip;
 import com.example.exploro.databinding.ActivityItineraryBinding;
 import com.example.exploro.R;
+import com.example.exploro.BuildConfig;
 
 import com.example.exploro.domain.MapManager;
 import com.example.exploro.ui.adapters.ItineraryListAdapter;
@@ -48,7 +49,8 @@ public class ItineraryActivity extends AppCompatActivity implements OnMapReadyCa
         binding = ActivityItineraryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Places.initialize(getApplicationContext(), "AIzaSyBdG4NHb0oSCpAifUzVyho8Mdc-OzKyj8c");
+
+        Places.initialize(getApplicationContext(), BuildConfig.GOOGLE_API_KEY);
 
         Intent intent = getIntent();
         Trip trip = (Trip) intent.getSerializableExtra("trip");
